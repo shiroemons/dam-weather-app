@@ -57,7 +57,7 @@ export const PREFECTURES: Prefecture[] = [
   { code: "43", name: "熊本県", slug: "kumamoto", region: "九州・沖縄", damCount: 36, jmaOfficeCode: "430000" },
   { code: "44", name: "大分県", slug: "oita", region: "九州・沖縄", damCount: 84, jmaOfficeCode: "440000" },
   { code: "45", name: "宮崎県", slug: "miyazaki", region: "九州・沖縄", damCount: 51, jmaOfficeCode: "450000" },
-  { code: "46", name: "鹿児島県", slug: "kagoshima", region: "九州・沖縄", damCount: 42, jmaOfficeCode: "460000" },
+  { code: "46", name: "鹿児島県", slug: "kagoshima", region: "九州・沖縄", damCount: 42, jmaOfficeCode: "460100" },
   { code: "47", name: "沖縄県", slug: "okinawa", region: "九州・沖縄", damCount: 46, jmaOfficeCode: "471000" },
 ];
 

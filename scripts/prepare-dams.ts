@@ -106,7 +106,7 @@ const PREFECTURES: PrefectureInfo[] = [
   { code: "43", name: "熊本県", slug: "kumamoto", jmaOfficeCode: "430000" },
   { code: "44", name: "大分県", slug: "oita", jmaOfficeCode: "440000" },
   { code: "45", name: "宮崎県", slug: "miyazaki", jmaOfficeCode: "450000" },
-  { code: "46", name: "鹿児島県", slug: "kagoshima", jmaOfficeCode: "460000" },
+  { code: "46", name: "鹿児島県", slug: "kagoshima", jmaOfficeCode: "460100" },
   { code: "47", name: "沖縄県", slug: "okinawa", jmaOfficeCode: "471000" },
 ];
 

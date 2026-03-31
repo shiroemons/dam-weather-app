@@ -25,3 +25,6 @@ dist-ssr
 
 # GML source data (large binary/xml files)
 scripts/data/
+
+# Generated weather data (fetched from JMA API)
+public/weather/
