@@ -1,8 +1,8 @@
 /**
  * fetch-weather.ts
  *
- * Fetches weather forecast data for all 47 prefectures from JMA API
- * and saves them as JSON files under public/weather/.
+ * Fetches weather forecast data for all dams from Open-Meteo API
+ * and saves them as prefecture-grouped JSON files under public/weather/.
  *
  * Usage: npx tsx scripts/fetch-weather.ts
  */
@@ -11,79 +11,107 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { parseJmaForecast } from "./jma-parser.ts";
-
 // ---------------------------------------------------------------------------
 // Paths
 // ---------------------------------------------------------------------------
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUTPUT_DIR = path.join(__dirname, "..", "public", "weather");
-const JMA_FORECAST_URL = "https://www.jma.go.jp/bosai/forecast/data/forecast";
+const DAMS_JSON_PATH = path.join(__dirname, "..", "src", "data", "dams.json");
+const OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast";
 
 // ---------------------------------------------------------------------------
-// Types (local – mirrors src/data/prefectures.ts)
+// Constants
 // ---------------------------------------------------------------------------
 
-interface PrefectureEntry {
-  name: string;
-  slug: string;
-  jmaOfficeCode: string;
+const BATCH_SIZE = 1000;
+const MAX_RETRIES = 3;
+const BATCH_DELAY_MS = 1000;
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+interface DamEntry {
+  id: string;
+  prefectureSlug: string;
+  latitude: number;
+  longitude: number;
+}
+
+interface DayForecast {
+  date: string;
+  weatherCode: number;
+  weather: string;
+  tempMax: number | null;
+  tempMin: number | null;
+  precipProbability: number | null;
+  precipitationSum: number | null;
+}
+
+interface DamWeather {
+  damId: string;
+  today: DayForecast;
+  tomorrow: DayForecast;
+}
+
+interface PrefectureWeather {
+  prefectureSlug: string;
+  updatedAt: string;
+  dams: DamWeather[];
+}
+
+interface OpenMeteoDaily {
+  time: string[];
+  weather_code: number[];
+  temperature_2m_max: (number | null)[];
+  temperature_2m_min: (number | null)[];
+  precipitation_sum: (number | null)[];
+  precipitation_probability_max: (number | null)[];
+}
+
+interface OpenMeteoResponse {
+  daily: OpenMeteoDaily;
 }
 
 // ---------------------------------------------------------------------------
-// Prefecture table
+// WMO weather code labels
 // ---------------------------------------------------------------------------
 
-const PREFECTURES: PrefectureEntry[] = [
-  { name: "北海道", slug: "hokkaido", jmaOfficeCode: "016000" },
-  { name: "青森県", slug: "aomori", jmaOfficeCode: "020000" },
-  { name: "岩手県", slug: "iwate", jmaOfficeCode: "030000" },
-  { name: "宮城県", slug: "miyagi", jmaOfficeCode: "040000" },
-  { name: "秋田県", slug: "akita", jmaOfficeCode: "050000" },
-  { name: "山形県", slug: "yamagata", jmaOfficeCode: "060000" },
-  { name: "福島県", slug: "fukushima", jmaOfficeCode: "070000" },
-  { name: "茨城県", slug: "ibaraki", jmaOfficeCode: "080000" },
-  { name: "栃木県", slug: "tochigi", jmaOfficeCode: "090000" },
-  { name: "群馬県", slug: "gunma", jmaOfficeCode: "100000" },
-  { name: "埼玉県", slug: "saitama", jmaOfficeCode: "110000" },
-  { name: "千葉県", slug: "chiba", jmaOfficeCode: "120000" },
-  { name: "東京都", slug: "tokyo", jmaOfficeCode: "130000" },
-  { name: "神奈川県", slug: "kanagawa", jmaOfficeCode: "140000" },
-  { name: "新潟県", slug: "niigata", jmaOfficeCode: "150000" },
-  { name: "富山県", slug: "toyama", jmaOfficeCode: "160000" },
-  { name: "石川県", slug: "ishikawa", jmaOfficeCode: "170000" },
-  { name: "福井県", slug: "fukui", jmaOfficeCode: "180000" },
-  { name: "山梨県", slug: "yamanashi", jmaOfficeCode: "190000" },
-  { name: "長野県", slug: "nagano", jmaOfficeCode: "200000" },
-  { name: "岐阜県", slug: "gifu", jmaOfficeCode: "210000" },
-  { name: "静岡県", slug: "shizuoka", jmaOfficeCode: "220000" },
-  { name: "愛知県", slug: "aichi", jmaOfficeCode: "230000" },
-  { name: "三重県", slug: "mie", jmaOfficeCode: "240000" },
-  { name: "滋賀県", slug: "shiga", jmaOfficeCode: "250000" },
-  { name: "京都府", slug: "kyoto", jmaOfficeCode: "260000" },
-  { name: "大阪府", slug: "osaka", jmaOfficeCode: "270000" },
-  { name: "兵庫県", slug: "hyogo", jmaOfficeCode: "280000" },
-  { name: "奈良県", slug: "nara", jmaOfficeCode: "290000" },
-  { name: "和歌山県", slug: "wakayama", jmaOfficeCode: "300000" },
-  { name: "鳥取県", slug: "tottori", jmaOfficeCode: "310000" },
-  { name: "島根県", slug: "shimane", jmaOfficeCode: "320000" },
-  { name: "岡山県", slug: "okayama", jmaOfficeCode: "330000" },
-  { name: "広島県", slug: "hiroshima", jmaOfficeCode: "340000" },
-  { name: "山口県", slug: "yamaguchi", jmaOfficeCode: "350000" },
-  { name: "徳島県", slug: "tokushima", jmaOfficeCode: "360000" },
-  { name: "香川県", slug: "kagawa", jmaOfficeCode: "370000" },
-  { name: "愛媛県", slug: "ehime", jmaOfficeCode: "380000" },
-  { name: "高知県", slug: "kochi", jmaOfficeCode: "390000" },
-  { name: "福岡県", slug: "fukuoka", jmaOfficeCode: "400000" },
-  { name: "佐賀県", slug: "saga", jmaOfficeCode: "410000" },
-  { name: "長崎県", slug: "nagasaki", jmaOfficeCode: "420000" },
-  { name: "熊本県", slug: "kumamoto", jmaOfficeCode: "430000" },
-  { name: "大分県", slug: "oita", jmaOfficeCode: "440000" },
-  { name: "宮崎県", slug: "miyazaki", jmaOfficeCode: "450000" },
-  { name: "鹿児島県", slug: "kagoshima", jmaOfficeCode: "460100" },
-  { name: "沖縄県", slug: "okinawa", jmaOfficeCode: "471000" },
-];
+const WMO_LABELS: Record<number, string> = {
+  0: "快晴",
+  1: "晴れ",
+  2: "一部曇り",
+  3: "曇り",
+  45: "霧",
+  48: "着氷性の霧",
+  51: "弱い霧雨",
+  53: "霧雨",
+  55: "強い霧雨",
+  56: "弱い着氷性霧雨",
+  57: "強い着氷性霧雨",
+  61: "弱い雨",
+  63: "雨",
+  65: "強い雨",
+  66: "弱い着氷性の雨",
+  67: "強い着氷性の雨",
+  71: "弱い雪",
+  73: "雪",
+  75: "強い雪",
+  77: "霧雪",
+  80: "弱いにわか雨",
+  81: "にわか雨",
+  82: "激しいにわか雨",
+  85: "弱いにわか雪",
+  86: "強いにわか雪",
+  95: "雷雨",
+  96: "雹を伴う雷雨",
+  99: "激しい雹を伴う雷雨",
+};
+
+function wmoLabel(code: number): string {
+  return WMO_LABELS[code] ?? `天気コード ${code}`;
+}
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -91,6 +119,51 @@ const PREFECTURES: PrefectureEntry[] = [
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function buildDayForecast(daily: OpenMeteoDaily, index: number): DayForecast {
+  const code = daily.weather_code[index] ?? 0;
+  return {
+    date: daily.time[index] ?? "",
+    weatherCode: code,
+    weather: wmoLabel(code),
+    tempMax: daily.temperature_2m_max[index] ?? null,
+    tempMin: daily.temperature_2m_min[index] ?? null,
+    precipProbability: daily.precipitation_probability_max[index] ?? null,
+    precipitationSum: daily.precipitation_sum[index] ?? null,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Open-Meteo fetch with retry
+// ---------------------------------------------------------------------------
+
+async function fetchBatch(dams: DamEntry[], attempt = 1): Promise<OpenMeteoResponse[]> {
+  const latitudes = dams.map((d) => d.latitude).join(",");
+  const longitudes = dams.map((d) => d.longitude).join(",");
+
+  const params = new URLSearchParams({
+    latitude: latitudes,
+    longitude: longitudes,
+    daily:
+      "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max",
+    timezone: "Asia/Tokyo",
+    forecast_days: "2",
+  });
+
+  const res = await fetch(`${OPEN_METEO_URL}?${params.toString()}`);
+  if (!res.ok) {
+    const message = `HTTP ${res.status} ${res.statusText}`;
+    if (attempt < MAX_RETRIES) {
+      console.warn(`  Retry ${attempt}/${MAX_RETRIES - 1}: ${message}`);
+      await sleep(BATCH_DELAY_MS * attempt);
+      return fetchBatch(dams, attempt + 1);
+    }
+    throw new Error(message);
+  }
+
+  const data = (await res.json()) as OpenMeteoResponse | OpenMeteoResponse[];
+  return Array.isArray(data) ? data : [data];
 }
 
 // ---------------------------------------------------------------------------
@@ -102,52 +175,75 @@ async function main(): Promise<void> {
     fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   }
 
-  let successCount = 0;
-  let errorCount = 0;
-  const errors: string[] = [];
+  const allDams = JSON.parse(fs.readFileSync(DAMS_JSON_PATH, "utf-8")) as DamEntry[];
 
-  for (const pref of PREFECTURES) {
+  console.log(`Loaded ${allDams.length} dams from dams.json`);
+
+  const damWeatherMap = new Map<string, DamWeather>();
+  let batchIndex = 0;
+
+  for (let i = 0; i < allDams.length; i += BATCH_SIZE) {
+    const batch = allDams.slice(i, i + BATCH_SIZE);
+    batchIndex++;
+    console.log(
+      `\nBatch ${batchIndex}: fetching ${batch.length} dams (index ${i}–${i + batch.length - 1})...`,
+    );
+
+    let responses: OpenMeteoResponse[];
     try {
-      console.log(`Fetching weather for ${pref.name} (${pref.jmaOfficeCode})...`);
-
-      const url = `${JMA_FORECAST_URL}/${pref.jmaOfficeCode}.json`;
-      const res = await fetch(url);
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status} ${res.statusText}`);
-      }
-
-      const data = (await res.json()) as unknown[];
-      const areas = parseJmaForecast(data);
-
-      const prefWeather = {
-        prefectureSlug: pref.slug,
-        updatedAt: new Date().toISOString(),
-        areas,
-      };
-
-      const outputPath = path.join(OUTPUT_DIR, `${pref.slug}.json`);
-      fs.writeFileSync(outputPath, JSON.stringify(prefWeather, null, 2), "utf-8");
-
-      successCount++;
-      console.log(`  ✓ ${areas.length} areas saved to ${pref.slug}.json`);
+      responses = await fetchBatch(batch);
     } catch (err) {
-      errorCount++;
       const message = err instanceof Error ? err.message : String(err);
-      errors.push(`${pref.name}: ${message}`);
-      console.error(`  ✗ ${pref.name}: ${message}`);
+      console.error(`  ✗ Batch ${batchIndex} failed: ${message}`);
+      if (i + BATCH_SIZE < allDams.length) {
+        await sleep(BATCH_DELAY_MS);
+      }
+      continue;
     }
 
-    await sleep(1000);
+    for (let j = 0; j < batch.length; j++) {
+      const dam = batch[j];
+      const res = responses[j];
+      if (!dam || !res) continue;
+
+      damWeatherMap.set(dam.id, {
+        damId: dam.id,
+        today: buildDayForecast(res.daily, 0),
+        tomorrow: buildDayForecast(res.daily, 1),
+      });
+    }
+
+    console.log(`  ✓ ${responses.length} responses processed`);
+
+    if (i + BATCH_SIZE < allDams.length) {
+      await sleep(BATCH_DELAY_MS);
+    }
+  }
+
+  // Group dams by prefecture and write JSON files
+  const byPrefecture = new Map<string, DamWeather[]>();
+  for (const dam of allDams) {
+    const weather = damWeatherMap.get(dam.id);
+    if (!weather) continue;
+    const list = byPrefecture.get(dam.prefectureSlug) ?? [];
+    list.push(weather);
+    byPrefecture.set(dam.prefectureSlug, list);
+  }
+
+  const updatedAt = new Date().toISOString();
+  let successCount = 0;
+
+  for (const [prefectureSlug, dams] of byPrefecture) {
+    const prefWeather: PrefectureWeather = { prefectureSlug, updatedAt, dams };
+    const outputPath = path.join(OUTPUT_DIR, `${prefectureSlug}.json`);
+    fs.writeFileSync(outputPath, JSON.stringify(prefWeather, null, 2), "utf-8");
+    successCount++;
+    console.log(`  ✓ ${dams.length} dams saved to ${prefectureSlug}.json`);
   }
 
   console.log("\n=== Summary ===");
-  console.log(`Success: ${successCount}/${PREFECTURES.length}`);
-  if (errorCount > 0) {
-    console.log(`Errors: ${errorCount}`);
-    for (const e of errors) {
-      console.log(`  - ${e}`);
-    }
-  }
+  console.log(`Prefectures written: ${successCount}`);
+  console.log(`Dams processed: ${damWeatherMap.size}/${allDams.length}`);
   console.log(`\nOutput directory: ${OUTPUT_DIR}`);
 }
 

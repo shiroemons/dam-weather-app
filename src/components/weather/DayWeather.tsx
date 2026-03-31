@@ -21,7 +21,10 @@ export default function DayWeather({ forecast, label }: Props) {
         <span className="text-blue-500">{minTemp}</span>
       </div>
       {forecast.precipProbability !== null && (
-        <span className="text-xs text-blue-500">☂ {forecast.precipProbability}%</span>
+        <span className="text-xs text-blue-500">
+          ☂{forecast.precipProbability}%
+          {forecast.precipitationSum !== null && ` ${forecast.precipitationSum}mm`}
+        </span>
       )}
     </div>
   );

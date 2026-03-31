@@ -11,7 +11,5 @@ export interface Dam {
   totalStorageCapacity: number | null;
   damHeight: number | null;
   completionYear: number | null;
-  jmaAreaCode: string;
-  jmaForecastCode: string;
   isMajor: boolean;
 }
