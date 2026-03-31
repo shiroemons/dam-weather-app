@@ -108,7 +108,10 @@ function PrefecturePage() {
       {!damsLoading && !weatherLoading && !damsError && !weatherError && (
         <>
           {weather?.updatedAt && (
-            <p className="mt-2 text-xs text-gray-400">更新日時: {weather.updatedAt}</p>
+            <p className="mt-2 text-xs text-gray-400">
+              更新日時:{" "}
+              {new Date(weather.updatedAt).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}
+            </p>
           )}
           <div className="mt-6">
             <DamGroupedGrid dams={dams} weather={weather} />
