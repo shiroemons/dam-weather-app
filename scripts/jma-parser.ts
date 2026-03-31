@@ -96,11 +96,7 @@ function emptyToNull(value: string | undefined): string | null {
  * Groups precipitation probability values by date and returns the maximum
  * non-empty value per date. Returns null if all values for a date are empty.
  */
-function maxPopByDate(
-  timeDefines: string[],
-  pops: string[],
-  targetDate: string
-): string | null {
+function maxPopByDate(timeDefines: string[], pops: string[], targetDate: string): string | null {
   let max: number | null = null;
 
   for (let i = 0; i < timeDefines.length; i++) {
@@ -133,7 +129,7 @@ function extractTemps(
   tempTimeSeries: JmaTimeSeries | undefined,
   areaIndex: number,
   todayDate: string,
-  tomorrowDate: string
+  tomorrowDate: string,
 ): { today: DayTemps; tomorrow: DayTemps } {
   const noData: DayTemps = { tempMax: null, tempMin: null };
 
@@ -176,7 +172,6 @@ function extractTemps(
 function extractWeekly(
   weeklyForecast: JmaForecast | undefined,
   areaCode: string,
-  weatherAreaIndex: number
 ): WeeklyForecast[] {
   if (!weeklyForecast) return [];
 
@@ -185,12 +180,15 @@ function extractWeekly(
 
   if (!weeklyWeatherSeries) return [];
 
-  const weatherArea = weeklyWeatherSeries.areas.find(
-    (a) => a.area.code === areaCode
-  );
+  // Weekly forecast uses prefecture-level area codes (e.g. "400000"),
+  // while short-term forecast uses class10s codes (e.g. "400010").
+  // Try exact match first, then fall back to the first area (one per prefecture).
+  const weatherArea =
+    weeklyWeatherSeries.areas.find((a) => a.area.code === areaCode) ?? weeklyWeatherSeries.areas[0];
   if (!weatherArea) return [];
 
-  const tempArea = weeklyTempSeries?.areas[weatherAreaIndex];
+  // Temperature data also has one area per prefecture; use the first one.
+  const tempArea = weeklyTempSeries?.areas[0];
   const timeDefines = weeklyWeatherSeries.timeDefines;
 
   const weekly: WeeklyForecast[] = [];
@@ -257,7 +255,7 @@ export function parseJmaForecast(data: JmaAny[]): AreaWeather[] {
       tempSeries,
       i,
       todayDate,
-      tomorrowDate
+      tomorrowDate,
     );
 
     const today: DayForecast = {
@@ -278,7 +276,7 @@ export function parseJmaForecast(data: JmaAny[]): AreaWeather[] {
       precipProbability: tomorrowPop,
     };
 
-    const weeklyForecasts = extractWeekly(weekly, areaCode, i);
+    const weeklyForecasts = extractWeekly(weekly, areaCode);
 
     results.push({
       areaCode,
