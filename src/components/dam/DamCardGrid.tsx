@@ -1,5 +1,5 @@
 import type { Dam } from "@/types/dam";
-import type { PrefectureWeather } from "@/types/weather";
+import type { DamWeather, PrefectureWeather } from "@/types/weather";
 
 import DamCard from "./DamCard";
 
@@ -16,8 +16,8 @@ export default function DamCardGrid({ dams, weather }: Props) {
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {dams.map((dam) => {
-        const areaWeather = weather?.areas.find((area) => area.areaCode === dam.jmaAreaCode);
-        return <DamCard key={dam.id} dam={dam} weather={areaWeather} />;
+        const damWeather: DamWeather | undefined = weather?.dams.find((dw) => dw.damId === dam.id);
+        return <DamCard key={dam.id} dam={dam} weather={damWeather} />;
       })}
     </div>
   );

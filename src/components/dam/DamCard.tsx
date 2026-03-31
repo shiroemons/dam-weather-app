@@ -1,19 +1,14 @@
-import { useState } from "react";
-
 import type { Dam } from "@/types/dam";
-import type { AreaWeather } from "@/types/weather";
+import type { DamWeather } from "@/types/weather";
 
 import DayWeather from "@/components/weather/DayWeather";
-import WeeklyForecastView from "@/components/weather/WeeklyForecast";
 
 type Props = {
   dam: Dam;
-  weather: AreaWeather | undefined;
+  weather: DamWeather | undefined;
 };
 
 export default function DamCard({ dam, weather }: Props) {
-  const [isWeeklyOpen, setIsWeeklyOpen] = useState(false);
-
   return (
     <div className="rounded-2xl bg-white shadow-sm p-5">
       <p className="text-lg font-semibold text-gray-900">{dam.damName}</p>
@@ -26,38 +21,14 @@ export default function DamCard({ dam, weather }: Props) {
           天気情報を取得できません
         </div>
       ) : (
-        <>
-          <div className="mt-4 flex gap-3">
-            <div className="flex-1">
-              <DayWeather forecast={weather.today} label="今日" />
-            </div>
-            <div className="flex-1">
-              <DayWeather forecast={weather.tomorrow} label="明日" />
-            </div>
+        <div className="mt-4 flex gap-3">
+          <div className="flex-1">
+            <DayWeather forecast={weather.today} label="今日" />
           </div>
-
-          <div className="mt-3">
-            <button
-              type="button"
-              onClick={() => setIsWeeklyOpen((prev) => !prev)}
-              className="flex w-full items-center justify-between px-1 py-2 text-sm font-medium text-gray-700"
-            >
-              <span>週間予報</span>
-              <span
-                className="text-gray-400 transition-transform duration-200"
-                style={{ transform: isWeeklyOpen ? "rotate(90deg)" : "rotate(0deg)" }}
-              >
-                ▶
-              </span>
-            </button>
-
-            {isWeeklyOpen && (
-              <div className="mt-2">
-                <WeeklyForecastView forecasts={weather.weekly} />
-              </div>
-            )}
+          <div className="flex-1">
+            <DayWeather forecast={weather.tomorrow} label="明日" />
           </div>
-        </>
+        </div>
       )}
     </div>
   );
