@@ -15,7 +15,7 @@ const SIZE_PX: Record<Size, number> = {
   lg: 56,
 };
 
-export default function WeatherIcon({ code, size = "md" }: Props): JSX.Element {
+export default function WeatherIcon({ code, size = "md" }: Props) {
   const [hasError, setHasError] = useState(false);
   const { label, iconUrl } = getWeatherInfo(code);
   const px = SIZE_PX[size];
@@ -32,13 +32,5 @@ export default function WeatherIcon({ code, size = "md" }: Props): JSX.Element {
     );
   }
 
-  return (
-    <img
-      src={iconUrl}
-      alt={label}
-      width={px}
-      height={px}
-      onError={() => setHasError(true)}
-    />
-  );
+  return <img src={iconUrl} alt={label} width={px} height={px} onError={() => setHasError(true)} />;
 }

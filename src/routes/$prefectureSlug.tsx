@@ -12,13 +12,22 @@ export const Route = createFileRoute("/$prefectureSlug")({
   component: PrefecturePage,
 });
 
-function PrefecturePage(): JSX.Element {
+function PrefecturePage() {
   const { prefectureSlug } = Route.useParams();
   const [majorOnly, setMajorOnly] = useState<boolean>(false);
 
   const prefecture = getPrefectureBySlug(prefectureSlug);
-  const dams = useFilteredDams(prefectureSlug, majorOnly);
-  const { data: weather, isLoading, isError, refetch } = useWeather(prefectureSlug);
+  const {
+    dams,
+    isLoading: damsLoading,
+    isError: damsError,
+  } = useFilteredDams(prefectureSlug, majorOnly);
+  const {
+    data: weather,
+    isLoading: weatherLoading,
+    isError: weatherError,
+    refetch,
+  } = useWeather(prefectureSlug);
 
   if (!prefecture) {
     return (
@@ -48,7 +57,7 @@ function PrefecturePage(): JSX.Element {
         <FilterToggle enabled={majorOnly} onChange={setMajorOnly} />
       </div>
 
-      {isLoading && (
+      {(damsLoading || weatherLoading) && (
         <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
             <DamCardSkeleton key={i} />
@@ -56,18 +65,16 @@ function PrefecturePage(): JSX.Element {
         </div>
       )}
 
-      {isError && (
+      {(damsError || weatherError) && (
         <div className="mt-6">
           <ErrorFallback resetErrorBoundary={() => refetch()} />
         </div>
       )}
 
-      {!isLoading && !isError && (
+      {!damsLoading && !weatherLoading && !damsError && !weatherError && (
         <>
           {weather?.updatedAt && (
-            <p className="mt-2 text-xs text-gray-400">
-              更新日時: {weather.updatedAt}
-            </p>
+            <p className="mt-2 text-xs text-gray-400">更新日時: {weather.updatedAt}</p>
           )}
           <div className="mt-6">
             <DamCardGrid dams={dams} weather={weather} />

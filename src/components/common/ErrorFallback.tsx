@@ -1,15 +1,15 @@
 type Props = {
-  error?: Error;
+  error?: unknown;
   resetErrorBoundary?: () => void;
 };
 
-export default function ErrorFallback({ error, resetErrorBoundary }: Props): JSX.Element {
+export default function ErrorFallback({ error, resetErrorBoundary }: Props) {
+  const errorMessage = error instanceof Error ? error.message : undefined;
+
   return (
     <div className="py-12 text-center">
       <p className="text-base font-semibold text-gray-900">データの読み込みに失敗しました</p>
-      {error && (
-        <p className="mt-2 text-sm text-gray-500">{error.message}</p>
-      )}
+      {errorMessage && <p className="mt-2 text-sm text-gray-500">{errorMessage}</p>}
       {resetErrorBoundary && (
         <button
           type="button"

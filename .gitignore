@@ -28,3 +28,6 @@ scripts/data/
 
 # Generated weather data (fetched from JMA API)
 public/weather/
+
+# Generated dam data (split by prefecture)
+public/data/dams/

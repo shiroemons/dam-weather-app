@@ -3,7 +3,7 @@ type Props = {
   onChange: (enabled: boolean) => void;
 };
 
-export default function FilterToggle({ enabled, onChange }: Props): JSX.Element {
+export default function FilterToggle({ enabled, onChange }: Props) {
   return (
     <div className="flex items-center gap-2">
       <span className="text-sm text-gray-600">主要ダムのみ</span>

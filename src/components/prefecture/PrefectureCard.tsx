@@ -6,7 +6,7 @@ type Props = {
   prefecture: Prefecture;
 };
 
-export default function PrefectureCard({ prefecture }: Props): JSX.Element {
+export default function PrefectureCard({ prefecture }: Props) {
   return (
     <Link
       to="/$prefectureSlug"

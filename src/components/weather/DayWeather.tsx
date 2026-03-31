@@ -7,7 +7,7 @@ type Props = {
   label: string;
 };
 
-export default function DayWeather({ forecast, label }: Props): JSX.Element {
+export default function DayWeather({ forecast, label }: Props) {
   const maxTemp = forecast.tempMax !== null ? `${forecast.tempMax}°C` : "--";
   const minTemp = forecast.tempMin !== null ? `${forecast.tempMin}°C` : "--";
 
@@ -21,9 +21,7 @@ export default function DayWeather({ forecast, label }: Props): JSX.Element {
         <span className="text-blue-500">{minTemp}</span>
       </div>
       {forecast.precipProbability !== null && (
-        <span className="text-xs text-blue-500">
-          ☂ {forecast.precipProbability}%
-        </span>
+        <span className="text-xs text-blue-500">☂ {forecast.precipProbability}%</span>
       )}
     </div>
   );

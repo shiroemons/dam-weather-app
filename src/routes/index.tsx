@@ -7,7 +7,7 @@ export const Route = createFileRoute("/")({
   component: IndexPage,
 });
 
-function IndexPage(): JSX.Element {
+function IndexPage() {
   const regions = getRegionsWithPrefectures();
 
   return (

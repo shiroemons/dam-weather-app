@@ -11,7 +11,7 @@ type Props = {
   weather: AreaWeather | undefined;
 };
 
-export default function DamCard({ dam, weather }: Props): JSX.Element {
+export default function DamCard({ dam, weather }: Props) {
   const [isWeeklyOpen, setIsWeeklyOpen] = useState(false);
 
   return (

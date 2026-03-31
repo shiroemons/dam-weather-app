@@ -1,4 +1,4 @@
-export default function DamCardSkeleton(): JSX.Element {
+export default function DamCardSkeleton() {
   return (
     <div className="rounded-2xl bg-white shadow-sm p-5 animate-pulse">
       <div className="h-5 w-3/5 bg-gray-200 rounded" />

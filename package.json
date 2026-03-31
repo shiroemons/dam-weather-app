@@ -8,7 +8,8 @@
     "build": "tsc -b && vp build",
     "lint": "eslint .",
     "preview": "vp preview",
-    "prepare": "vp config"
+    "prepare": "vp config",
+    "test": "vp test run"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.95.2",

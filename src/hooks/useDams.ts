@@ -1,28 +1,29 @@
 import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import type { Dam } from "@/types/dam";
 
-import damsData from "@/data/dams.json";
-import type { Dam } from "@/types/dam.ts";
-
-const dams = damsData as Dam[];
-
-export function useDams(prefectureSlug: string): Dam[] {
-  return useMemo(
-    () => dams.filter((dam) => dam.prefectureSlug === prefectureSlug),
-    [prefectureSlug],
-  );
+export function useDams(prefectureSlug: string) {
+  return useQuery<Dam[]>({
+    queryKey: ["dams", prefectureSlug],
+    queryFn: async () => {
+      const response = await fetch(`/data/dams/${prefectureSlug}.json`);
+      if (!response.ok) return [];
+      return response.json() as Promise<Dam[]>;
+    },
+    staleTime: Infinity,
+    enabled: !!prefectureSlug,
+  });
 }
 
-export function useFilteredDams(
-  prefectureSlug: string,
-  majorOnly: boolean,
-): Dam[] {
-  return useMemo(() => {
-    const prefectureDams = dams.filter(
-      (dam) => dam.prefectureSlug === prefectureSlug,
-    );
+export function useFilteredDams(prefectureSlug: string, majorOnly: boolean) {
+  const { data: dams = [], isLoading, isError } = useDams(prefectureSlug);
+
+  const filtered = useMemo(() => {
     if (majorOnly) {
-      return prefectureDams.filter((dam) => dam.isMajor);
+      return dams.filter((dam) => dam.isMajor);
     }
-    return prefectureDams;
-  }, [prefectureSlug, majorOnly]);
+    return dams;
+  }, [dams, majorOnly]);
+
+  return { dams: filtered, isLoading, isError };
 }

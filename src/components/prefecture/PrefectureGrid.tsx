@@ -7,7 +7,7 @@ type Props = {
   prefectures: Prefecture[];
 };
 
-export default function PrefectureGrid({ region, prefectures }: Props): JSX.Element {
+export default function PrefectureGrid({ region, prefectures }: Props) {
   return (
     <div>
       <h2 className="mb-3 text-xl font-semibold text-gray-900">{region}</h2>
