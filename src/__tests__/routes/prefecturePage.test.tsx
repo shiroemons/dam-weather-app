@@ -15,6 +15,7 @@ const mockDam: Dam = {
   latitude: 35.68,
   longitude: 139.76,
   damType: "重力式コンクリート",
+  waterSystem: "多摩川",
   riverName: "多摩川",
   totalStorageCapacity: 10000,
   damHeight: 50,

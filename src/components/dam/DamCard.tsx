@@ -1,7 +1,7 @@
 import type { Dam } from "@/types/dam";
 import type { DamWeather } from "@/types/weather";
 
-import { MapPin, Waves, Box } from "lucide-react";
+import { MapPin, Droplets, Waves, Box } from "lucide-react";
 import DayWeather from "@/components/weather/DayWeather";
 
 type Props = {
@@ -26,6 +26,10 @@ export default function DamCard({ dam, weather }: Props) {
             <span>{dam.address}</span>
           </div>
         )}
+        <div className="flex items-center gap-1.5 text-sm text-gray-500">
+          <Droplets className="size-3.5 shrink-0 text-cyan-400" />
+          <span>{dam.waterSystem}</span>
+        </div>
         <div className="flex items-center gap-1.5 text-sm text-gray-500">
           <Waves className="size-3.5 shrink-0 text-blue-400" />
           <span>{dam.riverName}</span>

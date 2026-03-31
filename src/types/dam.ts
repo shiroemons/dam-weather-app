@@ -7,6 +7,7 @@ export interface Dam {
   latitude: number;
   longitude: number;
   damType: string;
+  waterSystem: string;
   riverName: string;
   totalStorageCapacity: number | null;
   damHeight: number | null;

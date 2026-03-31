@@ -32,6 +32,7 @@ interface Dam {
   latitude: number;
   longitude: number;
   damType: string;
+  waterSystem: string;
   riverName: string;
   totalStorageCapacity: number | null;
   damHeight: number | null;
@@ -223,6 +224,7 @@ function main(): void {
 
     const damName = extractTagValue(block, "damName") ?? "";
     const damCode = extractTagValue(block, "damCode") ?? "";
+    const waterSystem = extractTagValue(block, "waterSystemName") ?? "";
     const riverName = extractTagValue(block, "riverName") ?? "";
     const typeCode = extractTagValue(block, "type") ?? "";
     const address = extractTagValue(block, "address") ?? "";
@@ -258,6 +260,7 @@ function main(): void {
       latitude,
       longitude,
       damType,
+      waterSystem,
       riverName,
       totalStorageCapacity,
       damHeight,
