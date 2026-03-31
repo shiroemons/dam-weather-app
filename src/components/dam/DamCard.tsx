@@ -3,6 +3,7 @@ import type { DamWeather } from "@/types/weather";
 
 import { MapPin, Droplets, Waves, Box, ExternalLink } from "lucide-react";
 import DayWeather from "@/components/weather/DayWeather";
+import { PURPOSE_SHORT_MAP } from "@/data/purposes";
 
 type Props = {
   dam: Dam;
@@ -19,6 +20,18 @@ export default function DamCard({ dam, weather }: Props) {
       <div className="flex items-start justify-between gap-2">
         <p className="text-lg font-semibold text-gray-900">{dam.damName}</p>
         <div className="flex items-center gap-1.5">
+          {dam.purposes.map((purpose) => {
+            const short = PURPOSE_SHORT_MAP.get(purpose);
+            return short ? (
+              <span
+                key={purpose}
+                title={purpose}
+                className="shrink-0 rounded-full bg-amber-50 px-1.5 py-0.5 text-xs font-medium text-amber-600"
+              >
+                {short}
+              </span>
+            ) : null;
+          })}
           <a
             href={riverInfoUrl}
             target="_blank"

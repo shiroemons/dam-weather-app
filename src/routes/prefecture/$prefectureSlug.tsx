@@ -7,6 +7,7 @@ import DamGroupedGrid from "@/components/dam/DamGroupedGrid";
 import DamCardSkeleton from "@/components/dam/DamCardSkeleton";
 import FilterToggle from "@/components/dam/FilterToggle";
 import GroupBySelector from "@/components/dam/GroupBySelector";
+import PurposeFilter from "@/components/dam/PurposeFilter";
 import type { GroupByMode } from "@/components/dam/DamGroupedGrid";
 import ErrorFallback from "@/components/common/ErrorFallback";
 import { SITE_NAME, SITE_URL } from "@/config/seo";
@@ -52,14 +53,16 @@ function PrefecturePage() {
   const { prefectureSlug } = Route.useParams();
   const [majorOnly, setMajorOnly] = useState<boolean>(true);
   const [groupBy, setGroupBy] = useState<GroupByMode>("waterSystem");
+  const [selectedPurposes, setSelectedPurposes] = useState<Set<string>>(new Set());
 
   const prefecture = getPrefectureBySlug(prefectureSlug);
   const {
     dams,
     totalCount,
+    availablePurposes,
     isLoading: damsLoading,
     isError: damsError,
-  } = useFilteredDams(prefectureSlug, majorOnly);
+  } = useFilteredDams(prefectureSlug, majorOnly, selectedPurposes);
   const {
     data: weather,
     isLoading: weatherLoading,
@@ -99,6 +102,16 @@ function PrefecturePage() {
           <FilterToggle enabled={majorOnly} onChange={setMajorOnly} />
         </div>
       </div>
+
+      {availablePurposes.length > 0 && (
+        <div className="mt-3">
+          <PurposeFilter
+            selected={selectedPurposes}
+            available={availablePurposes}
+            onChange={setSelectedPurposes}
+          />
+        </div>
+      )}
 
       {(damsLoading || weatherLoading) && (
         <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">

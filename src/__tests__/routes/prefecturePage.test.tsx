@@ -23,6 +23,7 @@ const mockDam: Dam = {
   address: "東京都西多摩郡奥多摩町",
   municipality: "西多摩郡奥多摩町",
   isMajor: true,
+  purposes: ["洪水調節・農地防災", "上水道用水"],
 };
 
 const mockMajorDam: Dam = { ...mockDam, id: "dam-1", damName: "主要ダム", isMajor: true };
@@ -74,7 +75,7 @@ describe("都道府県ページ", () => {
     it("ダム名と基本情報を表示する", () => {
       render(<DamCard dam={mockDam} weather={undefined} />);
       expect(screen.getByText("テストダム")).toBeInTheDocument();
-      expect(screen.getByText("多摩川")).toBeInTheDocument();
+      expect(screen.getAllByText("多摩川")).toHaveLength(2);
       expect(screen.getByText("重力式コンクリート")).toBeInTheDocument();
     });
 
