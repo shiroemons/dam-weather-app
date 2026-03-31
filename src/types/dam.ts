@@ -16,4 +16,5 @@ export interface Dam {
   municipality: string;
   riverUrl?: string;
   isMajor: boolean;
+  purposes: string[];
 }

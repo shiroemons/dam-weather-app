@@ -40,6 +40,7 @@ interface Dam {
   address: string;
   municipality: string;
   isMajor: boolean;
+  purposes: string[];
 }
 
 interface PrefectureInfo {
@@ -106,6 +107,17 @@ const PREFECTURES: PrefectureInfo[] = [
 // Dam type code map
 // ---------------------------------------------------------------------------
 
+const PURPOSE_MAP: Record<string, string> = {
+  "1": "洪水調節・農地防災",
+  "2": "不特定用水・河川維持用水",
+  "3": "灌漑・特定灌漑用水",
+  "4": "上水道用水",
+  "5": "工業用水道用水",
+  "6": "発電",
+  "7": "消流雪用水",
+  "8": "レクリエーション",
+};
+
 const DAM_TYPE_MAP: Record<string, string> = {
   "1": "アーチ",
   "2": "バットレス",
@@ -125,6 +137,16 @@ const DAM_TYPE_MAP: Record<string, string> = {
 // ---------------------------------------------------------------------------
 // GML parsing helpers
 // ---------------------------------------------------------------------------
+
+function extractAllTagValues(block: string, tag: string): string[] {
+  const re = new RegExp(`<ksj:${tag}>([^<]*)<\\/ksj:${tag}>`, "g");
+  const values: string[] = [];
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(block)) !== null) {
+    values.push(m[1].trim());
+  }
+  return values;
+}
 
 function extractTagValue(block: string, tag: string): string | null {
   const re = new RegExp(`<ksj:${tag}>([^<]*)<\\/ksj:${tag}>`);
@@ -243,6 +265,11 @@ function main(): void {
 
     const damType = DAM_TYPE_MAP[typeCode] ?? typeCode;
 
+    const purposeCodes = extractAllTagValues(block, "purpose");
+    const purposes = purposeCodes
+      .map((code) => PURPOSE_MAP[code])
+      .filter((name): name is string => name !== undefined);
+
     const pref = matchPrefecture(address);
     if (!pref) {
       missingPrefecture.push(damName || damCode);
@@ -268,6 +295,7 @@ function main(): void {
       address,
       municipality,
       isMajor: damHeight !== null && damHeight >= 15,
+      purposes,
     });
   }
 
