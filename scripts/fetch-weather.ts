@@ -4,7 +4,7 @@
  * Fetches weather forecast data for all dams from Open-Meteo API
  * and saves them as prefecture-grouped JSON files under public/weather/.
  *
- * Usage: npx tsx scripts/fetch-weather.ts
+ * Usage: npx tsx scripts/fetch-weather.ts [--limit N]
  */
 
 import fs from "node:fs";
@@ -24,9 +24,10 @@ const OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast";
 // Constants
 // ---------------------------------------------------------------------------
 
-const BATCH_SIZE = 1000;
-const MAX_RETRIES = 3;
-const BATCH_DELAY_MS = 1000;
+const BATCH_SIZE = 200;
+const MAX_RETRIES = 5;
+const BATCH_DELAY_MS = 1500;
+const COORD_PRECISION = 2;
 
 // ---------------------------------------------------------------------------
 // Types
@@ -72,6 +73,12 @@ interface OpenMeteoDaily {
 
 interface OpenMeteoResponse {
   daily: OpenMeteoDaily;
+}
+
+interface CoordGroup {
+  lat: number;
+  lng: number;
+  damIds: string[];
 }
 
 // ---------------------------------------------------------------------------
@@ -134,30 +141,52 @@ function buildDayForecast(daily: OpenMeteoDaily, index: number): DayForecast {
   };
 }
 
+function coordKey(lat: number, lng: number): string {
+  const f = Math.pow(10, COORD_PRECISION);
+  return `${Math.round(lat * f) / f},${Math.round(lng * f) / f}`;
+}
+
+function groupByCoord(dams: DamEntry[]): CoordGroup[] {
+  const map = new Map<string, CoordGroup>();
+
+  for (const dam of dams) {
+    const key = coordKey(dam.latitude, dam.longitude);
+    const existing = map.get(key);
+    if (existing) {
+      existing.damIds.push(dam.id);
+    } else {
+      const f = Math.pow(10, COORD_PRECISION);
+      map.set(key, {
+        lat: Math.round(dam.latitude * f) / f,
+        lng: Math.round(dam.longitude * f) / f,
+        damIds: [dam.id],
+      });
+    }
+  }
+
+  return Array.from(map.values());
+}
+
 // ---------------------------------------------------------------------------
 // Open-Meteo fetch with retry
 // ---------------------------------------------------------------------------
 
-async function fetchBatch(dams: DamEntry[], attempt = 1): Promise<OpenMeteoResponse[]> {
-  const latitudes = dams.map((d) => d.latitude).join(",");
-  const longitudes = dams.map((d) => d.longitude).join(",");
+async function fetchBatch(coords: CoordGroup[], attempt = 1): Promise<OpenMeteoResponse[]> {
+  const latitudes = coords.map((c) => c.lat).join(",");
+  const longitudes = coords.map((c) => c.lng).join(",");
+  const daily =
+    "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max";
 
-  const params = new URLSearchParams({
-    latitude: latitudes,
-    longitude: longitudes,
-    daily:
-      "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max",
-    timezone: "Asia/Tokyo",
-    forecast_days: "2",
-  });
+  const url = `${OPEN_METEO_URL}?latitude=${latitudes}&longitude=${longitudes}&daily=${daily}&timezone=Asia%2FTokyo&forecast_days=2`;
 
-  const res = await fetch(`${OPEN_METEO_URL}?${params.toString()}`);
+  const res = await fetch(url);
   if (!res.ok) {
     const message = `HTTP ${res.status} ${res.statusText}`;
     if (attempt < MAX_RETRIES) {
-      console.warn(`  Retry ${attempt}/${MAX_RETRIES - 1}: ${message}`);
-      await sleep(BATCH_DELAY_MS * attempt);
-      return fetchBatch(dams, attempt + 1);
+      const waitMs = BATCH_DELAY_MS * Math.pow(2, attempt - 1);
+      console.warn(`  Retry ${attempt}/${MAX_RETRIES - 1}: ${message} (wait ${waitMs}ms)`);
+      await sleep(waitMs);
+      return fetchBatch(coords, attempt + 1);
     }
     throw new Error(message);
   }
@@ -171,22 +200,35 @@ async function fetchBatch(dams: DamEntry[], attempt = 1): Promise<OpenMeteoRespo
 // ---------------------------------------------------------------------------
 
 async function main(): Promise<void> {
+  // Parse --limit argument
+  const limitArg = process.argv.indexOf("--limit");
+  const limit = limitArg !== -1 ? parseInt(process.argv[limitArg + 1]) : undefined;
+
   if (!fs.existsSync(OUTPUT_DIR)) {
     fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   }
 
   const allDams = JSON.parse(fs.readFileSync(DAMS_JSON_PATH, "utf-8")) as DamEntry[];
-
   console.log(`Loaded ${allDams.length} dams from dams.json`);
 
-  const damWeatherMap = new Map<string, DamWeather>();
+  // Group dams by rounded coordinates
+  const allCoordGroups = groupByCoord(allDams);
+  console.log(`Unique coordinates: ${allCoordGroups.length} (from ${allDams.length} dams)`);
+
+  const coordGroups = limit !== undefined ? allCoordGroups.slice(0, limit) : allCoordGroups;
+  if (limit !== undefined) {
+    console.log(`Limiting to ${coordGroups.length} unique coordinates (--limit ${limit})`);
+  }
+
+  // Fetch weather data per unique coordinate batch
+  const weatherByCoordKey = new Map<string, OpenMeteoResponse>();
   let batchIndex = 0;
 
-  for (let i = 0; i < allDams.length; i += BATCH_SIZE) {
-    const batch = allDams.slice(i, i + BATCH_SIZE);
+  for (let i = 0; i < coordGroups.length; i += BATCH_SIZE) {
+    const batch = coordGroups.slice(i, i + BATCH_SIZE);
     batchIndex++;
     console.log(
-      `\nBatch ${batchIndex}: fetching ${batch.length} dams (index ${i}–${i + batch.length - 1})...`,
+      `\nBatch ${batchIndex}: fetching ${batch.length} coordinates (index ${i}–${i + batch.length - 1})...`,
     );
 
     let responses: OpenMeteoResponse[];
@@ -194,30 +236,40 @@ async function main(): Promise<void> {
       responses = await fetchBatch(batch);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
-      console.error(`  ✗ Batch ${batchIndex} failed: ${message}`);
-      if (i + BATCH_SIZE < allDams.length) {
+      console.error(`  Batch ${batchIndex} failed: ${message}`);
+      if (i + BATCH_SIZE < coordGroups.length) {
         await sleep(BATCH_DELAY_MS);
       }
       continue;
     }
 
     for (let j = 0; j < batch.length; j++) {
-      const dam = batch[j];
+      const group = batch[j];
       const res = responses[j];
-      if (!dam || !res) continue;
-
-      damWeatherMap.set(dam.id, {
-        damId: dam.id,
-        today: buildDayForecast(res.daily, 0),
-        tomorrow: buildDayForecast(res.daily, 1),
-      });
+      if (!group || !res) continue;
+      weatherByCoordKey.set(coordKey(group.lat, group.lng), res);
     }
 
-    console.log(`  ✓ ${responses.length} responses processed`);
+    console.log(`  ${responses.length} responses processed`);
 
-    if (i + BATCH_SIZE < allDams.length) {
+    if (i + BATCH_SIZE < coordGroups.length) {
       await sleep(BATCH_DELAY_MS);
     }
+  }
+
+  // Map weather responses back to each dam via coordinate key
+  const damWeatherMap = new Map<string, DamWeather>();
+
+  for (const dam of allDams) {
+    const key = coordKey(dam.latitude, dam.longitude);
+    const res = weatherByCoordKey.get(key);
+    if (!res) continue;
+
+    damWeatherMap.set(dam.id, {
+      damId: dam.id,
+      today: buildDayForecast(res.daily, 0),
+      tomorrow: buildDayForecast(res.daily, 1),
+    });
   }
 
   // Group dams by prefecture and write JSON files
@@ -238,12 +290,15 @@ async function main(): Promise<void> {
     const outputPath = path.join(OUTPUT_DIR, `${prefectureSlug}.json`);
     fs.writeFileSync(outputPath, JSON.stringify(prefWeather, null, 2), "utf-8");
     successCount++;
-    console.log(`  ✓ ${dams.length} dams saved to ${prefectureSlug}.json`);
+    console.log(`  ${dams.length} dams saved to ${prefectureSlug}.json`);
   }
 
   console.log("\n=== Summary ===");
-  console.log(`Prefectures written: ${successCount}`);
+  console.log(`Total dams: ${allDams.length}`);
+  console.log(`Unique coordinates: ${allCoordGroups.length}`);
+  console.log(`Coordinates fetched: ${weatherByCoordKey.size}`);
   console.log(`Dams processed: ${damWeatherMap.size}/${allDams.length}`);
+  console.log(`Prefectures written: ${successCount}`);
   console.log(`\nOutput directory: ${OUTPUT_DIR}`);
 }
 
