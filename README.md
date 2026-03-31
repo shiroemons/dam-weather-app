@@ -4,34 +4,33 @@
 
 ## 概要
 
-都道府県を選択すると、その県内のダム一覧がカード型UIで表示され、各ダムの天気情報（今日・明日・週間予報）を確認できます。
+都道府県を選択すると、その県内のダム一覧がカード型UIで表示され、各ダムの天気情報（今日・明日の天気・気温・降水確率・降水量）を確認できます。
 
 ## 主な機能
 
 - 都道府県別のダム天気一覧表示
-- 今日・明日の天気（アイコン・気温・降水確率）
-- 7日間の週間天気予報
+- 今日・明日の天気（アイコン・気温・降水確率・降水量）
 - 主要ダム/全ダムの表示切替フィルタ
 - レスポンシブ対応（PC・モバイル）
 
 ## 技術スタック
 
-| カテゴリ | 技術 |
-|---------|------|
+| カテゴリ       | 技術                                     |
+| -------------- | ---------------------------------------- |
 | ツールチェーン | [VitePlus](https://viteplus.dev/) (`vp`) |
-| フレームワーク | React |
-| 言語 | TypeScript |
-| ルーティング | TanStack Router |
-| スタイリング | Tailwind CSS |
-| データフェッチ | TanStack Query |
-| テスト | Vitest |
-| デプロイ | Cloudflare Pages |
-| CI/CD | GitHub Actions |
+| フレームワーク | React                                    |
+| 言語           | TypeScript                               |
+| ルーティング   | TanStack Router                          |
+| スタイリング   | Tailwind CSS                             |
+| データフェッチ | TanStack Query                           |
+| テスト         | Vitest                                   |
+| デプロイ       | Cloudflare Pages                         |
+| CI/CD          | GitHub Actions                           |
 
 ## データソース
 
 - **ダムデータ**: [国土数値情報 ダムデータ（W01）](https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-W01.html)（約2,700基）
-- **天気データ**: [気象庁API](https://www.jma.go.jp/bosai/forecast/)（GitHub Actionsで1日2回取得し静的JSONとしてビルド）
+- **天気データ**: [Open-Meteo API](https://open-meteo.com/)（各ダムの緯度経度からピンポイント天気を取得、GitHub Actionsで1日2回更新）
 
 ## セットアップ
 
@@ -79,9 +78,9 @@ vp fmt      # フォーマットのみ
 
 ## URL設計
 
-| パス | 画面 |
-|------|------|
-| `/` | 都道府県一覧（トップ） |
+| パス            | 画面                                     |
+| --------------- | ---------------------------------------- |
+| `/`             | 都道府県一覧（トップ）                   |
 | `/{prefecture}` | 都道府県別ダム天気一覧（例: `/fukuoka`） |
 
 ## アーキテクチャ
@@ -91,8 +90,9 @@ vp fmt      # フォーマットのみ
 ```
 GitHub Actions (1日2回: 6:00, 12:00 JST)
   │
-  ├─ 気象庁APIから全都道府県の天気データ取得
-  ├─ パース・整形して public/weather/{slug}.json に保存
+  ├─ 全ダムの緯度経度をOpen-Meteo APIにバルクリクエスト
+  │   （近接ダムは座標を丸めて重複排除、約2,600地点）
+  ├─ 都道府県別JSONに整形して public/weather/{slug}.json に保存
   ├─ vp build
   └─ Cloudflare Pages にデプロイ
 ```
@@ -102,7 +102,7 @@ GitHub Actions (1日2回: 6:00, 12:00 JST)
 ```
 dam-weather-app/
 ├── .github/workflows/     # CI/CD（天気データ取得 + ビルド + デプロイ）
-├── scripts/               # 気象庁API取得スクリプト
+├── scripts/               # Open-Meteo天気データ取得スクリプト
 ├── public/weather/        # SSG天気データ（ビルド時生成）
 ├── src/
 │   ├── components/        # UIコンポーネント
@@ -123,4 +123,5 @@ dam-weather-app/
 ## ライセンス
 
 - ダムデータ: 国土数値情報（非商用利用）
-- 天気データ: 気象庁（公開データ）
+- 天気データ: [Open-Meteo](https://open-meteo.com/)（非商用利用、APIキー不要）
+- 天気アイコン: [Meteocons](https://github.com/basmilius/weather-icons) by Bas Milius
