@@ -25,5 +25,5 @@ export function useFilteredDams(prefectureSlug: string, majorOnly: boolean) {
     return dams;
   }, [dams, majorOnly]);
 
-  return { dams: filtered, isLoading, isError };
+  return { dams: filtered, totalCount: dams.length, isLoading, isError };
 }

@@ -56,6 +56,7 @@ function PrefecturePage() {
   const prefecture = getPrefectureBySlug(prefectureSlug);
   const {
     dams,
+    totalCount,
     isLoading: damsLoading,
     isError: damsError,
   } = useFilteredDams(prefectureSlug, majorOnly);
@@ -89,7 +90,9 @@ function PrefecturePage() {
       <div className="mt-4 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">{prefecture.name}</h1>
-          <p className="mt-1 text-sm text-gray-500">{dams.length}基のダム</p>
+          <p className="mt-1 text-sm text-gray-500">
+            {dams.length}基のダム{majorOnly && totalCount > dams.length && ` / 全${totalCount}基`}
+          </p>
         </div>
         <div className="flex items-center gap-4">
           <GroupBySelector value={groupBy} onChange={setGroupBy} />
