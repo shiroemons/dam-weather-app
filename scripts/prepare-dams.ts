@@ -7,6 +7,7 @@
  * Usage: npx tsx scripts/prepare-dams.ts
  */
 
+import { execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -338,6 +339,19 @@ function main(): void {
   }
 
   console.log(`\nOutput written to: ${OUTPUT_PATH}`);
+
+  // Run downstream scripts
+  console.log("\n--- Running merge-river-links.ts ---");
+  execSync("npx tsx scripts/merge-river-links.ts", {
+    cwd: path.join(__dirname, ".."),
+    stdio: "inherit",
+  });
+
+  console.log("\n--- Running split-dams.ts ---");
+  execSync("npx tsx scripts/split-dams.ts", {
+    cwd: path.join(__dirname, ".."),
+    stdio: "inherit",
+  });
 }
 
 main();
