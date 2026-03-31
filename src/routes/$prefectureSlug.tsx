@@ -4,7 +4,9 @@ import { getPrefectureBySlug } from "@/data/prefectures";
 import { useFilteredDams } from "@/hooks/useDams";
 import { useWeather } from "@/hooks/useWeather";
 import DamCardGrid from "@/components/dam/DamCardGrid";
+import DamCardSkeleton from "@/components/dam/DamCardSkeleton";
 import FilterToggle from "@/components/dam/FilterToggle";
+import ErrorFallback from "@/components/common/ErrorFallback";
 
 export const Route = createFileRoute("/$prefectureSlug")({
   component: PrefecturePage,
@@ -16,12 +18,18 @@ function PrefecturePage(): JSX.Element {
 
   const prefecture = getPrefectureBySlug(prefectureSlug);
   const dams = useFilteredDams(prefectureSlug, majorOnly);
-  const { data: weather, isLoading, isError } = useWeather(prefectureSlug);
+  const { data: weather, isLoading, isError, refetch } = useWeather(prefectureSlug);
 
   if (!prefecture) {
     return (
       <div className="mx-auto max-w-6xl px-4 py-8">
-        <p className="text-gray-500">都道府県が見つかりません</p>
+        <Link to="/" className="text-sm text-blue-500 hover:text-blue-700">
+          ← 一覧に戻る
+        </Link>
+        <div className="mt-12 text-center">
+          <p className="text-lg font-semibold text-gray-900">404</p>
+          <p className="mt-2 text-gray-500">都道府県が見つかりません</p>
+        </div>
       </div>
     );
   }
@@ -41,22 +49,31 @@ function PrefecturePage(): JSX.Element {
       </div>
 
       {isLoading && (
-        <p className="mt-4 text-sm text-gray-500">読み込み中...</p>
+        <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <DamCardSkeleton key={i} />
+          ))}
+        </div>
       )}
 
       {isError && (
-        <p className="mt-4 text-sm text-red-500">天気情報の取得に失敗しました</p>
+        <div className="mt-6">
+          <ErrorFallback resetErrorBoundary={() => refetch()} />
+        </div>
       )}
 
-      {weather?.updatedAt && (
-        <p className="mt-2 text-xs text-gray-400">
-          更新日時: {weather.updatedAt}
-        </p>
+      {!isLoading && !isError && (
+        <>
+          {weather?.updatedAt && (
+            <p className="mt-2 text-xs text-gray-400">
+              更新日時: {weather.updatedAt}
+            </p>
+          )}
+          <div className="mt-6">
+            <DamCardGrid dams={dams} weather={weather} />
+          </div>
+        </>
       )}
-
-      <div className="mt-6">
-        <DamCardGrid dams={dams} weather={weather} />
-      </div>
     </div>
   );
 }
