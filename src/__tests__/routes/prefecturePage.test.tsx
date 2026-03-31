@@ -30,9 +30,9 @@ const mockMinorDam: Dam = { ...mockDam, id: "dam-2", damName: "副次ダム", is
 
 describe("都道府県ページ", () => {
   describe("FilterToggle", () => {
-    it("「主要ダムのみ」ラベルを表示する", () => {
+    it("「観測所情報あり」ラベルを表示する", () => {
       render(<FilterToggle enabled={false} onChange={() => {}} />);
-      expect(screen.getByText("主要ダムのみ")).toBeInTheDocument();
+      expect(screen.getByText("観測所情報あり")).toBeInTheDocument();
     });
 
     it("スイッチの状態がaria-checkedに反映される", () => {
