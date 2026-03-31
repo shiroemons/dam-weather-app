@@ -44,8 +44,5 @@ export function getWeatherInfo(code: number): WeatherCodeInfo {
 }
 
 export function getWeatherIconUrl(iconName: string): string {
-  return new URL(
-    `../../../node_modules/@bybas/weather-icons/production/fill/all/${iconName}.svg`,
-    import.meta.url,
-  ).href;
+  return `/icons/weather/${iconName}.svg`;
 }
