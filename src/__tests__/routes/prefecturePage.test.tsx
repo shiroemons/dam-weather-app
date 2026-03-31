@@ -19,8 +19,6 @@ const mockDam: Dam = {
   totalStorageCapacity: 10000,
   damHeight: 50,
   completionYear: 2000,
-  jmaAreaCode: "130010",
-  jmaForecastCode: "130000",
   isMajor: true,
 };
 
