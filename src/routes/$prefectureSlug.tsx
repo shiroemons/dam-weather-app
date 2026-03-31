@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { getPrefectureBySlug } from "@/data/prefectures";
 import { useFilteredDams } from "@/hooks/useDams";
 import { useWeather } from "@/hooks/useWeather";
-import DamCardGrid from "@/components/dam/DamCardGrid";
+import DamGroupedGrid from "@/components/dam/DamGroupedGrid";
 import DamCardSkeleton from "@/components/dam/DamCardSkeleton";
 import FilterToggle from "@/components/dam/FilterToggle";
 import ErrorFallback from "@/components/common/ErrorFallback";
@@ -77,7 +77,7 @@ function PrefecturePage() {
             <p className="mt-2 text-xs text-gray-400">更新日時: {weather.updatedAt}</p>
           )}
           <div className="mt-6">
-            <DamCardGrid dams={dams} weather={weather} />
+            <DamGroupedGrid dams={dams} weather={weather} />
           </div>
         </>
       )}

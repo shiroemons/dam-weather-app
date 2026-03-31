@@ -36,6 +36,8 @@ interface Dam {
   totalStorageCapacity: number | null;
   damHeight: number | null;
   completionYear: number | null;
+  address: string;
+  municipality: string;
   isMajor: boolean;
 }
 
@@ -166,6 +168,32 @@ function matchPrefecture(address: string): PrefectureInfo | null {
   return null;
 }
 
+function extractMunicipality(address: string, prefectureName: string): string {
+  const rest = address.startsWith(prefectureName) ? address.slice(prefectureName.length) : address;
+
+  if (!rest) return "不明";
+
+  // 政令指定都市: ○○市○○区（区名は1〜4文字）
+  const seirei = rest.match(/^(.+?市[^市]{1,4}区)/);
+  if (seirei) return seirei[1];
+
+  // 郡+町村: ○○郡○○町/村
+  const gun = rest.match(/^(.+?郡.+?[町村])/);
+  if (gun) return gun[1];
+
+  // 通常の市: ○○市
+  const shi = rest.match(/^(.+?市)/);
+  if (shi) return shi[1];
+
+  // 町・村のみ
+  const chouson = rest.match(/^(.+?[町村])/);
+  if (chouson) return chouson[1];
+
+  // フォールバック
+  const fallback = rest.match(/^(.+?)(?:大字|字|番地)/);
+  return fallback ? fallback[1] : rest;
+}
+
 // ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
@@ -219,6 +247,8 @@ function main(): void {
       continue;
     }
 
+    const municipality = extractMunicipality(address, pref.name);
+
     dams.push({
       id: `dam-${damCode}`,
       damName,
@@ -232,14 +262,18 @@ function main(): void {
       totalStorageCapacity,
       damHeight,
       completionYear,
+      address,
+      municipality,
       isMajor: damHeight !== null && damHeight >= 15,
     });
   }
 
-  // Sort by prefectureCode, then damName
+  // Sort by prefectureCode, then municipality, then damName
   dams.sort((a, b) => {
     const codeCompare = a.prefectureCode.localeCompare(b.prefectureCode);
     if (codeCompare !== 0) return codeCompare;
+    const munCompare = a.municipality.localeCompare(b.municipality, "ja");
+    if (munCompare !== 0) return munCompare;
     return a.damName.localeCompare(b.damName, "ja");
   });
 

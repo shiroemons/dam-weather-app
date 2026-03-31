@@ -11,5 +11,7 @@ export interface Dam {
   totalStorageCapacity: number | null;
   damHeight: number | null;
   completionYear: number | null;
+  address: string;
+  municipality: string;
   isMajor: boolean;
 }
