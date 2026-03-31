@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-import { getWeatherInfo } from "@/lib/weatherCodes";
+import { getWeatherInfo, getWeatherIconUrl } from "@/lib/weatherCodes";
 
 type Size = "sm" | "md" | "lg";
 
 type Props = {
-  code: string;
+  code: number;
   size?: Size;
 };
 
@@ -17,7 +17,8 @@ const SIZE_PX: Record<Size, number> = {
 
 export default function WeatherIcon({ code, size = "md" }: Props) {
   const [hasError, setHasError] = useState(false);
-  const { label, iconUrl } = getWeatherInfo(code);
+  const { label, iconName } = getWeatherInfo(code);
+  const iconUrl = getWeatherIconUrl(iconName);
   const px = SIZE_PX[size];
 
   if (hasError) {

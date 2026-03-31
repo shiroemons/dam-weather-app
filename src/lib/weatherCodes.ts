@@ -1,146 +1,51 @@
-const JMA_ICON_BASE = "https://www.jma.go.jp/bosai/forecast/img";
-
 export interface WeatherCodeInfo {
   label: string;
-  iconUrl: string;
+  iconName: string;
 }
 
-function iconUrl(code: string): string {
-  return `${JMA_ICON_BASE}/${code}.svg`;
-}
-
-// 気象庁天気コードマッピング
-export const weatherCodes: Record<string, WeatherCodeInfo> = {
-  // 晴れ系
-  "100": { label: "晴れ", iconUrl: iconUrl("100") },
-  "101": { label: "晴れ時々曇り", iconUrl: iconUrl("101") },
-  "102": { label: "晴れ一時雨", iconUrl: iconUrl("102") },
-  "103": { label: "晴れ時々雨", iconUrl: iconUrl("103") },
-  "104": { label: "晴れ一時雪", iconUrl: iconUrl("104") },
-  "105": { label: "晴れ時々雪", iconUrl: iconUrl("105") },
-  "106": { label: "晴れ一時雨か雪", iconUrl: iconUrl("106") },
-  "107": { label: "晴れ時々雨か雪", iconUrl: iconUrl("107") },
-  "108": { label: "晴れ一時雨か雷雨", iconUrl: iconUrl("108") },
-  "110": { label: "晴れ後時々曇り", iconUrl: iconUrl("110") },
-  "111": { label: "晴れ後曇り", iconUrl: iconUrl("111") },
-  "112": { label: "晴れ後一時雨", iconUrl: iconUrl("112") },
-  "113": { label: "晴れ後時々雨", iconUrl: iconUrl("113") },
-  "114": { label: "晴れ後雨", iconUrl: iconUrl("114") },
-  "115": { label: "晴れ後一時雪", iconUrl: iconUrl("115") },
-  "116": { label: "晴れ後時々雪", iconUrl: iconUrl("116") },
-  "117": { label: "晴れ後雪", iconUrl: iconUrl("117") },
-  "118": { label: "晴れ後雨か雪", iconUrl: iconUrl("118") },
-  "119": { label: "晴れ後雨か雷雨", iconUrl: iconUrl("119") },
-  "120": { label: "晴れ朝夕一時雨", iconUrl: iconUrl("120") },
-  "121": { label: "晴れ朝の内一時雨", iconUrl: iconUrl("121") },
-  "122": { label: "晴れ夕方一時雨", iconUrl: iconUrl("122") },
-  "123": { label: "晴れ山沿い雷雨", iconUrl: iconUrl("123") },
-  "124": { label: "晴れ山沿い雪", iconUrl: iconUrl("124") },
-  "125": { label: "晴れ午後は雷雨", iconUrl: iconUrl("125") },
-  "126": { label: "晴れ昼頃から雨", iconUrl: iconUrl("126") },
-  "127": { label: "晴れ夕方から雨", iconUrl: iconUrl("127") },
-  "128": { label: "晴れ夜は雨", iconUrl: iconUrl("128") },
-  "130": { label: "朝の内霧後晴れ", iconUrl: iconUrl("130") },
-  "131": { label: "晴れ明け方霧", iconUrl: iconUrl("131") },
-  "132": { label: "晴れ朝夕曇り", iconUrl: iconUrl("132") },
-  "140": { label: "晴れ時々雨で雷を伴う", iconUrl: iconUrl("140") },
-  "160": { label: "晴れ一時雪か雨", iconUrl: iconUrl("160") },
-  "170": { label: "晴れ時々雪か雨", iconUrl: iconUrl("170") },
-
-  // 曇り系
-  "200": { label: "曇り", iconUrl: iconUrl("200") },
-  "201": { label: "曇り時々晴れ", iconUrl: iconUrl("201") },
-  "202": { label: "曇り一時雨", iconUrl: iconUrl("202") },
-  "203": { label: "曇り時々雨", iconUrl: iconUrl("203") },
-  "204": { label: "曇り一時雪", iconUrl: iconUrl("204") },
-  "205": { label: "曇り時々雪", iconUrl: iconUrl("205") },
-  "206": { label: "曇り一時雨か雪", iconUrl: iconUrl("206") },
-  "207": { label: "曇り時々雨か雪", iconUrl: iconUrl("207") },
-  "208": { label: "曇り一時雨か雷雨", iconUrl: iconUrl("208") },
-  "209": { label: "霧", iconUrl: iconUrl("209") },
-  "210": { label: "曇り後時々晴れ", iconUrl: iconUrl("210") },
-  "211": { label: "曇り後晴れ", iconUrl: iconUrl("211") },
-  "212": { label: "曇り後一時雨", iconUrl: iconUrl("212") },
-  "213": { label: "曇り後時々雨", iconUrl: iconUrl("213") },
-  "214": { label: "曇り後雨", iconUrl: iconUrl("214") },
-  "215": { label: "曇り後一時雪", iconUrl: iconUrl("215") },
-  "216": { label: "曇り後時々雪", iconUrl: iconUrl("216") },
-  "217": { label: "曇り後雪", iconUrl: iconUrl("217") },
-  "218": { label: "曇り後雨か雪", iconUrl: iconUrl("218") },
-  "219": { label: "曇り後雨か雷雨", iconUrl: iconUrl("219") },
-  "220": { label: "曇り朝夕一時雨", iconUrl: iconUrl("220") },
-  "221": { label: "曇り朝の内一時雨", iconUrl: iconUrl("221") },
-  "222": { label: "曇り夕方一時雨", iconUrl: iconUrl("222") },
-  "223": { label: "曇り日中時々晴れ", iconUrl: iconUrl("223") },
-  "224": { label: "曇り昼頃から雨", iconUrl: iconUrl("224") },
-  "225": { label: "曇り夕方から雨", iconUrl: iconUrl("225") },
-  "226": { label: "曇り夜は雨", iconUrl: iconUrl("226") },
-  "228": { label: "曇り昼頃から雪", iconUrl: iconUrl("228") },
-  "229": { label: "曇り夕方から雪", iconUrl: iconUrl("229") },
-  "230": { label: "曇り夜は雪", iconUrl: iconUrl("230") },
-  "231": { label: "曇り海上海岸は霧か霧雨", iconUrl: iconUrl("231") },
-  "240": { label: "曇り時々雨で雷を伴う", iconUrl: iconUrl("240") },
-  "250": { label: "曇り時々雪で雷を伴う", iconUrl: iconUrl("250") },
-  "260": { label: "曇り一時雪か雨", iconUrl: iconUrl("260") },
-  "270": { label: "曇り時々雪か雨", iconUrl: iconUrl("270") },
-
-  // 雨系
-  "300": { label: "雨", iconUrl: iconUrl("300") },
-  "301": { label: "雨時々晴れ", iconUrl: iconUrl("301") },
-  "302": { label: "雨時々止む", iconUrl: iconUrl("302") },
-  "303": { label: "雨時々雪", iconUrl: iconUrl("303") },
-  "304": { label: "雨か雪", iconUrl: iconUrl("304") },
-  "306": { label: "大雨", iconUrl: iconUrl("306") },
-  "308": { label: "雨で暴風を伴う", iconUrl: iconUrl("308") },
-  "309": { label: "雨一時雪", iconUrl: iconUrl("309") },
-  "311": { label: "雨後晴れ", iconUrl: iconUrl("311") },
-  "313": { label: "雨後曇り", iconUrl: iconUrl("313") },
-  "314": { label: "雨後時々雪", iconUrl: iconUrl("314") },
-  "315": { label: "雨後雪", iconUrl: iconUrl("315") },
-  "316": { label: "雨か雪後晴れ", iconUrl: iconUrl("316") },
-  "317": { label: "雨か雪後曇り", iconUrl: iconUrl("317") },
-  "320": { label: "朝の内雨後晴れ", iconUrl: iconUrl("320") },
-  "321": { label: "朝の内雨後曇り", iconUrl: iconUrl("321") },
-  "322": { label: "雨朝晩一時雪", iconUrl: iconUrl("322") },
-  "323": { label: "雨昼頃から晴れ", iconUrl: iconUrl("323") },
-  "324": { label: "雨夕方から晴れ", iconUrl: iconUrl("324") },
-  "325": { label: "雨夜は晴れ", iconUrl: iconUrl("325") },
-  "326": { label: "雨夕方から雪", iconUrl: iconUrl("326") },
-  "327": { label: "雨夜は雪", iconUrl: iconUrl("327") },
-  "328": { label: "雨一時強く降る", iconUrl: iconUrl("328") },
-  "329": { label: "雨一時みぞれ", iconUrl: iconUrl("329") },
-  "340": { label: "雪か雨", iconUrl: iconUrl("340") },
-  "350": { label: "雨で雷を伴う", iconUrl: iconUrl("350") },
-  "361": { label: "雪か雨後晴れ", iconUrl: iconUrl("361") },
-  "371": { label: "雪か雨後曇り", iconUrl: iconUrl("371") },
-
-  // 雪系
-  "400": { label: "雪", iconUrl: iconUrl("400") },
-  "401": { label: "雪時々晴れ", iconUrl: iconUrl("401") },
-  "402": { label: "雪時々止む", iconUrl: iconUrl("402") },
-  "403": { label: "雪時々雨", iconUrl: iconUrl("403") },
-  "405": { label: "大雪", iconUrl: iconUrl("405") },
-  "406": { label: "風雪強い", iconUrl: iconUrl("406") },
-  "407": { label: "暴風雪", iconUrl: iconUrl("407") },
-  "409": { label: "雪一時雨", iconUrl: iconUrl("409") },
-  "411": { label: "雪後晴れ", iconUrl: iconUrl("411") },
-  "413": { label: "雪後曇り", iconUrl: iconUrl("413") },
-  "414": { label: "雪後雨", iconUrl: iconUrl("414") },
-  "420": { label: "朝の内雪後晴れ", iconUrl: iconUrl("420") },
-  "421": { label: "朝の内雪後曇り", iconUrl: iconUrl("421") },
-  "422": { label: "雪昼頃から雨", iconUrl: iconUrl("422") },
-  "423": { label: "雪夕方から雨", iconUrl: iconUrl("423") },
-  "425": { label: "雪一時強く降る", iconUrl: iconUrl("425") },
-  "426": { label: "雪後みぞれ", iconUrl: iconUrl("426") },
-  "427": { label: "雪一時みぞれ", iconUrl: iconUrl("427") },
-  "450": { label: "雪で雷を伴う", iconUrl: iconUrl("450") },
+export const weatherCodes: Record<number, WeatherCodeInfo> = {
+  0: { label: "快晴", iconName: "clear-day" },
+  1: { label: "晴れ", iconName: "clear-day" },
+  2: { label: "一部曇り", iconName: "partly-cloudy-day" },
+  3: { label: "曇り", iconName: "overcast" },
+  45: { label: "霧", iconName: "fog" },
+  48: { label: "着氷性の霧", iconName: "fog" },
+  51: { label: "弱い霧雨", iconName: "drizzle" },
+  53: { label: "霧雨", iconName: "drizzle" },
+  55: { label: "強い霧雨", iconName: "drizzle" },
+  56: { label: "弱い着氷性霧雨", iconName: "drizzle" },
+  57: { label: "強い着氷性霧雨", iconName: "drizzle" },
+  61: { label: "弱い雨", iconName: "rain" },
+  63: { label: "雨", iconName: "rain" },
+  65: { label: "強い雨", iconName: "rain" },
+  66: { label: "弱い着氷性の雨", iconName: "rain" },
+  67: { label: "強い着氷性の雨", iconName: "rain" },
+  71: { label: "弱い雪", iconName: "snow" },
+  73: { label: "雪", iconName: "snow" },
+  75: { label: "強い雪", iconName: "snow" },
+  77: { label: "霧雪", iconName: "snow" },
+  80: { label: "弱いにわか雨", iconName: "partly-cloudy-day-rain" },
+  81: { label: "にわか雨", iconName: "rain" },
+  82: { label: "激しいにわか雨", iconName: "rain" },
+  85: { label: "弱いにわか雪", iconName: "partly-cloudy-day-snow" },
+  86: { label: "強いにわか雪", iconName: "snow" },
+  95: { label: "雷雨", iconName: "thunderstorms" },
+  96: { label: "雹を伴う雷雨", iconName: "thunderstorms-rain" },
+  99: { label: "激しい雹を伴う雷雨", iconName: "thunderstorms-rain" },
 };
 
 const FALLBACK_WEATHER_INFO: WeatherCodeInfo = {
   label: "不明",
-  iconUrl: iconUrl("000"),
+  iconName: "not-available",
 };
 
-export function getWeatherInfo(code: string): WeatherCodeInfo {
+export function getWeatherInfo(code: number): WeatherCodeInfo {
   return weatherCodes[code] ?? FALLBACK_WEATHER_INFO;
+}
+
+export function getWeatherIconUrl(iconName: string): string {
+  return new URL(
+    `../../../node_modules/@bybas/weather-icons/production/fill/all/${iconName}.svg`,
+    import.meta.url,
+  ).href;
 }
