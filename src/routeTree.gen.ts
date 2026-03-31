@@ -9,55 +9,59 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as PrefectureSlugRouteImport } from './routes/$prefectureSlug'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PrefectureIndexRouteImport } from './routes/prefecture/index'
+import { Route as PrefecturePrefectureSlugRouteImport } from './routes/prefecture/$prefectureSlug'
 
-const PrefectureSlugRoute = PrefectureSlugRouteImport.update({
-  id: '/$prefectureSlug',
-  path: '/$prefectureSlug',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrefectureIndexRoute = PrefectureIndexRouteImport.update({
+  id: '/prefecture/',
+  path: '/prefecture/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrefecturePrefectureSlugRoute =
+  PrefecturePrefectureSlugRouteImport.update({
+    id: '/prefecture/$prefectureSlug',
+    path: '/prefecture/$prefectureSlug',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/$prefectureSlug': typeof PrefectureSlugRoute
+  '/prefecture/$prefectureSlug': typeof PrefecturePrefectureSlugRoute
+  '/prefecture/': typeof PrefectureIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/$prefectureSlug': typeof PrefectureSlugRoute
+  '/prefecture/$prefectureSlug': typeof PrefecturePrefectureSlugRoute
+  '/prefecture': typeof PrefectureIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/$prefectureSlug': typeof PrefectureSlugRoute
+  '/prefecture/$prefectureSlug': typeof PrefecturePrefectureSlugRoute
+  '/prefecture/': typeof PrefectureIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$prefectureSlug'
+  fullPaths: '/' | '/prefecture/$prefectureSlug' | '/prefecture/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$prefectureSlug'
-  id: '__root__' | '/' | '/$prefectureSlug'
+  to: '/' | '/prefecture/$prefectureSlug' | '/prefecture'
+  id: '__root__' | '/' | '/prefecture/$prefectureSlug' | '/prefecture/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  PrefectureSlugRoute: typeof PrefectureSlugRoute
+  PrefecturePrefectureSlugRoute: typeof PrefecturePrefectureSlugRoute
+  PrefectureIndexRoute: typeof PrefectureIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/$prefectureSlug': {
-      id: '/$prefectureSlug'
-      path: '/$prefectureSlug'
-      fullPath: '/$prefectureSlug'
-      preLoaderRoute: typeof PrefectureSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -65,12 +69,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/prefecture/': {
+      id: '/prefecture/'
+      path: '/prefecture'
+      fullPath: '/prefecture/'
+      preLoaderRoute: typeof PrefectureIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prefecture/$prefectureSlug': {
+      id: '/prefecture/$prefectureSlug'
+      path: '/prefecture/$prefectureSlug'
+      fullPath: '/prefecture/$prefectureSlug'
+      preLoaderRoute: typeof PrefecturePrefectureSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  PrefectureSlugRoute: PrefectureSlugRoute,
+  PrefecturePrefectureSlugRoute: PrefecturePrefectureSlugRoute,
+  PrefectureIndexRoute: PrefectureIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

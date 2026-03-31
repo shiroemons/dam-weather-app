@@ -8,7 +8,7 @@ import DamCardSkeleton from "@/components/dam/DamCardSkeleton";
 import FilterToggle from "@/components/dam/FilterToggle";
 import ErrorFallback from "@/components/common/ErrorFallback";
 
-export const Route = createFileRoute("/$prefectureSlug")({
+export const Route = createFileRoute("/prefecture/$prefectureSlug")({
   component: PrefecturePage,
 });
 
@@ -32,7 +32,7 @@ function PrefecturePage() {
   if (!prefecture) {
     return (
       <div className="mx-auto max-w-6xl px-4 py-8">
-        <Link to="/" className="text-sm text-blue-500 hover:text-blue-700">
+        <Link to="/prefecture" className="text-sm text-blue-500 hover:text-blue-700">
           ← 一覧に戻る
         </Link>
         <div className="mt-12 text-center">
@@ -45,7 +45,7 @@ function PrefecturePage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <Link to="/" className="text-sm text-blue-500 hover:text-blue-700">
+      <Link to="/prefecture" className="text-sm text-blue-500 hover:text-blue-700">
         ← 一覧に戻る
       </Link>
 

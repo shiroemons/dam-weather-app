@@ -9,7 +9,7 @@ type Props = {
 export default function PrefectureCard({ prefecture }: Props) {
   return (
     <Link
-      to="/$prefectureSlug"
+      to="/prefecture/$prefectureSlug"
       params={{ prefectureSlug: prefecture.slug }}
       className="block rounded-2xl bg-white p-5 shadow-sm transition hover:shadow-md"
     >
