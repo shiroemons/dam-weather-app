@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dam-weather.pages.dev/sitemap.xml

@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vp dev",
-    "build": "tsc -b && vp build",
+    "build": "npx tsx scripts/generate-sitemap.ts && tsc -b && vp build",
+    "generate:sitemap": "npx tsx scripts/generate-sitemap.ts",
     "lint": "eslint .",
     "preview": "vp preview",
     "prepare": "vp config",

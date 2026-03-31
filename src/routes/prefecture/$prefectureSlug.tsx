@@ -7,8 +7,42 @@ import DamGroupedGrid from "@/components/dam/DamGroupedGrid";
 import DamCardSkeleton from "@/components/dam/DamCardSkeleton";
 import FilterToggle from "@/components/dam/FilterToggle";
 import ErrorFallback from "@/components/common/ErrorFallback";
+import { SITE_NAME, SITE_URL } from "@/config/seo";
 
 export const Route = createFileRoute("/prefecture/$prefectureSlug")({
+  head: ({ params }) => {
+    const prefecture = getPrefectureBySlug(params.prefectureSlug);
+    if (!prefecture) {
+      return {
+        meta: [{ title: `ページが見つかりません | ${SITE_NAME}` }],
+      };
+    }
+    const title = `${prefecture.name}のダム天気 | ${SITE_NAME}`;
+    const description = `${prefecture.name}にある${prefecture.damCount}基のダムの天気予報。ダム周辺の天気を確認できます。`;
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:url", content: `${SITE_URL}/prefecture/${prefecture.slug}` },
+        {
+          "script:ld+json": {
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            name: title,
+            description,
+            url: `${SITE_URL}/prefecture/${prefecture.slug}`,
+            isPartOf: {
+              "@type": "WebSite",
+              name: SITE_NAME,
+              url: `${SITE_URL}/prefecture`,
+            },
+          },
+        },
+      ],
+    };
+  },
   component: PrefecturePage,
 });
 

@@ -1,9 +1,34 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import PrefectureGrid from "@/components/prefecture/PrefectureGrid";
+import { SITE_NAME, SITE_URL } from "@/config/seo";
 import { getRegionsWithPrefectures } from "@/data/prefectures";
 
 export const Route = createFileRoute("/prefecture/")({
+  head: () => ({
+    meta: [
+      { title: `都道府県一覧 | ${SITE_NAME}` },
+      {
+        name: "description",
+        content: "全国47都道府県のダム天気情報。地方別にダムの天気予報を確認できます。",
+      },
+      { property: "og:title", content: `都道府県一覧 | ${SITE_NAME}` },
+      {
+        property: "og:description",
+        content: "全国47都道府県のダム天気情報。地方別にダムの天気予報を確認できます。",
+      },
+      { property: "og:url", content: `${SITE_URL}/prefecture` },
+      {
+        "script:ld+json": {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: SITE_NAME,
+          description: "全国のダムの天気予報をチェック",
+          url: `${SITE_URL}/prefecture`,
+        },
+      },
+    ],
+  }),
   component: PrefecturePage,
 });
 
