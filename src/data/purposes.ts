@@ -14,3 +14,7 @@ export type DamPurpose = (typeof DAM_PURPOSES)[number]["label"];
 export const PURPOSE_SHORT_MAP = new Map<string, string>(
   DAM_PURPOSES.map(({ label, short }) => [label, short]),
 );
+
+export const PURPOSE_SHORT_TO_LABEL = new Map<string, string>(
+  DAM_PURPOSES.map(({ label, short }) => [short, label]),
+);

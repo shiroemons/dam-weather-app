@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { DAM_TYPE_UNSET } from "@/data/damTypes";
 import type { Dam } from "@/types/dam";
 
 export function useDams(prefectureSlug: string) {
@@ -19,6 +20,7 @@ export function useFilteredDams(
   prefectureSlug: string,
   majorOnly: boolean,
   selectedPurposes: Set<string>,
+  selectedTypes: Set<string>,
 ) {
   const { data: dams = [], isLoading, isError } = useDams(prefectureSlug);
 
@@ -39,10 +41,33 @@ export function useFilteredDams(
     return Array.from(purposeSet);
   }, [baseDams]);
 
-  const filtered = useMemo(() => {
-    if (selectedPurposes.size === 0) return baseDams;
-    return baseDams.filter((dam) => dam.purposes.some((p) => selectedPurposes.has(p)));
-  }, [baseDams, selectedPurposes]);
+  const availableTypes = useMemo(() => {
+    const typeSet = new Set<string>();
+    for (const dam of baseDams) {
+      typeSet.add(dam.damType || DAM_TYPE_UNSET);
+    }
+    return Array.from(typeSet);
+  }, [baseDams]);
 
-  return { dams: filtered, totalCount: dams.length, availablePurposes, isLoading, isError };
+  const filtered = useMemo(() => {
+    return baseDams.filter((dam) => {
+      if (selectedPurposes.size > 0 && !dam.purposes.some((p) => selectedPurposes.has(p))) {
+        return false;
+      }
+      if (selectedTypes.size > 0) {
+        const damTypeLabel = dam.damType || DAM_TYPE_UNSET;
+        if (!selectedTypes.has(damTypeLabel)) return false;
+      }
+      return true;
+    });
+  }, [baseDams, selectedPurposes, selectedTypes]);
+
+  return {
+    dams: filtered,
+    totalCount: dams.length,
+    availablePurposes,
+    availableTypes,
+    isLoading,
+    isError,
+  };
 }

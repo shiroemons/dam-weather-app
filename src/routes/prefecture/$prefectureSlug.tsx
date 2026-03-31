@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useEffect, useMemo } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { getPrefectureBySlug } from "@/data/prefectures";
+import { PURPOSE_SHORT_MAP, PURPOSE_SHORT_TO_LABEL } from "@/data/purposes";
+import { DAM_TYPE_LABEL_TO_SHORT, DAM_TYPE_SHORT_TO_LABEL } from "@/data/damTypes";
 import { useFilteredDams } from "@/hooks/useDams";
 import { useWeather } from "@/hooks/useWeather";
 import DamGroupedGrid from "@/components/dam/DamGroupedGrid";
 import DamCardSkeleton from "@/components/dam/DamCardSkeleton";
+import DamTypeFilter from "@/components/dam/DamTypeFilter";
 import FilterToggle from "@/components/dam/FilterToggle";
 import GroupBySelector from "@/components/dam/GroupBySelector";
 import PurposeFilter from "@/components/dam/PurposeFilter";
@@ -13,6 +16,12 @@ import ErrorFallback from "@/components/common/ErrorFallback";
 import { SITE_NAME, SITE_URL } from "@/config/seo";
 
 export const Route = createFileRoute("/prefecture/$prefectureSlug")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    obs: search.obs === false || search.obs === "false" ? false : true,
+    group: search.group === "municipality" ? ("municipality" as const) : ("waterSystem" as const),
+    purposes: typeof search.purposes === "string" ? search.purposes : "",
+    types: typeof search.types === "string" ? search.types : "",
+  }),
   head: ({ params }) => {
     const prefecture = getPrefectureBySlug(params.prefectureSlug);
     if (!prefecture) {
@@ -51,18 +60,87 @@ export const Route = createFileRoute("/prefecture/$prefectureSlug")({
 
 function PrefecturePage() {
   const { prefectureSlug } = Route.useParams();
-  const [majorOnly, setMajorOnly] = useState<boolean>(true);
-  const [groupBy, setGroupBy] = useState<GroupByMode>("waterSystem");
-  const [selectedPurposes, setSelectedPurposes] = useState<Set<string>>(new Set());
+  const { obs, group, purposes, types } = Route.useSearch();
+  const navigate = Route.useNavigate();
+
+  useEffect(() => {
+    void navigate({
+      search: { obs, group, purposes, types },
+      replace: true,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const selectedPurposes = useMemo(
+    () =>
+      new Set(
+        purposes
+          ? (purposes
+              .split(",")
+              .map((s) => PURPOSE_SHORT_TO_LABEL.get(s))
+              .filter(Boolean) as string[])
+          : [],
+      ),
+    [purposes],
+  );
+  const selectedTypes = useMemo(
+    () =>
+      new Set(
+        types
+          ? (types
+              .split(",")
+              .map((s) => DAM_TYPE_SHORT_TO_LABEL.get(s))
+              .filter(Boolean) as string[])
+          : [],
+      ),
+    [types],
+  );
+
+  function setObsOnly(value: boolean): void {
+    void navigate({
+      search: (prev) => ({ ...prev, obs: value }),
+      replace: true,
+    });
+  }
+
+  function setGroupBy(value: GroupByMode): void {
+    void navigate({
+      search: (prev) => ({ ...prev, group: value }),
+      replace: true,
+    });
+  }
+
+  function setSelectedPurposes(selected: Set<string>): void {
+    const codes = Array.from(selected)
+      .map((label) => PURPOSE_SHORT_MAP.get(label))
+      .filter(Boolean)
+      .join(",");
+    void navigate({
+      search: (prev) => ({ ...prev, purposes: codes }),
+      replace: true,
+    });
+  }
+
+  function setSelectedTypes(selected: Set<string>): void {
+    const codes = Array.from(selected)
+      .map((label) => DAM_TYPE_LABEL_TO_SHORT.get(label))
+      .filter(Boolean)
+      .join(",");
+    void navigate({
+      search: (prev) => ({ ...prev, types: codes }),
+      replace: true,
+    });
+  }
 
   const prefecture = getPrefectureBySlug(prefectureSlug);
   const {
     dams,
     totalCount,
     availablePurposes,
+    availableTypes,
     isLoading: damsLoading,
     isError: damsError,
-  } = useFilteredDams(prefectureSlug, majorOnly, selectedPurposes);
+  } = useFilteredDams(prefectureSlug, obs, selectedPurposes, selectedTypes);
   const {
     data: weather,
     isLoading: weatherLoading,
@@ -94,21 +172,33 @@ function PrefecturePage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">{prefecture.name}</h1>
           <p className="mt-1 text-sm text-gray-500">
-            {dams.length}基のダム{majorOnly && totalCount > dams.length && ` / 全${totalCount}基`}
+            {dams.length}基のダム{obs && totalCount > dams.length && ` / 全${totalCount}基`}
           </p>
         </div>
         <div className="flex items-center gap-4">
-          <GroupBySelector value={groupBy} onChange={setGroupBy} />
-          <FilterToggle enabled={majorOnly} onChange={setMajorOnly} />
+          <GroupBySelector value={group} onChange={setGroupBy} />
+          <FilterToggle enabled={obs} onChange={setObsOnly} />
         </div>
       </div>
 
       {availablePurposes.length > 0 && (
         <div className="mt-3">
+          <p className="mb-1.5 text-xs font-medium text-gray-500">用途で絞り込み</p>
           <PurposeFilter
             selected={selectedPurposes}
             available={availablePurposes}
             onChange={setSelectedPurposes}
+          />
+        </div>
+      )}
+
+      {availableTypes.length > 0 && (
+        <div className="mt-3">
+          <p className="mb-1.5 text-xs font-medium text-gray-500">ダム形式で絞り込み</p>
+          <DamTypeFilter
+            selected={selectedTypes}
+            available={availableTypes}
+            onChange={setSelectedTypes}
           />
         </div>
       )}
@@ -136,7 +226,7 @@ function PrefecturePage() {
             </p>
           )}
           <div className="mt-6">
-            <DamGroupedGrid dams={dams} weather={weather} groupBy={groupBy} />
+            <DamGroupedGrid dams={dams} weather={weather} groupBy={group} />
           </div>
         </>
       )}
