@@ -19,6 +19,8 @@ const mockDam: Dam = {
   totalStorageCapacity: 10000,
   damHeight: 50,
   completionYear: 2000,
+  address: "東京都西多摩郡奥多摩町",
+  municipality: "西多摩郡奥多摩町",
   isMajor: true,
 };
 
@@ -71,7 +73,8 @@ describe("都道府県ページ", () => {
     it("ダム名と基本情報を表示する", () => {
       render(<DamCard dam={mockDam} weather={undefined} />);
       expect(screen.getByText("テストダム")).toBeInTheDocument();
-      expect(screen.getByText("多摩川 | 重力式コンクリート")).toBeInTheDocument();
+      expect(screen.getByText("多摩川")).toBeInTheDocument();
+      expect(screen.getByText("重力式コンクリート")).toBeInTheDocument();
     });
 
     it("天気データなしの場合、メッセージを表示する", () => {

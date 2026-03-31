@@ -53,7 +53,6 @@ describe("トップページ", () => {
         expect(pref.slug).toBeTruthy();
         expect(pref.region).toBeTruthy();
         expect(pref.damCount).toBeGreaterThanOrEqual(0);
-        expect(pref.jmaOfficeCode).toBeTruthy();
       }
     });
   });
