@@ -17,35 +17,48 @@ export default function DamCard({ dam, weather }: Props) {
 
   return (
     <div className="rounded-2xl bg-gradient-to-br from-gray-50 to-white p-5 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff]">
-      <div className="flex items-start justify-between gap-2">
-        <p className="text-lg font-semibold text-gray-900">{dam.damName}</p>
-        <div className="flex items-center gap-1.5">
+      {/* 1行目: ダム名 + 外部リンク */}
+      <div className="flex items-center justify-between gap-2">
+        <p className="whitespace-nowrap text-lg font-semibold text-gray-900">{dam.damName}</p>
+        <a
+          href={riverInfoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          title={dam.riverUrl ? "川の防災情報（詳細）" : "川の防災情報（地図）"}
+          className={`transition-colors hover:text-blue-500 ${dam.riverUrl ? "text-blue-500" : "text-gray-300"}`}
+        >
+          <ExternalLink className="size-4" />
+        </a>
+      </div>
+
+      {/* 2行目: 用途 */}
+      {dam.purposes.some((p) => PURPOSE_SHORT_MAP.has(p)) && (
+        <div className="mt-1 flex items-center gap-1.5 text-sm">
+          <span className="text-gray-500">用途：</span>
           {dam.purposes.map((purpose) => {
             const short = PURPOSE_SHORT_MAP.get(purpose);
             return short ? (
-              <span
-                key={purpose}
-                title={purpose}
-                className="shrink-0 rounded-full bg-amber-50 px-1.5 py-0.5 text-xs font-medium text-amber-600"
-              >
-                {short}
+              <span key={purpose} className="group/tooltip relative">
+                <span className="cursor-default rounded-full bg-amber-50 px-1.5 py-0.5 text-xs font-medium text-amber-600">
+                  {short}
+                </span>
+                <span className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover/tooltip:opacity-100 after:absolute after:left-1/2 after:top-full after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-800">
+                  {purpose}
+                </span>
               </span>
             ) : null;
           })}
-          <a
-            href={riverInfoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            title={dam.riverUrl ? "川の防災情報（詳細）" : "川の防災情報（地図）"}
-            className={`transition-colors hover:text-blue-500 ${dam.riverUrl ? "text-blue-500" : "text-gray-300"}`}
-          >
-            <ExternalLink className="size-4" />
-          </a>
-          <span className="shrink-0 rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-600 shadow-sm">
+        </div>
+      )}
+
+      {/* 3行目: ダム種別 */}
+      {dam.damType && (
+        <div className="mt-1">
+          <span className="rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-600 shadow-sm">
             {dam.damType}
           </span>
         </div>
-      </div>
+      )}
 
       <div className="mt-2 space-y-1">
         {dam.address && (
