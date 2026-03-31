@@ -1,31 +1,21 @@
 export interface DayForecast {
   date: string;
-  weatherCode: string;
+  weatherCode: number;
   weather: string;
-  tempMax: string | null;
-  tempMin: string | null;
-  precipProbability: string | null;
+  tempMax: number | null;
+  tempMin: number | null;
+  precipProbability: number | null;
+  precipitationSum: number | null;
 }
 
-export interface WeeklyForecast {
-  date: string;
-  weatherCode: string;
-  tempMax: string;
-  tempMin: string;
-  reliability: string;
-}
-
-export interface AreaWeather {
-  areaCode: string;
-  areaName: string;
+export interface DamWeather {
+  damId: string;
   today: DayForecast;
   tomorrow: DayForecast;
-  weekly: WeeklyForecast[];
-  publishedAt: string;
 }
 
 export interface PrefectureWeather {
   prefectureSlug: string;
   updatedAt: string;
-  areas: AreaWeather[];
+  dams: DamWeather[];
 }
