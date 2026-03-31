@@ -6,6 +6,8 @@ import { useWeather } from "@/hooks/useWeather";
 import DamGroupedGrid from "@/components/dam/DamGroupedGrid";
 import DamCardSkeleton from "@/components/dam/DamCardSkeleton";
 import FilterToggle from "@/components/dam/FilterToggle";
+import GroupBySelector from "@/components/dam/GroupBySelector";
+import type { GroupByMode } from "@/components/dam/DamGroupedGrid";
 import ErrorFallback from "@/components/common/ErrorFallback";
 import { SITE_NAME, SITE_URL } from "@/config/seo";
 
@@ -49,6 +51,7 @@ export const Route = createFileRoute("/prefecture/$prefectureSlug")({
 function PrefecturePage() {
   const { prefectureSlug } = Route.useParams();
   const [majorOnly, setMajorOnly] = useState<boolean>(false);
+  const [groupBy, setGroupBy] = useState<GroupByMode>("waterSystem");
 
   const prefecture = getPrefectureBySlug(prefectureSlug);
   const {
@@ -88,7 +91,10 @@ function PrefecturePage() {
           <h1 className="text-2xl font-bold text-gray-900">{prefecture.name}</h1>
           <p className="mt-1 text-sm text-gray-500">{dams.length}基のダム</p>
         </div>
-        <FilterToggle enabled={majorOnly} onChange={setMajorOnly} />
+        <div className="flex items-center gap-4">
+          <GroupBySelector value={groupBy} onChange={setGroupBy} />
+          <FilterToggle enabled={majorOnly} onChange={setMajorOnly} />
+        </div>
       </div>
 
       {(damsLoading || weatherLoading) && (
@@ -114,7 +120,7 @@ function PrefecturePage() {
             </p>
           )}
           <div className="mt-6">
-            <DamGroupedGrid dams={dams} weather={weather} />
+            <DamGroupedGrid dams={dams} weather={weather} groupBy={groupBy} />
           </div>
         </>
       )}
