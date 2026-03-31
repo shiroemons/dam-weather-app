@@ -24,9 +24,10 @@ const OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast";
 // Constants
 // ---------------------------------------------------------------------------
 
-const BATCH_SIZE = 200;
+const BATCH_SIZE = 500;
+const MAX_URL_LENGTH = 8000;
 const MAX_RETRIES = 5;
-const BATCH_DELAY_MS = 1500;
+const BATCH_DELAY_MS = 1000;
 const COORD_PRECISION = 2;
 
 // ---------------------------------------------------------------------------
@@ -171,20 +172,44 @@ function groupByCoord(dams: DamEntry[]): CoordGroup[] {
 // Open-Meteo fetch with retry
 // ---------------------------------------------------------------------------
 
-async function fetchBatch(coords: CoordGroup[], attempt = 1): Promise<OpenMeteoResponse[]> {
+function buildUrl(coords: CoordGroup[]): string {
   const latitudes = coords.map((c) => c.lat).join(",");
   const longitudes = coords.map((c) => c.lng).join(",");
   const daily =
     "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max";
+  return `${OPEN_METEO_URL}?latitude=${latitudes}&longitude=${longitudes}&daily=${daily}&timezone=Asia%2FTokyo&forecast_days=2`;
+}
 
-  const url = `${OPEN_METEO_URL}?latitude=${latitudes}&longitude=${longitudes}&daily=${daily}&timezone=Asia%2FTokyo&forecast_days=2`;
+async function fetchBatch(coords: CoordGroup[], attempt = 1): Promise<OpenMeteoResponse[]> {
+  const url = buildUrl(coords);
 
+  if (url.length > MAX_URL_LENGTH) {
+    // URL が長すぎる場合は半分に分割して再帰的に取得
+    const mid = Math.ceil(coords.length / 2);
+    console.warn(`  URL too long (${url.length} chars), splitting into 2 sub-batches`);
+    const [a, b] = await Promise.all([
+      fetchBatch(coords.slice(0, mid)),
+      fetchBatch(coords.slice(mid)),
+    ]);
+    return [...a, ...b];
+  }
+
+  console.log(`  URL length: ${url.length} chars (${coords.length} coords)`);
   const res = await fetch(url);
   if (!res.ok) {
     const message = `HTTP ${res.status} ${res.statusText}`;
     if (attempt < MAX_RETRIES) {
-      const waitMs = BATCH_DELAY_MS * Math.pow(2, attempt - 1);
-      console.warn(`  Retry ${attempt}/${MAX_RETRIES - 1}: ${message} (wait ${waitMs}ms)`);
+      let waitMs: number;
+      if (res.status === 429) {
+        const retryAfter = res.headers.get("Retry-After");
+        waitMs = retryAfter ? parseInt(retryAfter) * 1000 : 60_000;
+        console.warn(
+          `  429 Rate limited. Waiting ${waitMs / 1000}s (Retry-After: ${retryAfter ?? "none, default 60s"})`,
+        );
+      } else {
+        waitMs = BATCH_DELAY_MS * Math.pow(2, attempt - 1);
+        console.warn(`  Retry ${attempt}/${MAX_RETRIES - 1}: ${message} (wait ${waitMs}ms)`);
+      }
       await sleep(waitMs);
       return fetchBatch(coords, attempt + 1);
     }
