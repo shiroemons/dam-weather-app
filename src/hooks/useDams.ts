@@ -20,7 +20,7 @@ export function useFilteredDams(prefectureSlug: string, majorOnly: boolean) {
 
   const filtered = useMemo(() => {
     if (majorOnly) {
-      return dams.filter((dam) => dam.isMajor);
+      return dams.filter((dam) => dam.isMajor && dam.riverUrl);
     }
     return dams;
   }, [dams, majorOnly]);

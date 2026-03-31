@@ -50,7 +50,7 @@ export const Route = createFileRoute("/prefecture/$prefectureSlug")({
 
 function PrefecturePage() {
   const { prefectureSlug } = Route.useParams();
-  const [majorOnly, setMajorOnly] = useState<boolean>(false);
+  const [majorOnly, setMajorOnly] = useState<boolean>(true);
   const [groupBy, setGroupBy] = useState<GroupByMode>("waterSystem");
 
   const prefecture = getPrefectureBySlug(prefectureSlug);
