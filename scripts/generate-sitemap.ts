@@ -55,11 +55,23 @@ const PREFECTURE_SLUGS = [
   "okinawa",
 ];
 
+// Read all dam IDs from dams.json
+const damsPath = path.resolve(__dirname, "../src/data/dams.json");
+const damsData = JSON.parse(fs.readFileSync(damsPath, "utf-8")) as { id: string }[];
+
 const urls = [
+  { loc: `${SITE_URL}/`, priority: "1.0" },
   { loc: `${SITE_URL}/prefecture`, priority: "1.0" },
+  { loc: `${SITE_URL}/map`, priority: "0.7" },
+  { loc: `${SITE_URL}/today`, priority: "0.7" },
+  { loc: `${SITE_URL}/about`, priority: "0.5" },
   ...PREFECTURE_SLUGS.map((slug) => ({
     loc: `${SITE_URL}/prefecture/${slug}`,
     priority: "0.8",
+  })),
+  ...damsData.map((dam) => ({
+    loc: `${SITE_URL}/dam/${dam.id}`,
+    priority: "0.6",
   })),
 ];
 

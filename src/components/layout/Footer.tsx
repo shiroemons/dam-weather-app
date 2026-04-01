@@ -37,9 +37,31 @@ export default function Footer() {
           </div>
         </nav>
 
-        <div className="border-t border-gray-200 py-6 text-center text-xs text-gray-500 dark:border-gray-700 dark:text-gray-400">
-          <p>データ出典: 国土数値情報（国土交通省）・Open-Meteo</p>
-          <p className="mt-1">© {new Date().getFullYear()} 日本のダム天気</p>
+        <div className="flex flex-col items-center gap-4 border-t border-gray-200 py-6 dark:border-gray-700">
+          <div className="flex gap-4">
+            <Link
+              to="/map"
+              className="text-xs text-gray-500 transition-colors hover:text-sky-600 dark:text-gray-400 dark:hover:text-sky-400"
+            >
+              マップ
+            </Link>
+            <Link
+              to="/today"
+              className="text-xs text-gray-500 transition-colors hover:text-sky-600 dark:text-gray-400 dark:hover:text-sky-400"
+            >
+              今日の天気
+            </Link>
+            <Link
+              to="/about"
+              className="text-xs text-gray-500 transition-colors hover:text-sky-600 dark:text-gray-400 dark:hover:text-sky-400"
+            >
+              このサイトについて
+            </Link>
+          </div>
+          <div className="text-center text-xs text-gray-500 dark:text-gray-400">
+            <p>データ出典: 国土数値情報（国土交通省）・Open-Meteo</p>
+            <p className="mt-1">© {new Date().getFullYear()} 日本のダム天気</p>
+          </div>
         </div>
       </div>
     </footer>
