@@ -1,0 +1,41 @@
+name: Update Weather Data
+
+on:
+  schedule:
+    # 毎日 6:00 JST (21:00 UTC)
+    - cron: "0 21 * * *"
+    # 毎日 12:00 JST (03:00 UTC)
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      # リポジトリをチェックアウト
+      - uses: actions/checkout@v4
+
+      # Node.js + pnpm + vp のセットアップを一括で行う
+      - uses: voidzero-dev/setup-vp@v1
+        with:
+          cache: true
+
+      # 依存関係インストール
+      - run: vp install
+
+      # 天気データ取得
+      - id: fetch-weather
+        run: npx tsx scripts/fetch-weather.ts
+
+      # ビルド（天気データ取得成功時のみ実行）
+      - if: success()
+        run: vp build
+
+      # Cloudflare Pages へデプロイ（天気データ取得成功時のみ実行）
+      - if: success()
+        uses: cloudflare/wrangler-action@v3
+        with:
+          command: pages deploy dist --project-name=japan-dam-weather
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
