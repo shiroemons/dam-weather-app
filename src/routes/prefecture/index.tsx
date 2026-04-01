@@ -37,6 +37,7 @@ export const Route = createFileRoute("/prefecture/")({
 function PrefecturePage() {
   const regions = getRegionsWithPrefectures();
   const totalDamCount = PREFECTURES.reduce((sum, p) => sum + p.damCount, 0);
+  const totalObsCount = PREFECTURES.reduce((sum, p) => sum + p.obsCount, 0);
   const weatherCategories = usePrefectureWeatherCategories();
 
   return (
@@ -61,6 +62,11 @@ function PrefecturePage() {
               <span className="ml-1 text-base font-medium">基</span>
             </p>
             <p className="text-xs text-sky-200/80">河川法上のダム（堤高15m以上）</p>
+            <p className="mt-2 text-lg font-semibold sm:text-xl">
+              {totalObsCount.toLocaleString()}
+              <span className="ml-1 text-xs font-medium">基</span>
+            </p>
+            <p className="text-xs text-sky-200/80">観測所情報あり</p>
           </div>
         </div>
       </div>

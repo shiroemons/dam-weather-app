@@ -6,4 +6,5 @@ export interface Prefecture {
   slug: string;
   region: Region;
   damCount: number;
+  obsCount: number;
 }
