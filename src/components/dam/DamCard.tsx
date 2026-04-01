@@ -1,6 +1,7 @@
 import type { Dam } from "@/types/dam";
 import type { DamWeather } from "@/types/weather";
 
+import { Link } from "@tanstack/react-router";
 import { MapPin, Droplets, Waves, Box, ExternalLink } from "lucide-react";
 import DayWeather from "@/components/weather/DayWeather";
 import { PURPOSE_SHORT_MAP } from "@/data/purposes";
@@ -22,9 +23,13 @@ export default function DamCard({ dam, weather }: Props) {
     >
       {/* 1行目: ダム名 + 外部リンク */}
       <div className="flex items-center justify-between gap-2">
-        <p className="whitespace-nowrap text-lg font-semibold text-gray-900 dark:text-gray-100">
+        <Link
+          to="/dam/$damId"
+          params={{ damId: dam.id }}
+          className="whitespace-nowrap text-lg font-semibold text-gray-900 transition-colors hover:text-blue-500 dark:text-gray-100 dark:hover:text-blue-400"
+        >
           {dam.damName}
-        </p>
+        </Link>
         <span className="group/link-tooltip relative">
           <a
             href={riverInfoUrl}
