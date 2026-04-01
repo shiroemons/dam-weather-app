@@ -70,7 +70,7 @@ function DamDetailPage() {
 
   if (!dam) {
     return (
-      <div className="mx-auto max-w-4xl px-4 py-8">
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <Link to="/" className="text-sm text-blue-500 hover:text-blue-700">
           ← ホームに戻る
         </Link>
@@ -88,7 +88,7 @@ function DamDetailPage() {
     `https://www.river.go.jp/kawabou/pc/tm?zm=15&clat=${dam.latitude}&clon=${dam.longitude}&itmkndCd=7&mapType=0`;
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8">
+    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
         <Link to="/" className="hover:text-blue-500">
