@@ -1,3 +1,4 @@
+import type { WeatherCategory } from "@/lib/weatherColors";
 import type { Prefecture } from "@/types/prefecture";
 
 import PrefectureCard from "./PrefectureCard";
@@ -5,9 +6,10 @@ import PrefectureCard from "./PrefectureCard";
 type Props = {
   region: string;
   prefectures: Prefecture[];
+  weatherCategories?: Record<string, WeatherCategory>;
 };
 
-export default function PrefectureGrid({ region, prefectures }: Props) {
+export default function PrefectureGrid({ region, prefectures, weatherCategories = {} }: Props) {
   const regionDamCount = prefectures.reduce((sum, p) => sum + p.damCount, 0);
 
   return (
@@ -20,7 +22,11 @@ export default function PrefectureGrid({ region, prefectures }: Props) {
       </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
         {prefectures.map((prefecture) => (
-          <PrefectureCard key={prefecture.code} prefecture={prefecture} />
+          <PrefectureCard
+            key={prefecture.code}
+            prefecture={prefecture}
+            weatherCategory={weatherCategories[prefecture.slug]}
+          />
         ))}
       </div>
     </div>

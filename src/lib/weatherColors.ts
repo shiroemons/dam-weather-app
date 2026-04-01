@@ -1,4 +1,4 @@
-type WeatherCategory = "sunny" | "cloudy" | "rain" | "snow" | "default";
+export type WeatherCategory = "sunny" | "cloudy" | "rain" | "snow" | "default";
 
 const WEATHER_CLASSES: Record<WeatherCategory, string> = {
   sunny:
@@ -11,7 +11,7 @@ const WEATHER_CLASSES: Record<WeatherCategory, string> = {
     "from-gray-50 to-white shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] dark:from-gray-800 dark:to-gray-700 dark:shadow-[6px_6px_12px_#1a1a1a,-6px_-6px_12px_#2a2a2a]",
 };
 
-function getWeatherCategory(code: number): WeatherCategory {
+export function getWeatherCategory(code: number): WeatherCategory {
   if (code <= 1) return "sunny";
   if (code <= 3 || code === 45 || code === 48) return "cloudy";
   if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82) || (code >= 95 && code <= 99))

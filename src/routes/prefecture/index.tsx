@@ -4,6 +4,7 @@ import { Droplets } from "lucide-react";
 import PrefectureGrid from "@/components/prefecture/PrefectureGrid";
 import { SITE_NAME, SITE_URL } from "@/config/seo";
 import { PREFECTURES, getRegionsWithPrefectures } from "@/data/prefectures";
+import { usePrefectureWeatherCategories } from "@/hooks/usePrefectureWeatherCategories";
 
 export const Route = createFileRoute("/prefecture/")({
   head: () => ({
@@ -36,6 +37,7 @@ export const Route = createFileRoute("/prefecture/")({
 function PrefecturePage() {
   const regions = getRegionsWithPrefectures();
   const totalDamCount = PREFECTURES.reduce((sum, p) => sum + p.damCount, 0);
+  const weatherCategories = usePrefectureWeatherCategories();
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
@@ -65,7 +67,12 @@ function PrefecturePage() {
 
       <div className="mt-8 flex flex-col gap-8">
         {regions.map(({ region, prefectures }) => (
-          <PrefectureGrid key={region} region={region} prefectures={prefectures} />
+          <PrefectureGrid
+            key={region}
+            region={region}
+            prefectures={prefectures}
+            weatherCategories={weatherCategories}
+          />
         ))}
       </div>
     </div>
