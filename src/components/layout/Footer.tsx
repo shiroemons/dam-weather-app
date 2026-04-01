@@ -40,6 +40,12 @@ export default function Footer() {
         <div className="flex flex-col items-center gap-4 border-t border-gray-200 py-6 dark:border-gray-700">
           <div className="flex gap-4">
             <Link
+              to="/prefecture"
+              className="text-xs text-gray-500 transition-colors hover:text-sky-600 dark:text-gray-400 dark:hover:text-sky-400"
+            >
+              都道府県
+            </Link>
+            <Link
               to="/map"
               className="text-xs text-gray-500 transition-colors hover:text-sky-600 dark:text-gray-400 dark:hover:text-sky-400"
             >
