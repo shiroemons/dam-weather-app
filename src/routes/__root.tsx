@@ -1,6 +1,7 @@
 import { createRootRoute, HeadContent, Outlet } from "@tanstack/react-router";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../components/common/ErrorFallback";
+import ScrollToTopButton from "../components/common/ScrollToTopButton";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import { SITE_NAME, SITE_DESCRIPTION } from "@/config/seo";
@@ -30,6 +31,7 @@ function RootLayout() {
         </ErrorBoundary>
       </main>
       <Footer />
+      <ScrollToTopButton />
     </div>
   );
 }
