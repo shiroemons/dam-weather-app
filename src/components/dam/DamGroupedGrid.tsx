@@ -27,7 +27,9 @@ function getGroupKey(dam: Dam, groupBy: GroupByMode): string {
 
 export default function DamGroupedGrid({ dams, weather, groupBy = "waterSystem" }: Props) {
   if (dams.length === 0) {
-    return <p className="py-12 text-center text-gray-500">ダムが見つかりません</p>;
+    return (
+      <p className="py-12 text-center text-gray-500 dark:text-gray-400">ダムが見つかりません</p>
+    );
   }
 
   const groupMap = new Map<string, Dam[]>();
@@ -48,9 +50,11 @@ export default function DamGroupedGrid({ dams, weather, groupBy = "waterSystem" 
     <div className="space-y-8">
       {groups.map(({ groupName, dams: groupDams }) => (
         <section key={groupName}>
-          <h2 className="mb-3 text-lg font-semibold text-gray-700">
+          <h2 className="mb-3 text-lg font-semibold text-gray-700 dark:text-gray-200">
             {groupName}
-            <span className="ml-2 text-sm font-normal text-gray-400">({groupDams.length}基)</span>
+            <span className="ml-2 text-sm font-normal text-gray-400 dark:text-gray-500">
+              ({groupDams.length}基)
+            </span>
           </h2>
           <DamCardGrid dams={groupDams} weather={weather} />
         </section>

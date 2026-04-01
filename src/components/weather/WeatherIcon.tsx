@@ -24,7 +24,7 @@ export default function WeatherIcon({ code, size = "md" }: Props) {
   if (hasError) {
     return (
       <span
-        className="inline-flex items-center justify-center rounded-full bg-gray-100 text-gray-500 text-xs font-medium"
+        className="inline-flex items-center justify-center rounded-full bg-gray-100 text-gray-500 text-xs font-medium dark:bg-gray-700 dark:text-gray-400"
         style={{ width: px, height: px }}
         title={label}
       >
