@@ -26,11 +26,14 @@ jobs:
 
       # 天気データ取得
       - id: fetch-weather
-        run: npx tsx scripts/fetch-weather.ts
+        run: vp dlx tsx scripts/fetch-weather.ts
 
-      # ビルド（天気データ取得成功時のみ実行）
+      # サイトマップ生成 + 型チェック + ビルド（天気データ取得成功時のみ実行）
       - if: success()
-        run: vp build
+        run: |
+          vp dlx tsx scripts/generate-sitemap.ts
+          vp exec tsc -b
+          vp build
 
       # Cloudflare Pages へデプロイ（天気データ取得成功時のみ実行）
       - if: success()
