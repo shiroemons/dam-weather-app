@@ -168,42 +168,46 @@ function PrefecturePage() {
         ← 一覧に戻る
       </Link>
 
-      <div className="mt-4 flex items-center justify-between">
+      <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{prefecture.name}</h1>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             {dams.length}基のダム{obs && totalCount > dams.length && ` / 全${totalCount}基`}
           </p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-3 self-start md:gap-4 md:self-auto">
           <GroupBySelector value={group} onChange={setGroupBy} />
           <FilterToggle enabled={obs} onChange={setObsOnly} />
         </div>
       </div>
 
-      {availablePurposes.length > 0 && (
-        <div className="mt-3">
-          <p className="mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
-            用途で絞り込み
-          </p>
-          <PurposeFilter
-            selected={selectedPurposes}
-            available={availablePurposes}
-            onChange={setSelectedPurposes}
-          />
-        </div>
-      )}
+      {(availablePurposes.length > 0 || availableTypes.length > 0) && (
+        <div className="mt-4 space-y-3 rounded-lg bg-gray-100 p-4 dark:bg-gray-800/50">
+          {availablePurposes.length > 0 && (
+            <div>
+              <p className="mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
+                用途で絞り込み
+              </p>
+              <PurposeFilter
+                selected={selectedPurposes}
+                available={availablePurposes}
+                onChange={setSelectedPurposes}
+              />
+            </div>
+          )}
 
-      {availableTypes.length > 0 && (
-        <div className="mt-3">
-          <p className="mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
-            ダム形式で絞り込み
-          </p>
-          <DamTypeFilter
-            selected={selectedTypes}
-            available={availableTypes}
-            onChange={setSelectedTypes}
-          />
+          {availableTypes.length > 0 && (
+            <div>
+              <p className="mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
+                ダム形式で絞り込み
+              </p>
+              <DamTypeFilter
+                selected={selectedTypes}
+                available={availableTypes}
+                onChange={setSelectedTypes}
+              />
+            </div>
+          )}
         </div>
       )}
 
