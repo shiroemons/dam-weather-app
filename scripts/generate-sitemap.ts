@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const SITE_URL = "https://dam-weather.pages.dev";
+const SITE_URL = "https://japan-dam-weather.pages.dev";
 
 const PREFECTURE_SLUGS = [
   "hokkaido",
