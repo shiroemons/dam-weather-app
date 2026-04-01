@@ -6,10 +6,10 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-gray-200/80 bg-slate-50/80 backdrop-blur-md dark:border-gray-700/80 dark:bg-gray-900/80">
       <nav className="mx-auto flex h-12 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link
-          to="/prefecture"
+          to="/"
           className="text-base font-semibold tracking-tight text-gray-900 dark:text-gray-100"
         >
-          ダム天気
+          日本のダム天気
         </Link>
         <ThemeSwitcher />
       </nav>
