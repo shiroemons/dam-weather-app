@@ -16,6 +16,14 @@ const queryClient = new QueryClient({
 
 const router = createRouter({ routeTree });
 
+router.subscribe("onResolved", ({ toLocation }) => {
+  if (typeof window.gtag === "function") {
+    window.gtag("event", "page_view", {
+      page_path: toLocation.pathname,
+    });
+  }
+});
+
 declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
@@ -31,3 +39,9 @@ createRoot(document.getElementById("root")!).render(
     </ThemeProvider>
   </StrictMode>,
 );
+
+declare global {
+  interface Window {
+    gtag: (...args: unknown[]) => void;
+  }
+}

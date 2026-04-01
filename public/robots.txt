@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://dam-weather.pages.dev/sitemap.xml
+Sitemap: https://japan-dam-weather.pages.dev/sitemap.xml
