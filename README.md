@@ -1,5 +1,7 @@
 # ダム天気アプリ
 
+[![Site](https://img.shields.io/badge/Site-japan--dam--weather.pages.dev-blue)](https://japan-dam-weather.pages.dev/)
+
 全国のダム所在地の天気を都道府県ごとに確認できるWebアプリ
 
 ## 概要
