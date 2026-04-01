@@ -59,6 +59,15 @@ function AboutPage() {
       </section>
 
       <section className="mt-8">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">作成のきっかけ</h2>
+        <p className="mt-3 leading-relaxed text-gray-600 dark:text-gray-300">
+          最近あまり雨が降っていないとき、「近くのダムにはちゃんと雨が降っているだろうか？」とふと気になったのがきっかけです。
+          身近なダムの天気だけ確認できれば十分でしたが、調べてみると日本全国のダムの天気をまとめて確認できるサイトが見つかりませんでした。
+          それなら自分で作ってしまおう——そんな思いから、このサイトは生まれました。
+        </p>
+      </section>
+
+      <section className="mt-8">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">データ出典</h2>
         <dl className="mt-3 space-y-4">
           <div>

@@ -9,10 +9,35 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TodayRouteImport } from './routes/today'
+import { Route as MapRouteImport } from './routes/map'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PrefectureIndexRouteImport } from './routes/prefecture/index'
 import { Route as PrefecturePrefectureSlugRouteImport } from './routes/prefecture/$prefectureSlug'
+import { Route as DamDamIdRouteImport } from './routes/dam/$damId'
 
+const TodayRoute = TodayRouteImport.update({
+  id: '/today',
+  path: '/today',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MapRoute = MapRouteImport.update({
+  id: '/map',
+  path: '/map',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SplatRoute = SplatRouteImport.update({
+  id: '/$',
+  path: '/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -29,39 +54,117 @@ const PrefecturePrefectureSlugRoute =
     path: '/prefecture/$prefectureSlug',
     getParentRoute: () => rootRouteImport,
   } as any)
+const DamDamIdRoute = DamDamIdRouteImport.update({
+  id: '/dam/$damId',
+  path: '/dam/$damId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
+  '/about': typeof AboutRoute
+  '/map': typeof MapRoute
+  '/today': typeof TodayRoute
+  '/dam/$damId': typeof DamDamIdRoute
   '/prefecture/$prefectureSlug': typeof PrefecturePrefectureSlugRoute
   '/prefecture/': typeof PrefectureIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
+  '/about': typeof AboutRoute
+  '/map': typeof MapRoute
+  '/today': typeof TodayRoute
+  '/dam/$damId': typeof DamDamIdRoute
   '/prefecture/$prefectureSlug': typeof PrefecturePrefectureSlugRoute
   '/prefecture': typeof PrefectureIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
+  '/about': typeof AboutRoute
+  '/map': typeof MapRoute
+  '/today': typeof TodayRoute
+  '/dam/$damId': typeof DamDamIdRoute
   '/prefecture/$prefectureSlug': typeof PrefecturePrefectureSlugRoute
   '/prefecture/': typeof PrefectureIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/prefecture/$prefectureSlug' | '/prefecture/'
+  fullPaths:
+    | '/'
+    | '/$'
+    | '/about'
+    | '/map'
+    | '/today'
+    | '/dam/$damId'
+    | '/prefecture/$prefectureSlug'
+    | '/prefecture/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/prefecture/$prefectureSlug' | '/prefecture'
-  id: '__root__' | '/' | '/prefecture/$prefectureSlug' | '/prefecture/'
+  to:
+    | '/'
+    | '/$'
+    | '/about'
+    | '/map'
+    | '/today'
+    | '/dam/$damId'
+    | '/prefecture/$prefectureSlug'
+    | '/prefecture'
+  id:
+    | '__root__'
+    | '/'
+    | '/$'
+    | '/about'
+    | '/map'
+    | '/today'
+    | '/dam/$damId'
+    | '/prefecture/$prefectureSlug'
+    | '/prefecture/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SplatRoute: typeof SplatRoute
+  AboutRoute: typeof AboutRoute
+  MapRoute: typeof MapRoute
+  TodayRoute: typeof TodayRoute
+  DamDamIdRoute: typeof DamDamIdRoute
   PrefecturePrefectureSlugRoute: typeof PrefecturePrefectureSlugRoute
   PrefectureIndexRoute: typeof PrefectureIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/today': {
+      id: '/today'
+      path: '/today'
+      fullPath: '/today'
+      preLoaderRoute: typeof TodayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/map': {
+      id: '/map'
+      path: '/map'
+      fullPath: '/map'
+      preLoaderRoute: typeof MapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$': {
+      id: '/$'
+      path: '/$'
+      fullPath: '/$'
+      preLoaderRoute: typeof SplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -83,11 +186,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrefecturePrefectureSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dam/$damId': {
+      id: '/dam/$damId'
+      path: '/dam/$damId'
+      fullPath: '/dam/$damId'
+      preLoaderRoute: typeof DamDamIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SplatRoute: SplatRoute,
+  AboutRoute: AboutRoute,
+  MapRoute: MapRoute,
+  TodayRoute: TodayRoute,
+  DamDamIdRoute: DamDamIdRoute,
   PrefecturePrefectureSlugRoute: PrefecturePrefectureSlugRoute,
   PrefectureIndexRoute: PrefectureIndexRoute,
 }
