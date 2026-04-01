@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   MapPin,
@@ -16,6 +17,9 @@ import DayWeather from "@/components/weather/DayWeather";
 import { PURPOSE_SHORT_MAP } from "@/data/purposes";
 import { getWeatherCardClasses } from "@/lib/weatherColors";
 import { SITE_NAME, SITE_URL } from "@/config/seo";
+import "leaflet/dist/leaflet.css";
+
+const MapView = lazy(() => import("@/components/map/MapView"));
 
 export const Route = createFileRoute("/dam/$damId")({
   head: ({ params }) => {
@@ -238,14 +242,24 @@ function DamDetailPage() {
         </dl>
       </div>
 
-      {/* Map placeholder - will be replaced with Leaflet in Phase 3 */}
+      {/* Map */}
       <div className="mt-6">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">位置情報</h2>
-        <div className="mt-3 flex h-64 items-center justify-center rounded-xl bg-gray-100 text-sm text-gray-500 dark:bg-gray-800 dark:text-gray-400">
-          <p>
-            緯度: {dam.latitude.toFixed(6)} / 経度: {dam.longitude.toFixed(6)}
-          </p>
-        </div>
+        <Suspense
+          fallback={
+            <div className="mt-3 flex h-64 items-center justify-center rounded-xl bg-gray-100 text-sm text-gray-500 dark:bg-gray-800 dark:text-gray-400">
+              地図を読み込み中...
+            </div>
+          }
+        >
+          <MapView
+            dams={[dam]}
+            singleMarker
+            center={[dam.latitude, dam.longitude]}
+            zoom={13}
+            className="mt-3 h-64 rounded-xl"
+          />
+        </Suspense>
       </div>
     </div>
   );
