@@ -24,6 +24,9 @@ jobs:
       # 依存関係インストール
       - run: vp install
 
+      # ダムデータを都道府県別に分割（public/data/dams/）
+      - run: vp dlx tsx scripts/split-dams.ts
+
       # 天気データ取得
       - id: fetch-weather
         run: vp dlx tsx scripts/fetch-weather.ts
