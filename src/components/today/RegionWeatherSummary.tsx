@@ -1,7 +1,11 @@
+import { Link } from "@tanstack/react-router";
+
+import { REGION_SLUG_MAP } from "@/data/prefectures";
 import type { WeatherCategory } from "@/lib/weatherColors";
+import type { Region } from "@/types/prefecture";
 
 type Props = {
-  region: string;
+  region: Region;
   counts: Record<WeatherCategory, number>;
   total: number;
 };
@@ -20,7 +24,11 @@ export default function RegionWeatherSummary({ region, counts, total }: Props) {
   if (total === 0) return null;
 
   return (
-    <div className="rounded-xl bg-white p-4 shadow-sm dark:bg-gray-800">
+    <Link
+      to="/prefecture"
+      hash={REGION_SLUG_MAP[region]}
+      className="block rounded-xl bg-white p-4 shadow-sm transition-colors hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700/80"
+    >
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">{region}</h3>
         <span className="text-xs text-gray-500 dark:text-gray-400">{total}基</span>
@@ -51,6 +59,6 @@ export default function RegionWeatherSummary({ region, counts, total }: Props) {
           );
         })}
       </div>
-    </div>
+    </Link>
   );
 }

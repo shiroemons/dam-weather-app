@@ -11,6 +11,17 @@ export const REGIONS: Region[] = [
   "九州・沖縄",
 ];
 
+export const REGION_SLUG_MAP: Record<Region, string> = {
+  北海道: "hokkaido",
+  東北: "tohoku",
+  関東: "kanto",
+  中部: "chubu",
+  近畿: "kinki",
+  中国: "chugoku",
+  四国: "shikoku",
+  "九州・沖縄": "kyushu-okinawa",
+};
+
 export const PREFECTURES: Prefecture[] = [
   { code: "01", name: "北海道", slug: "hokkaido", region: "北海道", damCount: 190, obsCount: 72 },
   { code: "02", name: "青森県", slug: "aomori", region: "東北", damCount: 34, obsCount: 16 },

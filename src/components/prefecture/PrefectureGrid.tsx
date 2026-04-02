@@ -5,15 +5,21 @@ import PrefectureCard from "./PrefectureCard";
 
 type Props = {
   region: string;
+  regionSlug?: string;
   prefectures: Prefecture[];
   weatherCategories?: Record<string, WeatherCategory>;
 };
 
-export default function PrefectureGrid({ region, prefectures, weatherCategories = {} }: Props) {
+export default function PrefectureGrid({
+  region,
+  regionSlug,
+  prefectures,
+  weatherCategories = {},
+}: Props) {
   const regionDamCount = prefectures.reduce((sum, p) => sum + p.damCount, 0);
 
   return (
-    <div>
+    <div id={regionSlug} className="scroll-mt-20">
       <div className="mb-4 flex items-baseline gap-3 border-l-4 border-sky-500 pl-3 dark:border-sky-400">
         <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{region}</h2>
         <span className="text-sm font-medium text-sky-600 dark:text-sky-400">

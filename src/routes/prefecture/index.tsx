@@ -1,9 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
+
+import { createFileRoute, useLocation } from "@tanstack/react-router";
 
 import PrefectureGrid from "@/components/prefecture/PrefectureGrid";
 import { SITE_NAME, SITE_URL } from "@/config/seo";
-import { getRegionsWithPrefectures } from "@/data/prefectures";
+import { REGION_SLUG_MAP, getRegionsWithPrefectures } from "@/data/prefectures";
 import { usePrefectureWeatherCategories } from "@/hooks/usePrefectureWeatherCategories";
+import type { Region } from "@/types/prefecture";
 
 export const Route = createFileRoute("/prefecture/")({
   head: () => ({
@@ -36,6 +39,14 @@ export const Route = createFileRoute("/prefecture/")({
 function PrefecturePage() {
   const regions = getRegionsWithPrefectures();
   const weatherCategories = usePrefectureWeatherCategories();
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      const el = document.getElementById(hash);
+      el?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [hash]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
@@ -48,6 +59,7 @@ function PrefecturePage() {
           <PrefectureGrid
             key={region}
             region={region}
+            regionSlug={REGION_SLUG_MAP[region as Region]}
             prefectures={prefectures}
             weatherCategories={weatherCategories}
           />
