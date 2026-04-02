@@ -27,7 +27,7 @@ const OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast";
 const BATCH_SIZE = 500;
 const MAX_URL_LENGTH = 8000;
 const MAX_RETRIES = 5;
-const BATCH_DELAY_MS = 1000;
+const BATCH_DELAY_MS = 15_000;
 const COORD_PRECISION = 2;
 
 // ---------------------------------------------------------------------------
