@@ -1,11 +1,6 @@
 name: Update Weather Data
 
 on:
-  schedule:
-    # 毎日 6:00 JST (21:00 UTC)
-    - cron: "0 21 * * *"
-    # 毎日 12:00 JST (03:00 UTC)
-    - cron: "0 3 * * *"
   workflow_dispatch:
 
 jobs:

@@ -1,0 +1,13 @@
+name = "dam-weather-scheduler"
+main = "src/index.ts"
+compatibility_date = "2025-04-01"
+
+[triggers]
+crons = [
+  "0 21 * * *",
+  "0 3 * * *"
+]
+
+[vars]
+GITHUB_REPO = "shiroemons/dam-weather-app"
+GITHUB_WORKFLOW_ID = "update-weather.yml"
