@@ -103,7 +103,8 @@ function TodayPage() {
           counts[cat]++;
         }
       }
-      return { region, counts, total: regionDams.length };
+      const total = Object.values(counts).reduce((a, b) => a + b, 0);
+      return { region, counts, total };
     });
   }, [allDams, weatherMap]);
 
