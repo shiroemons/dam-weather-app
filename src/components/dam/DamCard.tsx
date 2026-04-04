@@ -2,7 +2,7 @@ import type { Dam } from "@/types/dam";
 import type { DamWeather } from "@/types/weather";
 
 import { Link } from "@tanstack/react-router";
-import { MapPin, Droplets, Waves, Box, ExternalLink } from "lucide-react";
+import { MapPin, Droplets, Waves, Box, ExternalLink, X } from "lucide-react";
 import DayWeather from "@/components/weather/DayWeather";
 import WatchlistAddButton from "@/components/watchlist/WatchlistAddButton";
 import { PURPOSE_SHORT_MAP } from "@/data/purposes";
@@ -11,9 +11,10 @@ import { getWeatherCardClasses } from "@/lib/weatherColors";
 type Props = {
   dam: Dam;
   weather: DamWeather | undefined;
+  onRemove?: () => void;
 };
 
-export default function DamCard({ dam, weather }: Props) {
+export default function DamCard({ dam, weather, onRemove }: Props) {
   const riverInfoUrl =
     dam.riverUrl ??
     `https://www.river.go.jp/kawabou/pc/tm?zm=15&clat=${dam.latitude}&clon=${dam.longitude}&itmkndCd=7&mapType=0`;
@@ -32,13 +33,13 @@ export default function DamCard({ dam, weather }: Props) {
           {dam.damName}
         </Link>
         <div className="flex shrink-0 items-center gap-3">
-          <WatchlistAddButton damId={dam.id} variant="icon" />
-          <span className="group/link-tooltip relative">
+          {!onRemove && <WatchlistAddButton damId={dam.id} variant="icon" />}
+          <span className="group/link-tooltip relative inline-flex">
             <a
               href={riverInfoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className={`transition-colors hover:text-blue-500 ${dam.riverUrl ? "text-blue-500" : "text-gray-300 dark:text-gray-600"}`}
+              className={`inline-flex transition-colors hover:text-blue-500 ${dam.riverUrl ? "text-blue-500" : "text-gray-300 dark:text-gray-600"}`}
             >
               <ExternalLink className="size-4" />
             </a>
@@ -46,6 +47,21 @@ export default function DamCard({ dam, weather }: Props) {
               {dam.riverUrl ? "川の防災情報（詳細）" : "川の防災情報（地図）"}
             </span>
           </span>
+          {onRemove && (
+            <span className="group/remove relative inline-flex">
+              <button
+                type="button"
+                onClick={onRemove}
+                className="inline-flex text-gray-400 transition-colors hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400"
+                aria-label={`${dam.damName}をリストから削除`}
+              >
+                <X className="size-4" />
+              </button>
+              <span className="pointer-events-none absolute bottom-full right-0 mb-2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover/remove:opacity-100 after:absolute after:right-1 after:top-full after:border-4 after:border-transparent after:border-t-gray-800">
+                リストから削除
+              </span>
+            </span>
+          )}
         </div>
       </div>
 

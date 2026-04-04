@@ -10,6 +10,7 @@ type WatchlistContextValue = {
   deleteList: (listId: string) => void;
   addDam: (listId: string, damId: string) => void;
   removeDam: (listId: string, damId: string) => void;
+  reorderDams: (listId: string, damIds: string[]) => void;
   isInAnyList: (damId: string) => boolean;
   getListsForDam: (damId: string) => WatchList[];
   exportData: () => string;
@@ -115,6 +116,19 @@ export function WatchlistProvider({ children }: ProviderProps) {
     });
   }, []);
 
+  const reorderDams = useCallback((listId: string, damIds: string[]): void => {
+    setData((prev) => {
+      const next = {
+        ...prev,
+        lists: prev.lists.map((list) =>
+          list.id === listId ? { ...list, damIds, updatedAt: new Date().toISOString() } : list,
+        ),
+      };
+      persist(next);
+      return next;
+    });
+  }, []);
+
   const isInAnyList = useCallback(
     (damId: string): boolean => data.lists.some((list) => list.damIds.includes(damId)),
     [data.lists],
@@ -159,6 +173,7 @@ export function WatchlistProvider({ children }: ProviderProps) {
         deleteList,
         addDam,
         removeDam,
+        reorderDams,
         isInAnyList,
         getListsForDam,
         exportData,

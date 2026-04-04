@@ -1,6 +1,18 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ChevronRight, Pencil, Trash2, X } from "lucide-react";
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragStartEvent,
+} from "@dnd-kit/core";
+import { SortableContext, rectSortingStrategy, useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { ChevronRight, GripVertical, Pencil, Trash2 } from "lucide-react";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 import { getDamById } from "@/hooks/useAllDams";
 import { useWatchlistWeather } from "@/hooks/useWatchlistWeather";
@@ -9,6 +21,7 @@ import WeatherSummaryBar from "@/components/today/WeatherSummaryBar";
 import DamCard from "@/components/dam/DamCard";
 import type { WeatherCategory } from "@/lib/weatherColors";
 import type { Dam } from "@/types/dam";
+import type { DamWeather } from "@/types/weather";
 
 export const Route = createFileRoute("/watchlist/$listId")({
   component: WatchlistDetailPage,
@@ -18,15 +31,70 @@ function emptyCounts(): Record<WeatherCategory, number> {
   return { sunny: 0, cloudy: 0, rain: 0, snow: 0, default: 0 };
 }
 
+function SortableDamCard({
+  dam,
+  weather,
+  onRemove,
+}: {
+  dam: Dam;
+  weather: DamWeather | undefined;
+  onRemove: () => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: dam.id,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`relative ${isDragging ? "z-10 opacity-50" : ""}`}
+    >
+      <span className="group/drag absolute left-2 top-2 z-10 opacity-0 transition-opacity [div:hover>&]:opacity-100">
+        <button
+          type="button"
+          {...attributes}
+          {...listeners}
+          className="cursor-grab rounded-full bg-gray-900/50 p-1 text-white hover:bg-gray-700 active:cursor-grabbing"
+          aria-label="ドラッグして並べ替え"
+        >
+          <GripVertical className="size-3.5" />
+        </button>
+        <span className="pointer-events-none absolute bottom-full left-0 mb-2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover/drag:opacity-100 after:absolute after:left-1 after:top-full after:border-4 after:border-transparent after:border-t-gray-800">
+          ドラッグして並べ替え
+        </span>
+      </span>
+      <DamCard dam={dam} weather={weather} onRemove={onRemove} />
+    </div>
+  );
+}
+
 function WatchlistDetailPage() {
   const { listId } = Route.useParams();
-  const { data, renameList, deleteList: deleteWatchList, removeDam } = useWatchlist();
+  const { data, renameList, deleteList: deleteWatchList, removeDam, reorderDams } = useWatchlist();
   const list = data.lists.find((l) => l.id === listId);
 
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [activeDamId, setActiveDamId] = useState<string | null>(null);
+
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
+
+  // Must call hooks unconditionally
+  const damIds = list?.damIds ?? [];
+  const { weatherMap, isLoading } = useWatchlistWeather(damIds);
+
+  const dams = useMemo(
+    () => damIds.map((id) => getDamById(id)).filter((d): d is Dam => d !== undefined),
+    [damIds],
+  );
 
   function handleStartEdit() {
     if (!list) return;
@@ -57,13 +125,24 @@ function WatchlistDetailPage() {
     removeDam(list.id, damId);
   }
 
-  // Must call hooks unconditionally
-  const damIds = list?.damIds ?? [];
-  const { weatherMap, isLoading } = useWatchlistWeather(damIds);
+  function handleDragStart(event: DragStartEvent) {
+    setActiveDamId(event.active.id as string);
+  }
 
-  const dams = useMemo(
-    () => damIds.map((id) => getDamById(id)).filter((d): d is Dam => d !== undefined),
-    [damIds],
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      setActiveDamId(null);
+      const { active, over } = event;
+      if (!over || active.id === over.id || !list) return;
+      const oldIndex = damIds.indexOf(active.id as string);
+      const newIndex = damIds.indexOf(over.id as string);
+      if (oldIndex === -1 || newIndex === -1) return;
+      const newDamIds = [...damIds];
+      newDamIds.splice(oldIndex, 1);
+      newDamIds.splice(newIndex, 0, active.id as string);
+      reorderDams(list.id, newDamIds);
+    },
+    [list, damIds, reorderDams],
   );
 
   const counts = useMemo(() => {
@@ -78,6 +157,8 @@ function WatchlistDetailPage() {
   }, [dams, weatherMap]);
 
   const total = Object.values(counts).reduce((a, b) => a + b, 0);
+
+  const activeDam = activeDamId ? dams.find((d) => d.id === activeDamId) : undefined;
 
   if (!list) {
     return (
@@ -210,21 +291,32 @@ function WatchlistDetailPage() {
           </p>
         </div>
       ) : (
-        <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {dams.map((dam) => (
-            <div key={dam.id} className="relative">
-              <DamCard dam={dam} weather={weatherMap.get(dam.id)} />
-              <button
-                type="button"
-                onClick={() => handleRemoveDam(dam.id)}
-                className="absolute right-2 top-2 rounded-full bg-gray-900/50 p-1 text-white opacity-0 transition-opacity hover:bg-red-500 group-hover:opacity-100 [div:hover>&]:opacity-100"
-                aria-label={`${dam.damName}をリストから削除`}
-              >
-                <X className="size-3.5" />
-              </button>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext items={damIds} strategy={rectSortingStrategy}>
+            <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {dams.map((dam) => (
+                <SortableDamCard
+                  key={dam.id}
+                  dam={dam}
+                  weather={weatherMap.get(dam.id)}
+                  onRemove={() => handleRemoveDam(dam.id)}
+                />
+              ))}
             </div>
-          ))}
-        </div>
+          </SortableContext>
+          <DragOverlay>
+            {activeDam ? (
+              <div className="rotate-1 opacity-95 shadow-2xl">
+                <DamCard dam={activeDam} weather={weatherMap.get(activeDam.id)} />
+              </div>
+            ) : null}
+          </DragOverlay>
+        </DndContext>
       )}
     </div>
   );
