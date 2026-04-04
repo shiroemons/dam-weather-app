@@ -10,12 +10,14 @@ import {
   Building2,
   ExternalLink,
   ChevronRight,
+  CloudRain,
 } from "lucide-react";
 import { getDamById, useDamById } from "@/hooks/useAllDams";
 import { useWeather } from "@/hooks/useWeather";
 import DayWeather from "@/components/weather/DayWeather";
 import { PURPOSE_SHORT_MAP } from "@/data/purposes";
 import { getWeatherCardClasses } from "@/lib/weatherColors";
+import { getYahooRadarUrl } from "@/lib/externalLinks";
 import WatchlistAddButton from "@/components/watchlist/WatchlistAddButton";
 import { SITE_NAME, SITE_URL } from "@/config/seo";
 import "leaflet/dist/leaflet.css";
@@ -87,6 +89,7 @@ function DamDetailPage() {
   const riverInfoUrl =
     dam.riverUrl ??
     `https://www.river.go.jp/kawabou/pc/tm?zm=15&clat=${dam.latitude}&clon=${dam.longitude}&itmkndCd=7&mapType=0`;
+  const yahooRadarUrl = getYahooRadarUrl(dam.latitude, dam.longitude);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
@@ -165,6 +168,16 @@ function DamDetailPage() {
                 {new Date(weather.updatedAt).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}
               </p>
             )}
+            <a
+              href={yahooRadarUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 flex items-center justify-end gap-1 text-xs text-gray-500 transition-colors hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400"
+            >
+              <CloudRain className="size-3" />
+              <span>雨雲レーダー</span>
+              <ExternalLink className="size-3" />
+            </a>
           </div>
         ) : (
           <div className="mt-3 rounded-2xl bg-gray-100/50 px-4 py-8 text-center text-sm text-gray-500 dark:bg-gray-700/50 dark:text-gray-400">
