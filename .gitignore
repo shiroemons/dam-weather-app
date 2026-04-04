@@ -32,3 +32,6 @@ public/weather/
 
 # Generated dam data (split by prefecture)
 public/data/dams/
+
+# Generated dam storage data (fetched from river.go.jp API)
+public/storage/

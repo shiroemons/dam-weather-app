@@ -26,6 +26,10 @@ jobs:
       - id: fetch-weather
         run: vp dlx tsx scripts/fetch-weather.ts
 
+      # ダム貯水率データ取得
+      - id: fetch-storage
+        run: vp dlx tsx scripts/fetch-dam-storage.ts
+
       # サイトマップ生成 + 型チェック + ビルド（天気データ取得成功時のみ実行）
       - if: success()
         run: |
