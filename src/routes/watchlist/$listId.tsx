@@ -1,6 +1,6 @@
-import { useMemo } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronRight } from "lucide-react";
+import { useMemo, useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { ChevronRight, Pencil, Trash2, X } from "lucide-react";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 import { getDamById } from "@/hooks/useAllDams";
 import { useWatchlistWeather } from "@/hooks/useWatchlistWeather";
@@ -20,8 +20,42 @@ function emptyCounts(): Record<WeatherCategory, number> {
 
 function WatchlistDetailPage() {
   const { listId } = Route.useParams();
-  const { data } = useWatchlist();
+  const { data, renameList, deleteList: deleteWatchList, removeDam } = useWatchlist();
   const list = data.lists.find((l) => l.id === listId);
+
+  const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState("");
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  function handleStartEdit() {
+    if (!list) return;
+    setEditName(list.name);
+    setIsEditing(true);
+  }
+
+  function handleSaveEdit() {
+    const trimmed = editName.trim();
+    if (!trimmed || !list) return;
+    renameList(list.id, trimmed);
+    setIsEditing(false);
+  }
+
+  function handleCancelEdit() {
+    setIsEditing(false);
+    setEditName("");
+  }
+
+  function handleDeleteList() {
+    if (!list) return;
+    deleteWatchList(list.id);
+    void navigate({ to: "/watchlist" });
+  }
+
+  function handleRemoveDam(damId: string) {
+    if (!list) return;
+    removeDam(list.id, damId);
+  }
 
   // Must call hooks unconditionally
   const damIds = list?.damIds ?? [];
@@ -72,9 +106,86 @@ function WatchlistDetailPage() {
 
       {/* Header */}
       <div className="mt-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{list.name}</h1>
+        {isEditing ? (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSaveEdit();
+            }}
+            className="flex items-center gap-2"
+          >
+            <input
+              type="text"
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+              autoFocus
+              className="rounded-lg border border-gray-300 px-3 py-1.5 text-xl font-bold dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+            />
+            <button
+              type="submit"
+              className="rounded-lg bg-sky-500 px-3 py-1.5 text-sm font-medium text-white hover:bg-sky-600"
+            >
+              保存
+            </button>
+            <button
+              type="button"
+              onClick={handleCancelEdit}
+              className="text-sm text-gray-500 hover:text-gray-700"
+            >
+              キャンセル
+            </button>
+          </form>
+        ) : (
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{list.name}</h1>
+            <button
+              type="button"
+              onClick={handleStartEdit}
+              className="text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-gray-300"
+              aria-label="リスト名を編集"
+            >
+              <Pencil className="size-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowDeleteConfirm(true)}
+              className="text-gray-400 transition-colors hover:text-red-500"
+              aria-label="リストを削除"
+            >
+              <Trash2 className="size-4" />
+            </button>
+          </div>
+        )}
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{dams.length}基のダム</p>
       </div>
+
+      {/* Delete confirmation */}
+      {showDeleteConfirm && (
+        <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
+          <p className="text-sm font-medium text-red-700 dark:text-red-400">
+            「{list.name}」を削除しますか？
+          </p>
+          <p className="mt-1 text-xs text-red-600/70 dark:text-red-400/70">
+            この操作は取り消せません
+          </p>
+          <div className="mt-3 flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleDeleteList}
+              className="rounded-lg bg-red-500 px-3 py-1.5 text-xs font-medium text-white hover:bg-red-600"
+            >
+              削除する
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowDeleteConfirm(false)}
+              className="text-xs text-gray-500 hover:text-gray-700"
+            >
+              キャンセル
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Weather Summary */}
       {isLoading ? (
@@ -101,7 +212,17 @@ function WatchlistDetailPage() {
       ) : (
         <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {dams.map((dam) => (
-            <DamCard key={dam.id} dam={dam} weather={weatherMap.get(dam.id)} />
+            <div key={dam.id} className="relative">
+              <DamCard dam={dam} weather={weatherMap.get(dam.id)} />
+              <button
+                type="button"
+                onClick={() => handleRemoveDam(dam.id)}
+                className="absolute right-2 top-2 rounded-full bg-gray-900/50 p-1 text-white opacity-0 transition-opacity hover:bg-red-500 group-hover:opacity-100 [div:hover>&]:opacity-100"
+                aria-label={`${dam.damName}をリストから削除`}
+              >
+                <X className="size-3.5" />
+              </button>
+            </div>
           ))}
         </div>
       )}
