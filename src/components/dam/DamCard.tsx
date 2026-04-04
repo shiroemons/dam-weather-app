@@ -27,11 +27,11 @@ export default function DamCard({ dam, weather }: Props) {
         <Link
           to="/dam/$damId"
           params={{ damId: dam.id }}
-          className="whitespace-nowrap text-lg font-semibold text-gray-900 transition-colors hover:text-blue-500 dark:text-gray-100 dark:hover:text-blue-400"
+          className="truncate text-lg font-semibold text-gray-900 transition-colors hover:text-blue-500 dark:text-gray-100 dark:hover:text-blue-400"
         >
           {dam.damName}
         </Link>
-        <div className="flex items-center gap-1.5">
+        <div className="flex shrink-0 items-center gap-3">
           <WatchlistAddButton damId={dam.id} variant="icon" />
           <span className="group/link-tooltip relative">
             <a

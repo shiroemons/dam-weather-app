@@ -100,22 +100,27 @@ export default function WatchlistAddButton({ damId, variant }: Props) {
           </>
         )}
         {isCreating ? (
-          <form onSubmit={handleCreateList} className="flex items-center gap-1 p-1">
-            <input
-              type="text"
-              value={newListName}
-              onChange={(e) => setNewListName(e.target.value)}
-              placeholder="リスト名"
-              autoFocus
-              className="w-full rounded border border-gray-300 px-2 py-1 text-xs dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-            />
-            <button
-              type="submit"
-              className="whitespace-nowrap rounded bg-sky-500 px-2 py-1 text-xs text-white hover:bg-sky-600"
-            >
-              作成
-            </button>
-          </form>
+          <div className="p-1">
+            <p className="mb-1.5 text-xs font-medium text-gray-700 dark:text-gray-300">
+              新しいウォッチリストを作成
+            </p>
+            <form onSubmit={handleCreateList} className="flex items-center gap-1">
+              <input
+                type="text"
+                value={newListName}
+                onChange={(e) => setNewListName(e.target.value)}
+                placeholder="例: お気に入り、釣りスポット"
+                autoFocus
+                className="w-full rounded border border-gray-300 px-2 py-1 text-xs dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+              />
+              <button
+                type="submit"
+                className="whitespace-nowrap rounded bg-sky-500 px-2 py-1 text-xs text-white hover:bg-sky-600"
+              >
+                作成
+              </button>
+            </form>
+          </div>
         ) : (
           <button
             type="button"
@@ -131,20 +136,24 @@ export default function WatchlistAddButton({ damId, variant }: Props) {
 
   // Render icon variant
   if (variant === "icon") {
+    const tooltipText = inAnyList ? "ウォッチリスト登録済み" : "ウォッチリストに追加";
     return (
-      <div className="relative" ref={dropdownRef}>
+      <div className="group/watchlist relative flex items-center" ref={dropdownRef}>
         <button
           type="button"
           onClick={handleClick}
-          className={`transition-colors ${
+          className={`flex items-center leading-none transition-colors ${
             inAnyList
               ? "text-sky-500 hover:text-sky-600"
               : "text-gray-300 hover:text-sky-400 dark:text-gray-600 dark:hover:text-sky-400"
           }`}
-          aria-label={inAnyList ? "ウォッチリストから削除" : "ウォッチリストに追加"}
+          aria-label={tooltipText}
         >
           <Bookmark className="size-4" fill={inAnyList ? "currentColor" : "none"} />
         </button>
+        <span className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover/watchlist:opacity-100 after:absolute after:left-1/2 after:top-full after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-800">
+          {tooltipText}
+        </span>
         {isOpen && renderDropdown()}
       </div>
     );
