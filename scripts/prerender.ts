@@ -108,18 +108,18 @@ function buildHeadTags(params: {
   const jsonLdString = escapeJsonLd(JSON.stringify(jsonLd, null, 2));
 
   return [
-    `<title>${escapedTitle}</title>`,
-    `<meta name="description" content="${escapedDescription}">`,
-    `<meta property="og:title" content="${escapedTitle}">`,
-    `<meta property="og:description" content="${escapedDescription}">`,
-    `<meta property="og:url" content="${escapedUrl}">`,
-    `<meta property="og:type" content="website">`,
-    `<meta property="og:locale" content="ja_JP">`,
-    `<meta property="og:site_name" content="${escapeHtml(SITE_NAME)}">`,
-    `<meta name="application-name" content="${escapeHtml(SITE_NAME)}">`,
-    `<meta name="twitter:card" content="summary">`,
-    `<link rel="canonical" href="${escapedUrl}">`,
-    `<script type="application/ld+json">${jsonLdString}</script>`,
+    `<title data-ssg>${escapedTitle}</title>`,
+    `<meta data-ssg name="description" content="${escapedDescription}">`,
+    `<meta data-ssg property="og:title" content="${escapedTitle}">`,
+    `<meta data-ssg property="og:description" content="${escapedDescription}">`,
+    `<meta data-ssg property="og:url" content="${escapedUrl}">`,
+    `<meta data-ssg property="og:type" content="website">`,
+    `<meta data-ssg property="og:locale" content="ja_JP">`,
+    `<meta data-ssg property="og:site_name" content="${escapeHtml(SITE_NAME)}">`,
+    `<meta data-ssg name="application-name" content="${escapeHtml(SITE_NAME)}">`,
+    `<meta data-ssg name="twitter:card" content="summary">`,
+    `<link data-ssg rel="canonical" href="${escapedUrl}">`,
+    `<script data-ssg type="application/ld+json">${jsonLdString}</script>`,
   ].join("\n    ");
 }
 
@@ -149,11 +149,19 @@ function stripTemplateSeoTags(html: string): string {
   );
 }
 
+// Remove data-ssg tags before React hydrates to prevent duplication with TanStack Router's HeadContent
+const CLEANUP_SCRIPT = `<script>document.querySelectorAll("[data-ssg]").forEach(function(e){while(e.previousSibling&&e.previousSibling.nodeType===3)e.previousSibling.remove();e.remove()})</script>`;
+
 function injectHeadTags(template: string, headTags: string): string {
   const stripped = stripTemplateSeoTags(template);
   // Remove blank lines left by tag removal
   const cleaned = stripped.replace(/\n\s*\n/g, "\n");
-  return cleaned.replace("</head>", `    ${headTags}\n  </head>`);
+  // Insert SSG tags + cleanup script before </head>
+  // Cleanup runs after SSG tags are in DOM but before module scripts execute (modules are deferred)
+  return cleaned.replace(
+    "</head>",
+    `    ${headTags}\n    ${CLEANUP_SCRIPT}\n  </head>`,
+  );
 }
 
 // ─── JSON-LD builders ─────────────────────────────────────────────────────────
