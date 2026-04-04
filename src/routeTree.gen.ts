@@ -14,7 +14,9 @@ import { Route as MapRouteImport } from './routes/map'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as WatchlistIndexRouteImport } from './routes/watchlist/index'
 import { Route as PrefectureIndexRouteImport } from './routes/prefecture/index'
+import { Route as WatchlistListIdRouteImport } from './routes/watchlist/$listId'
 import { Route as PrefecturePrefectureSlugRouteImport } from './routes/prefecture/$prefectureSlug'
 import { Route as DamDamIdRouteImport } from './routes/dam/$damId'
 
@@ -43,9 +45,19 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WatchlistIndexRoute = WatchlistIndexRouteImport.update({
+  id: '/watchlist/',
+  path: '/watchlist/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrefectureIndexRoute = PrefectureIndexRouteImport.update({
   id: '/prefecture/',
   path: '/prefecture/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WatchlistListIdRoute = WatchlistListIdRouteImport.update({
+  id: '/watchlist/$listId',
+  path: '/watchlist/$listId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrefecturePrefectureSlugRoute =
@@ -68,7 +80,9 @@ export interface FileRoutesByFullPath {
   '/today': typeof TodayRoute
   '/dam/$damId': typeof DamDamIdRoute
   '/prefecture/$prefectureSlug': typeof PrefecturePrefectureSlugRoute
+  '/watchlist/$listId': typeof WatchlistListIdRoute
   '/prefecture/': typeof PrefectureIndexRoute
+  '/watchlist/': typeof WatchlistIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,7 +92,9 @@ export interface FileRoutesByTo {
   '/today': typeof TodayRoute
   '/dam/$damId': typeof DamDamIdRoute
   '/prefecture/$prefectureSlug': typeof PrefecturePrefectureSlugRoute
+  '/watchlist/$listId': typeof WatchlistListIdRoute
   '/prefecture': typeof PrefectureIndexRoute
+  '/watchlist': typeof WatchlistIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,7 +105,9 @@ export interface FileRoutesById {
   '/today': typeof TodayRoute
   '/dam/$damId': typeof DamDamIdRoute
   '/prefecture/$prefectureSlug': typeof PrefecturePrefectureSlugRoute
+  '/watchlist/$listId': typeof WatchlistListIdRoute
   '/prefecture/': typeof PrefectureIndexRoute
+  '/watchlist/': typeof WatchlistIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,7 +119,9 @@ export interface FileRouteTypes {
     | '/today'
     | '/dam/$damId'
     | '/prefecture/$prefectureSlug'
+    | '/watchlist/$listId'
     | '/prefecture/'
+    | '/watchlist/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,7 +131,9 @@ export interface FileRouteTypes {
     | '/today'
     | '/dam/$damId'
     | '/prefecture/$prefectureSlug'
+    | '/watchlist/$listId'
     | '/prefecture'
+    | '/watchlist'
   id:
     | '__root__'
     | '/'
@@ -121,7 +143,9 @@ export interface FileRouteTypes {
     | '/today'
     | '/dam/$damId'
     | '/prefecture/$prefectureSlug'
+    | '/watchlist/$listId'
     | '/prefecture/'
+    | '/watchlist/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -132,7 +156,9 @@ export interface RootRouteChildren {
   TodayRoute: typeof TodayRoute
   DamDamIdRoute: typeof DamDamIdRoute
   PrefecturePrefectureSlugRoute: typeof PrefecturePrefectureSlugRoute
+  WatchlistListIdRoute: typeof WatchlistListIdRoute
   PrefectureIndexRoute: typeof PrefectureIndexRoute
+  WatchlistIndexRoute: typeof WatchlistIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -172,11 +198,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/watchlist/': {
+      id: '/watchlist/'
+      path: '/watchlist'
+      fullPath: '/watchlist/'
+      preLoaderRoute: typeof WatchlistIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/prefecture/': {
       id: '/prefecture/'
       path: '/prefecture'
       fullPath: '/prefecture/'
       preLoaderRoute: typeof PrefectureIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/watchlist/$listId': {
+      id: '/watchlist/$listId'
+      path: '/watchlist/$listId'
+      fullPath: '/watchlist/$listId'
+      preLoaderRoute: typeof WatchlistListIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/prefecture/$prefectureSlug': {
@@ -204,7 +244,9 @@ const rootRouteChildren: RootRouteChildren = {
   TodayRoute: TodayRoute,
   DamDamIdRoute: DamDamIdRoute,
   PrefecturePrefectureSlugRoute: PrefecturePrefectureSlugRoute,
+  WatchlistListIdRoute: WatchlistListIdRoute,
   PrefectureIndexRoute: PrefectureIndexRoute,
+  WatchlistIndexRoute: WatchlistIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
