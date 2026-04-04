@@ -8,7 +8,7 @@ export default {
   async scheduled(
     controller: ScheduledController,
     env: Env,
-    ctx: ExecutionContext,
+    _ctx: ExecutionContext,
   ): Promise<void> {
     const url = `https://api.github.com/repos/${env.GITHUB_REPO}/actions/workflows/${env.GITHUB_WORKFLOW_ID}/dispatches`;
 
@@ -28,8 +28,6 @@ export default {
       throw new Error(`Failed to dispatch workflow: ${response.status}`);
     }
 
-    console.log(
-      `Workflow dispatched at ${new Date(controller.scheduledTime).toISOString()}`,
-    );
+    console.log(`Workflow dispatched at ${new Date(controller.scheduledTime).toISOString()}`);
   },
 } satisfies ExportedHandler<Env>;
