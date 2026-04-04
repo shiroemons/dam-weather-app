@@ -116,7 +116,7 @@ export default function DamCard({ dam, weather, storage, onRemove }: Props) {
         {dam.totalStorageCapacity != null && (
           <div className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400">
             <Box className="size-3.5 shrink-0 text-emerald-400" />
-            <span>{dam.totalStorageCapacity.toLocaleString()}万m³</span>
+            <span>{dam.totalStorageCapacity.toLocaleString()}千m³</span>
           </div>
         )}
         <div
