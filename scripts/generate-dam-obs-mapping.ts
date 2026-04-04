@@ -74,9 +74,7 @@ function normalizeName(name: string): string {
   // 末尾の「ダム」を除去
   let n = name.replace(/ダム$/, "");
   // 全角英数字を半角に変換
-  n = n.replace(/[Ａ-Ｚａ-ｚ０-９]/g, (ch) =>
-    String.fromCharCode(ch.charCodeAt(0) - 0xfee0),
-  );
+  n = n.replace(/[Ａ-Ｚａ-ｚ０-９]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0xfee0));
   // スペース除去
   n = n.replace(/\s+/g, "");
   // 「（」「）」内の注釈を除去
@@ -287,9 +285,7 @@ async function main(): Promise<void> {
   }
 
   // Sort by obsFcd key and write output
-  const sorted = Object.fromEntries(
-    Object.entries(mapping).sort(([a], [b]) => a.localeCompare(b)),
-  );
+  const sorted = Object.fromEntries(Object.entries(mapping).sort(([a], [b]) => a.localeCompare(b)));
 
   fs.writeFileSync(OUTPUT_PATH, JSON.stringify(sorted, null, 2), "utf-8");
   console.log(`\nマッピングを書き出しました: ${OUTPUT_PATH}`);
