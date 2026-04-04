@@ -63,7 +63,7 @@ export default function PrefectureCard({ prefecture, weatherCategory = "default"
     <Link
       to="/prefecture/$prefectureSlug"
       params={{ prefectureSlug: prefecture.slug }}
-      search={{ obs: true, group: "waterSystem", purposes: "", types: "", q: "" }}
+      search={{ obs: false, group: "waterSystem", purposes: "", types: "", q: "" }}
       className={`group block rounded-2xl border bg-gradient-to-br p-5 shadow-sm transition-all duration-200 hover:scale-[1.02] hover:shadow-md motion-reduce:hover:scale-100 ${CARD_CLASSES[weatherCategory]}`}
     >
       <div className="flex items-center justify-between">

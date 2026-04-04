@@ -18,7 +18,7 @@ import { SITE_NAME, SITE_URL } from "@/config/seo";
 
 export const Route = createFileRoute("/prefecture/$prefectureSlug")({
   validateSearch: (search: Record<string, unknown>) => ({
-    obs: search.obs === false || search.obs === "false" ? false : true,
+    obs: search.obs === true || search.obs === "true" ? true : false,
     group: search.group === "municipality" ? ("municipality" as const) : ("waterSystem" as const),
     purposes: typeof search.purposes === "string" ? search.purposes : "",
     types: typeof search.types === "string" ? search.types : "",
