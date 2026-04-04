@@ -24,7 +24,7 @@ export default function DamMarkerPopup({ dam, weather }: Props) {
         {dam.prefecture} {dam.municipality}
       </p>
       {dam.damType && (
-        <span className="mt-1 inline-block rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-600">
+        <span className="mt-1 inline-block rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-600">
           {dam.damType}
         </span>
       )}

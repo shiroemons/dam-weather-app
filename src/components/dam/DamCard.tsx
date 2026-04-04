@@ -88,7 +88,7 @@ export default function DamCard({ dam, weather, onRemove }: Props) {
       {/* 3行目: ダム種別 */}
       {dam.damType && (
         <div className="mt-1">
-          <span className="rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-600 shadow-sm dark:bg-blue-900/30 dark:text-blue-400">
+          <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-600 shadow-sm dark:bg-emerald-900/30 dark:text-emerald-400">
             {dam.damType}
           </span>
         </div>
