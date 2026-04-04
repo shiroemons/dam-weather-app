@@ -37,6 +37,7 @@ jobs:
           vp dlx tsx scripts/generate-sitemap.ts
           vp exec tsc -b
           vp build
+          vp dlx tsx scripts/prerender.ts
 
       # Cloudflare Pages へデプロイ（天気データ取得成功時のみ実行）
       - if: success()
