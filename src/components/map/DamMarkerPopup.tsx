@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 
+import WatchlistAddButton from "@/components/watchlist/WatchlistAddButton";
 import WeatherIcon from "@/components/weather/WeatherIcon";
 import type { Dam } from "@/types/dam";
 import type { DamWeather } from "@/types/weather";
@@ -42,6 +43,9 @@ export default function DamMarkerPopup({ dam, weather }: Props) {
           </div>
         </div>
       )}
+      <div className="mt-2 border-t border-gray-200 pt-2">
+        <WatchlistAddButton damId={dam.id} variant="icon" />
+      </div>
     </div>
   );
 }

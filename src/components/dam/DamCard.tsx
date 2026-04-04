@@ -4,6 +4,7 @@ import type { DamWeather } from "@/types/weather";
 import { Link } from "@tanstack/react-router";
 import { MapPin, Droplets, Waves, Box, ExternalLink } from "lucide-react";
 import DayWeather from "@/components/weather/DayWeather";
+import WatchlistAddButton from "@/components/watchlist/WatchlistAddButton";
 import { PURPOSE_SHORT_MAP } from "@/data/purposes";
 import { getWeatherCardClasses } from "@/lib/weatherColors";
 
@@ -30,19 +31,22 @@ export default function DamCard({ dam, weather }: Props) {
         >
           {dam.damName}
         </Link>
-        <span className="group/link-tooltip relative">
-          <a
-            href={riverInfoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`transition-colors hover:text-blue-500 ${dam.riverUrl ? "text-blue-500" : "text-gray-300 dark:text-gray-600"}`}
-          >
-            <ExternalLink className="size-4" />
-          </a>
-          <span className="pointer-events-none absolute bottom-full right-0 mb-2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover/link-tooltip:opacity-100 after:absolute after:right-1 after:top-full after:border-4 after:border-transparent after:border-t-gray-800">
-            {dam.riverUrl ? "川の防災情報（詳細）" : "川の防災情報（地図）"}
+        <div className="flex items-center gap-1.5">
+          <WatchlistAddButton damId={dam.id} variant="icon" />
+          <span className="group/link-tooltip relative">
+            <a
+              href={riverInfoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`transition-colors hover:text-blue-500 ${dam.riverUrl ? "text-blue-500" : "text-gray-300 dark:text-gray-600"}`}
+            >
+              <ExternalLink className="size-4" />
+            </a>
+            <span className="pointer-events-none absolute bottom-full right-0 mb-2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover/link-tooltip:opacity-100 after:absolute after:right-1 after:top-full after:border-4 after:border-transparent after:border-t-gray-800">
+              {dam.riverUrl ? "川の防災情報（詳細）" : "川の防災情報（地図）"}
+            </span>
           </span>
-        </span>
+        </div>
       </div>
 
       {/* 2行目: 用途 */}

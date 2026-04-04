@@ -16,6 +16,7 @@ import { useWeather } from "@/hooks/useWeather";
 import DayWeather from "@/components/weather/DayWeather";
 import { PURPOSE_SHORT_MAP } from "@/data/purposes";
 import { getWeatherCardClasses } from "@/lib/weatherColors";
+import WatchlistAddButton from "@/components/watchlist/WatchlistAddButton";
 import { SITE_NAME, SITE_URL } from "@/config/seo";
 import "leaflet/dist/leaflet.css";
 
@@ -111,6 +112,7 @@ function DamDetailPage() {
       <div className="mt-6">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{dam.damName}</h1>
+          <WatchlistAddButton damId={dam.id} variant="button" />
           <a
             href={riverInfoUrl}
             target="_blank"
