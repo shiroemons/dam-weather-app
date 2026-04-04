@@ -4,6 +4,12 @@
  * Downloads kawabou_dam_master.json from japan-dam-map and matches entries
  * against src/data/dams.json to produce an obsFcd → dam ID mapping file.
  *
+ * Matching is performed in 4 passes:
+ *   Pass 0: Direct derivation from riverUrl (most reliable)
+ *   Pass 1: Exact dam name match via kawabou_dam_master
+ *   Pass 2: Normalized dam name match via kawabou_dam_master
+ *   Pass 3: Coordinate proximity match via kawabou_dam_master
+ *
  * Usage: npx tsx scripts/generate-dam-obs-mapping.ts
  */
 
@@ -32,6 +38,7 @@ interface DamEntry {
   prefectureCode: string;
   latitude: number;
   longitude: number;
+  riverUrl?: string;
 }
 
 interface KawabouEntry {
@@ -82,9 +89,43 @@ function coordDistance(lat1: number, lon1: number, lat2: number, lon2: number): 
   return Math.sqrt(Math.pow(lat1 - lat2, 2) + Math.pow(lon1 - lon2, 2));
 }
 
+/**
+ * riverUrl から obsFcd を導出する。
+ * パターン: ofcCd=XXXXX&itmkndCd=7&obsCd=Y
+ * obsFcd = ofcCd(0パディング5桁) + "007" + obsCd(0パディング5桁)
+ * itmkndCd=7 以外のURLはスキップする。
+ */
+function deriveObsFcdFromRiverUrl(riverUrl: string): string | null {
+  const url = new URL(riverUrl);
+  const itmkndCd = url.searchParams.get("itmkndCd");
+  if (itmkndCd !== "7") {
+    return null;
+  }
+  const ofcCd = url.searchParams.get("ofcCd");
+  const obsCd = url.searchParams.get("obsCd");
+  if (!ofcCd || !obsCd) {
+    return null;
+  }
+  return ofcCd.padStart(5, "0") + "007" + obsCd.padStart(5, "0");
+}
+
 // ---------------------------------------------------------------------------
 // Matching passes
 // ---------------------------------------------------------------------------
+
+function matchByRiverUrl(dams: DamEntry[]): Map<string, string> {
+  const result = new Map<string, string>();
+  for (const dam of dams) {
+    if (!dam.riverUrl) {
+      continue;
+    }
+    const obsFcd = deriveObsFcdFromRiverUrl(dam.riverUrl);
+    if (obsFcd) {
+      result.set(obsFcd, dam.id);
+    }
+  }
+  return result;
+}
 
 function matchByExactName(
   kawabouEntries: [string, KawabouEntry][],
@@ -178,28 +219,40 @@ async function main(): Promise<void> {
   const dams = JSON.parse(fs.readFileSync(DAMS_JSON_PATH, "utf-8")) as DamEntry[];
   console.log(`dams.json 読み込み: ${dams.length} ダム\n`);
 
-  // Pass 1: exact name match
-  const pass1 = matchByExactName(kawabouEntries, dams);
+  // Pass 0: direct derivation from riverUrl (highest reliability)
+  const pass0 = matchByRiverUrl(dams);
+  console.log(`パス0 (riverUrl直接導出): ${pass0.size} 件マッチ`);
+
+  // Exclude pass0 matches from kawabou-based passes
+  const pass0DamIds = new Set(pass0.values());
+  const remainingForKawabou = dams.filter((d) => !pass0DamIds.has(d.id));
+  const kawabouUnmatched0 = kawabouEntries.filter(([obsFcd]) => !pass0.has(obsFcd));
+
+  // Pass 1: exact name match (on dams not matched in pass 0)
+  const pass1 = matchByExactName(kawabouUnmatched0, remainingForKawabou);
   console.log(`パス1 (ダム名完全一致): ${pass1.size} 件マッチ`);
 
-  const unmatched1 = kawabouEntries.filter(([obsFcd]) => !pass1.has(obsFcd));
+  const kawabouUnmatched1 = kawabouUnmatched0.filter(([obsFcd]) => !pass1.has(obsFcd));
 
   // Pass 2: normalized name match (on unmatched from pass 1)
-  const usedDamIds1 = new Set(pass1.values());
+  const usedDamIds1 = new Set([...pass0DamIds, ...pass1.values()]);
   const remainingDams1 = dams.filter((d) => !usedDamIds1.has(d.id));
-  const pass2 = matchByNormalizedName(unmatched1, remainingDams1);
+  const pass2 = matchByNormalizedName(kawabouUnmatched1, remainingDams1);
   console.log(`パス2 (ダム名正規化一致): ${pass2.size} 件マッチ`);
 
-  const unmatched2 = unmatched1.filter(([obsFcd]) => !pass2.has(obsFcd));
+  const kawabouUnmatched2 = kawabouUnmatched1.filter(([obsFcd]) => !pass2.has(obsFcd));
 
-  // Pass 3: coordinate proximity match (on unmatched from pass 1 and 2)
-  const usedDamIds2 = new Set([...pass1.values(), ...pass2.values()]);
+  // Pass 3: coordinate proximity match (on unmatched from passes 1 and 2)
+  const usedDamIds2 = new Set([...usedDamIds1, ...pass2.values()]);
   const remainingDams2 = dams.filter((d) => !usedDamIds2.has(d.id));
-  const pass3 = matchByCoordProximity(unmatched2, remainingDams2);
+  const pass3 = matchByCoordProximity(kawabouUnmatched2, remainingDams2);
   console.log(`パス3 (座標近接マッチ): ${pass3.size} 件マッチ`);
 
   // Merge all passes
   const mapping: Record<string, string> = {};
+  for (const [obsFcd, damId] of pass0) {
+    mapping[obsFcd] = damId;
+  }
   for (const [obsFcd, damId] of pass1) {
     mapping[obsFcd] = damId;
   }
@@ -210,19 +263,22 @@ async function main(): Promise<void> {
     mapping[obsFcd] = damId;
   }
 
-  const unmatched3 = unmatched2.filter(([obsFcd]) => !pass3.has(obsFcd));
-  const totalMatched = pass1.size + pass2.size + pass3.size;
+  const kawabouUnmatched3 = kawabouUnmatched2.filter(([obsFcd]) => !pass3.has(obsFcd));
+  const totalMatched = pass0.size + pass1.size + pass2.size + pass3.size;
 
   // Summary
   console.log("\n=== Summary ===");
+  console.log(`dams.json 総件数: ${dams.length}`);
   console.log(`kawabouエントリ数: ${kawabouEntries.length}`);
-  console.log(`マッチ数: ${totalMatched} (パス1: ${pass1.size}, パス2: ${pass2.size}, パス3: ${pass3.size})`);
-  console.log(`未マッチ数: ${unmatched3.length}`);
+  console.log(
+    `マッチ数: ${totalMatched} (パス0: ${pass0.size}, パス1: ${pass1.size}, パス2: ${pass2.size}, パス3: ${pass3.size})`,
+  );
+  console.log(`kawabou未マッチ数: ${kawabouUnmatched3.length}`);
 
-  // Log unmatched entries for debugging
-  if (unmatched3.length > 0) {
+  // Log unmatched kawabou entries for debugging
+  if (kawabouUnmatched3.length > 0) {
     console.log("\n=== 未マッチのkawabouエントリ ===");
-    for (const [obsFcd, entry] of unmatched3) {
+    for (const [obsFcd, entry] of kawabouUnmatched3) {
       const prefCode = kawabouPrefCode(entry.prefCd);
       console.log(
         `  ${obsFcd}  ${entry.name}  prefCd=${entry.prefCd}(→${prefCode})  lat=${entry.lat}  lon=${entry.lon}`,
