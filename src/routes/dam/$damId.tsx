@@ -243,7 +243,7 @@ function DamDetailPage() {
                 総貯水容量
               </dt>
               <dd className="text-sm text-gray-900 dark:text-gray-100">
-                {dam.totalStorageCapacity.toLocaleString()}万m³
+                {dam.totalStorageCapacity.toLocaleString()}千m³
               </dd>
             </div>
           )}
