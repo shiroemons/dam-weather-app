@@ -8,9 +8,10 @@ import type { DamWeather } from "@/types/weather";
 type Props = {
   dam: Dam;
   weather?: DamWeather;
+  updatedAt?: string | null;
 };
 
-export default function DamMarkerPopup({ dam, weather }: Props) {
+export default function DamMarkerPopup({ dam, weather, updatedAt }: Props) {
   return (
     <div className="min-w-48">
       <Link
@@ -42,6 +43,11 @@ export default function DamMarkerPopup({ dam, weather }: Props) {
             )}
           </div>
         </div>
+      )}
+      {updatedAt && (
+        <p className="mt-1 text-[10px] text-gray-400">
+          更新: {new Date(updatedAt).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}
+        </p>
       )}
       <div className="mt-2 border-t border-gray-200 pt-2">
         <WatchlistAddButton damId={dam.id} variant="icon" />

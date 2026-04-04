@@ -117,10 +117,25 @@ function TodayPage() {
 
   const totalDams = weatherMap.size;
 
+  const latestUpdatedAt = useMemo(() => {
+    let latest = "";
+    for (const query of weatherQueries) {
+      if (query.data?.updatedAt && query.data.updatedAt > latest) {
+        latest = query.data.updatedAt;
+      }
+    }
+    return latest || null;
+  }, [weatherQueries]);
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">今日のダム天気</h1>
       <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">全国のダムの天気概況</p>
+      {latestUpdatedAt && (
+        <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">
+          更新日時: {new Date(latestUpdatedAt).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}
+        </p>
+      )}
 
       {isLoading && (
         <div className="mt-6">

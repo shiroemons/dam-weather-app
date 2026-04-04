@@ -46,5 +46,15 @@ export function useWatchlistWeather(damIds: string[]) {
     return map;
   }, [damIds, weatherQueries]);
 
-  return { weatherMap, isLoading };
+  const updatedAt = useMemo(() => {
+    let latest = "";
+    for (const query of weatherQueries) {
+      if (query.data?.updatedAt && query.data.updatedAt > latest) {
+        latest = query.data.updatedAt;
+      }
+    }
+    return latest || null;
+  }, [weatherQueries]);
+
+  return { weatherMap, isLoading, updatedAt };
 }

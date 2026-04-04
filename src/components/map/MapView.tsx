@@ -32,6 +32,7 @@ type Props = {
   singleMarker?: boolean;
   prefectureSummaries?: PrefectureSummary[];
   onPrefectureClick?: (slug: string) => void;
+  updatedAt?: string | null;
 };
 
 const JAPAN_CENTER: [number, number] = [36.5, 137.0];
@@ -121,6 +122,7 @@ export default function MapView({
   singleMarker = false,
   prefectureSummaries,
   onPrefectureClick,
+  updatedAt,
 }: Props) {
   const [currentZoom, setCurrentZoom] = useState(zoom);
   const showPrefecturePins =
@@ -129,7 +131,7 @@ export default function MapView({
   const markers = dams.map((dam) => (
     <Marker key={dam.id} position={[dam.latitude, dam.longitude]}>
       <Popup>
-        <DamMarkerPopup dam={dam} weather={weatherMap?.get(dam.id)} />
+        <DamMarkerPopup dam={dam} weather={weatherMap?.get(dam.id)} updatedAt={updatedAt} />
       </Popup>
     </Marker>
   ));

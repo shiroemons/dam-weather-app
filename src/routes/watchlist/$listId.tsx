@@ -89,7 +89,7 @@ function WatchlistDetailPage() {
 
   // Must call hooks unconditionally
   const damIds = list?.damIds ?? [];
-  const { weatherMap, isLoading } = useWatchlistWeather(damIds);
+  const { weatherMap, isLoading, updatedAt } = useWatchlistWeather(damIds);
 
   const dams = useMemo(
     () => damIds.map((id) => getDamById(id)).filter((d): d is Dam => d !== undefined),
@@ -308,6 +308,11 @@ function WatchlistDetailPage() {
           <div className="mt-3">
             <WeatherSummaryBar counts={counts} total={total} />
           </div>
+          {updatedAt && (
+            <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
+              更新日時: {new Date(updatedAt).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}
+            </p>
+          )}
         </div>
       ) : null}
 

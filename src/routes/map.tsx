@@ -128,6 +128,16 @@ function MapPage() {
     return result;
   }, [allDams, filteredDams, selectedFilter]);
 
+  const latestUpdatedAt = useMemo(() => {
+    let latest = "";
+    for (const query of weatherQueries) {
+      if (query.data?.updatedAt && query.data.updatedAt > latest) {
+        latest = query.data.updatedAt;
+      }
+    }
+    return latest || null;
+  }, [weatherQueries]);
+
   const handlePrefectureClick = useCallback((slug: string) => {
     setSelectedFilter(`pref:${slug}`);
   }, []);
@@ -140,6 +150,12 @@ function MapPage() {
           selectedFilter={selectedFilter}
           onFilterChange={setSelectedFilter}
         />
+        {latestUpdatedAt && (
+          <p className="mt-1 rounded bg-white/80 px-2 py-0.5 text-xs text-gray-500 backdrop-blur dark:bg-gray-800/80 dark:text-gray-400">
+            更新日時:{" "}
+            {new Date(latestUpdatedAt).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}
+          </p>
+        )}
       </div>
 
       <Suspense
@@ -155,6 +171,7 @@ function MapPage() {
           bounds={bounds}
           prefectureSummaries={prefectureSummaries}
           onPrefectureClick={handlePrefectureClick}
+          updatedAt={latestUpdatedAt}
           className="h-full w-full"
         />
       </Suspense>
