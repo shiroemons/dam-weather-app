@@ -15,12 +15,14 @@ import { CSS } from "@dnd-kit/utilities";
 import { ChevronRight, Download, GripVertical, Pencil, Trash2 } from "lucide-react";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 import { getDamById } from "@/hooks/useAllDams";
+import { useWatchlistStorage } from "@/hooks/useWatchlistStorage";
 import { useWatchlistWeather } from "@/hooks/useWatchlistWeather";
 import { getWeatherCategory } from "@/lib/weatherColors";
 import WeatherSummaryBar from "@/components/today/WeatherSummaryBar";
 import DamCard from "@/components/dam/DamCard";
 import type { WeatherCategory } from "@/lib/weatherColors";
 import type { Dam } from "@/types/dam";
+import type { DamStorage } from "@/types/storage";
 import type { DamWeather } from "@/types/weather";
 
 export const Route = createFileRoute("/watchlist/$listId")({
@@ -34,10 +36,12 @@ function emptyCounts(): Record<WeatherCategory, number> {
 function SortableDamCard({
   dam,
   weather,
+  storage,
   onRemove,
 }: {
   dam: Dam;
   weather: DamWeather | undefined;
+  storage?: DamStorage;
   onRemove: () => void;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -69,7 +73,7 @@ function SortableDamCard({
           ドラッグして並べ替え
         </span>
       </span>
-      <DamCard dam={dam} weather={weather} onRemove={onRemove} />
+      <DamCard dam={dam} weather={weather} storage={storage} onRemove={onRemove} />
     </div>
   );
 }
@@ -90,6 +94,7 @@ function WatchlistDetailPage() {
   // Must call hooks unconditionally
   const damIds = list?.damIds ?? [];
   const { weatherMap, isLoading, updatedAt } = useWatchlistWeather(damIds);
+  const { storageMap } = useWatchlistStorage(damIds);
 
   const dams = useMemo(
     () => damIds.map((id) => getDamById(id)).filter((d): d is Dam => d !== undefined),
@@ -338,6 +343,7 @@ function WatchlistDetailPage() {
                   key={dam.id}
                   dam={dam}
                   weather={weatherMap.get(dam.id)}
+                  storage={storageMap.get(dam.id)}
                   onRemove={() => handleRemoveDam(dam.id)}
                 />
               ))}
@@ -346,7 +352,11 @@ function WatchlistDetailPage() {
           <DragOverlay>
             {activeDam ? (
               <div className="rotate-1 opacity-95 shadow-2xl">
-                <DamCard dam={activeDam} weather={weatherMap.get(activeDam.id)} />
+                <DamCard
+                  dam={activeDam}
+                  weather={weatherMap.get(activeDam.id)}
+                  storage={storageMap.get(activeDam.id)}
+                />
               </div>
             ) : null}
           </DragOverlay>

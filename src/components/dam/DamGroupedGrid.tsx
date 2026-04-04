@@ -1,4 +1,5 @@
 import type { Dam } from "@/types/dam";
+import type { PrefectureStorage } from "@/types/storage";
 import type { PrefectureWeather } from "@/types/weather";
 
 import DamCardGrid from "./DamCardGrid";
@@ -8,6 +9,7 @@ export type GroupByMode = "municipality" | "waterSystem";
 type Props = {
   dams: Dam[];
   weather: PrefectureWeather | undefined;
+  storage?: PrefectureStorage;
   groupBy?: GroupByMode;
 };
 
@@ -25,7 +27,7 @@ function getGroupKey(dam: Dam, groupBy: GroupByMode): string {
   return getMunicipalityKey(dam);
 }
 
-export default function DamGroupedGrid({ dams, weather, groupBy = "waterSystem" }: Props) {
+export default function DamGroupedGrid({ dams, weather, storage, groupBy = "waterSystem" }: Props) {
   if (dams.length === 0) {
     return (
       <p className="py-12 text-center text-gray-500 dark:text-gray-400">ダムが見つかりません</p>
@@ -56,7 +58,7 @@ export default function DamGroupedGrid({ dams, weather, groupBy = "waterSystem" 
               ({groupDams.length}基)
             </span>
           </h2>
-          <DamCardGrid dams={groupDams} weather={weather} />
+          <DamCardGrid dams={groupDams} weather={weather} storage={storage} />
         </section>
       ))}
     </div>

@@ -1,18 +1,23 @@
 import { lazy, Suspense } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  MapPin,
-  Droplets,
-  Waves,
+  Activity,
+  ArrowDownToLine,
+  ArrowUpFromLine,
   Box,
-  Mountain,
-  Calendar,
   Building2,
-  ExternalLink,
+  Calendar,
   ChevronRight,
   CloudRain,
+  Droplets,
+  ExternalLink,
+  Gauge,
+  MapPin,
+  Mountain,
+  Waves,
 } from "lucide-react";
 import { getDamById, useDamById } from "@/hooks/useAllDams";
+import { useStorage } from "@/hooks/useStorage";
 import { useWeather } from "@/hooks/useWeather";
 import DayWeather from "@/components/weather/DayWeather";
 import { PURPOSE_SHORT_MAP } from "@/data/purposes";
@@ -70,6 +75,7 @@ function DamDetailPage() {
   const { damId } = Route.useParams();
   const dam = useDamById(damId);
   const { data: weather, isLoading: weatherLoading } = useWeather(dam?.prefectureSlug ?? "");
+  const { data: storage } = useStorage(dam?.prefectureSlug ?? "");
 
   if (!dam) {
     return (
@@ -86,6 +92,7 @@ function DamDetailPage() {
   }
 
   const damWeather = weather?.dams.find((w) => w.damId === damId);
+  const damStorage = storage?.dams.find((s) => s.damId === damId);
   const riverInfoUrl =
     dam.riverUrl ??
     `https://www.river.go.jp/kawabou/pc/tm?zm=15&clat=${dam.latitude}&clon=${dam.longitude}&itmkndCd=7&mapType=0`;
@@ -251,6 +258,73 @@ function DamDetailPage() {
           )}
         </dl>
       </div>
+
+      {/* Storage Section */}
+      {damStorage && (
+        <div className="mt-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">貯水状況</h2>
+          <dl className="mt-3 divide-y divide-gray-200 rounded-xl bg-white p-4 shadow-sm dark:divide-gray-700 dark:bg-gray-800">
+            {damStorage.storageRate != null && (
+              <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+                <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
+                  <Activity className="size-4 text-violet-400" />
+                  貯水率
+                </dt>
+                <dd className="text-sm text-gray-900 dark:text-gray-100">
+                  {damStorage.storageRate}%
+                </dd>
+              </div>
+            )}
+            {damStorage.storageLevel > 0 && (
+              <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+                <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
+                  <Gauge className="size-4 text-sky-400" />
+                  貯水位
+                </dt>
+                <dd className="text-sm text-gray-900 dark:text-gray-100">
+                  {damStorage.storageLevel}m
+                </dd>
+              </div>
+            )}
+            {damStorage.storageCapacity > 0 && (
+              <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+                <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
+                  <Droplets className="size-4 text-teal-400" />
+                  貯水量
+                </dt>
+                <dd className="text-sm text-gray-900 dark:text-gray-100">
+                  {damStorage.storageCapacity.toLocaleString()}千m³
+                </dd>
+              </div>
+            )}
+            {damStorage.inflow > 0 && (
+              <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+                <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
+                  <ArrowDownToLine className="size-4 text-blue-400" />
+                  流入量
+                </dt>
+                <dd className="text-sm text-gray-900 dark:text-gray-100">
+                  {damStorage.inflow}m³/s
+                </dd>
+              </div>
+            )}
+            {damStorage.outflow > 0 && (
+              <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+                <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
+                  <ArrowUpFromLine className="size-4 text-orange-400" />
+                  放流量
+                </dt>
+                <dd className="text-sm text-gray-900 dark:text-gray-100">
+                  {damStorage.outflow}m³/s
+                </dd>
+              </div>
+            )}
+          </dl>
+          <p className="mt-2 text-right text-xs text-gray-400 dark:text-gray-500">
+            観測: {damStorage.obsTime}
+          </p>
+        </div>
+      )}
 
       {/* Map */}
       <div className="mt-6">

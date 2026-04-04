@@ -1,8 +1,9 @@
 import type { Dam } from "@/types/dam";
+import type { DamStorage } from "@/types/storage";
 import type { DamWeather } from "@/types/weather";
 
 import { Link } from "@tanstack/react-router";
-import { MapPin, Droplets, Waves, Box, ExternalLink, X, CloudRain } from "lucide-react";
+import { Activity, MapPin, Droplets, Waves, Box, ExternalLink, X, CloudRain } from "lucide-react";
 import DayWeather from "@/components/weather/DayWeather";
 import WatchlistAddButton from "@/components/watchlist/WatchlistAddButton";
 import { PURPOSE_SHORT_MAP } from "@/data/purposes";
@@ -12,10 +13,11 @@ import { getYahooRadarUrl } from "@/lib/externalLinks";
 type Props = {
   dam: Dam;
   weather: DamWeather | undefined;
+  storage?: DamStorage;
   onRemove?: () => void;
 };
 
-export default function DamCard({ dam, weather, onRemove }: Props) {
+export default function DamCard({ dam, weather, storage, onRemove }: Props) {
   const riverInfoUrl =
     dam.riverUrl ??
     `https://www.river.go.jp/kawabou/pc/tm?zm=15&clat=${dam.latitude}&clon=${dam.longitude}&itmkndCd=7&mapType=0`;
@@ -117,6 +119,12 @@ export default function DamCard({ dam, weather, onRemove }: Props) {
             <span>{dam.totalStorageCapacity.toLocaleString()}万m³</span>
           </div>
         )}
+        <div
+          className={`flex items-center gap-1.5 text-sm ${storage?.storageRate != null ? "text-gray-500 dark:text-gray-400" : "invisible"}`}
+        >
+          <Activity className="size-3.5 shrink-0 text-violet-400" />
+          <span>貯水率 {storage?.storageRate ?? 0}%</span>
+        </div>
       </div>
 
       {weather === undefined ? (

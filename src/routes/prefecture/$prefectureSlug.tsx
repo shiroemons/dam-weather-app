@@ -4,6 +4,7 @@ import { getPrefectureBySlug } from "@/data/prefectures";
 import { PURPOSE_SHORT_MAP, PURPOSE_SHORT_TO_LABEL } from "@/data/purposes";
 import { DAM_TYPE_LABEL_TO_SHORT, DAM_TYPE_SHORT_TO_LABEL } from "@/data/damTypes";
 import { useFilteredDams } from "@/hooks/useDams";
+import { useStorage } from "@/hooks/useStorage";
 import { useWeather } from "@/hooks/useWeather";
 import DamGroupedGrid from "@/components/dam/DamGroupedGrid";
 import DamCardSkeleton from "@/components/dam/DamCardSkeleton";
@@ -156,6 +157,7 @@ function PrefecturePage() {
     isError: weatherError,
     refetch,
   } = useWeather(prefectureSlug);
+  const { data: storageData } = useStorage(prefectureSlug);
 
   if (!prefecture) {
     return (
@@ -248,7 +250,7 @@ function PrefecturePage() {
             </p>
           )}
           <div className="mt-6">
-            <DamGroupedGrid dams={dams} weather={weather} groupBy={group} />
+            <DamGroupedGrid dams={dams} weather={weather} storage={storageData} groupBy={group} />
           </div>
         </>
       )}
