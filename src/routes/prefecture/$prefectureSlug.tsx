@@ -8,14 +8,17 @@ import { useStorage } from "@/hooks/useStorage";
 import { useWeather } from "@/hooks/useWeather";
 import DamGroupedGrid from "@/components/dam/DamGroupedGrid";
 import DamCardSkeleton from "@/components/dam/DamCardSkeleton";
+import DamListView from "@/components/dam/DamListView";
 import DamSearchInput from "@/components/dam/DamSearchInput";
 import DamTypeFilter from "@/components/dam/DamTypeFilter";
 import FilterToggle from "@/components/dam/FilterToggle";
 import GroupBySelector from "@/components/dam/GroupBySelector";
 import PurposeFilter from "@/components/dam/PurposeFilter";
+import ViewModeSelector from "@/components/dam/ViewModeSelector";
 import type { GroupByMode } from "@/components/dam/DamGroupedGrid";
 import ErrorFallback from "@/components/common/ErrorFallback";
 import { SITE_NAME, SITE_URL } from "@/config/seo";
+import type { ViewMode, SortField, SortDirection } from "@/lib/sortDams";
 
 export const Route = createFileRoute("/prefecture/$prefectureSlug")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -24,6 +27,15 @@ export const Route = createFileRoute("/prefecture/$prefectureSlug")({
     purposes: typeof search.purposes === "string" ? search.purposes : "",
     types: typeof search.types === "string" ? search.types : "",
     q: typeof search.q === "string" ? search.q : "",
+    view: search.view === "list" ? ("list" as const) : ("grid" as const),
+    sort:
+      search.sort === "capacity" ||
+      search.sort === "rate" ||
+      search.sort === "waterSystem" ||
+      search.sort === "river"
+        ? (search.sort as SortField)
+        : ("name" as const),
+    order: search.order === "desc" ? ("desc" as const) : ("asc" as const),
   }),
   head: ({ params }) => {
     const prefecture = getPrefectureBySlug(params.prefectureSlug);
@@ -63,12 +75,12 @@ export const Route = createFileRoute("/prefecture/$prefectureSlug")({
 
 function PrefecturePage() {
   const { prefectureSlug } = Route.useParams();
-  const { obs, group, purposes, types, q } = Route.useSearch();
+  const { obs, group, purposes, types, q, view, sort, order } = Route.useSearch();
   const navigate = Route.useNavigate();
 
   useEffect(() => {
     void navigate({
-      search: { obs, group, purposes, types, q },
+      search: { obs, group, purposes, types, q, view, sort, order },
       replace: true,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -142,6 +154,20 @@ function PrefecturePage() {
     });
   }
 
+  function setViewMode(mode: ViewMode): void {
+    void navigate({
+      search: (prev) => ({ ...prev, view: mode }),
+      replace: true,
+    });
+  }
+
+  function setSortParams(field: SortField, direction: SortDirection): void {
+    void navigate({
+      search: (prev) => ({ ...prev, sort: field, order: direction }),
+      replace: true,
+    });
+  }
+
   const prefecture = getPrefectureBySlug(prefectureSlug);
   const {
     dams,
@@ -187,7 +213,8 @@ function PrefecturePage() {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3 self-start md:gap-4 md:self-auto">
-          <GroupBySelector value={group} onChange={setGroupBy} />
+          {view === "grid" && <GroupBySelector value={group} onChange={setGroupBy} />}
+          <ViewModeSelector value={view} onChange={setViewMode} />
           <FilterToggle enabled={obs} onChange={setObsOnly} />
         </div>
       </div>
@@ -250,7 +277,18 @@ function PrefecturePage() {
             </p>
           )}
           <div className="mt-6">
-            <DamGroupedGrid dams={dams} weather={weather} storage={storageData} groupBy={group} />
+            {view === "grid" ? (
+              <DamGroupedGrid dams={dams} weather={weather} storage={storageData} groupBy={group} />
+            ) : (
+              <DamListView
+                dams={dams}
+                weather={weather}
+                storage={storageData}
+                sortField={sort}
+                sortDirection={order}
+                onSort={setSortParams}
+              />
+            )}
           </div>
         </>
       )}
