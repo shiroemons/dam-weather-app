@@ -143,11 +143,6 @@ function DamDetailPage() {
               </span>
             ) : null;
           })}
-          {dam.isMajor && (
-            <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
-              主要ダム
-            </span>
-          )}
         </div>
       </div>
 
