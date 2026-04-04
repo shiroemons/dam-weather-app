@@ -24,7 +24,7 @@ export default function Footer() {
                       <Link
                         to="/prefecture/$prefectureSlug"
                         params={{ prefectureSlug: pref.slug }}
-                        search={{ obs: true, group: "waterSystem", purposes: "", types: "" }}
+                        search={{ obs: true, group: "waterSystem", purposes: "", types: "", q: "" }}
                         className="block py-1 text-xs text-gray-500 transition-colors hover:text-sky-600 dark:text-gray-400 dark:hover:text-sky-400"
                       >
                         {pref.name}

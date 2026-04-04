@@ -7,6 +7,7 @@ import { useFilteredDams } from "@/hooks/useDams";
 import { useWeather } from "@/hooks/useWeather";
 import DamGroupedGrid from "@/components/dam/DamGroupedGrid";
 import DamCardSkeleton from "@/components/dam/DamCardSkeleton";
+import DamSearchInput from "@/components/dam/DamSearchInput";
 import DamTypeFilter from "@/components/dam/DamTypeFilter";
 import FilterToggle from "@/components/dam/FilterToggle";
 import GroupBySelector from "@/components/dam/GroupBySelector";
@@ -21,6 +22,7 @@ export const Route = createFileRoute("/prefecture/$prefectureSlug")({
     group: search.group === "municipality" ? ("municipality" as const) : ("waterSystem" as const),
     purposes: typeof search.purposes === "string" ? search.purposes : "",
     types: typeof search.types === "string" ? search.types : "",
+    q: typeof search.q === "string" ? search.q : "",
   }),
   head: ({ params }) => {
     const prefecture = getPrefectureBySlug(params.prefectureSlug);
@@ -60,12 +62,12 @@ export const Route = createFileRoute("/prefecture/$prefectureSlug")({
 
 function PrefecturePage() {
   const { prefectureSlug } = Route.useParams();
-  const { obs, group, purposes, types } = Route.useSearch();
+  const { obs, group, purposes, types, q } = Route.useSearch();
   const navigate = Route.useNavigate();
 
   useEffect(() => {
     void navigate({
-      search: { obs, group, purposes, types },
+      search: { obs, group, purposes, types, q },
       replace: true,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -121,6 +123,13 @@ function PrefecturePage() {
     });
   }
 
+  function setKeyword(value: string): void {
+    void navigate({
+      search: (prev) => ({ ...prev, q: value }),
+      replace: true,
+    });
+  }
+
   function setSelectedTypes(selected: Set<string>): void {
     const codes = Array.from(selected)
       .map((label) => DAM_TYPE_LABEL_TO_SHORT.get(label))
@@ -140,7 +149,7 @@ function PrefecturePage() {
     availableTypes,
     isLoading: damsLoading,
     isError: damsError,
-  } = useFilteredDams(prefectureSlug, obs, selectedPurposes, selectedTypes);
+  } = useFilteredDams(prefectureSlug, obs, selectedPurposes, selectedTypes, q);
   const {
     data: weather,
     isLoading: weatherLoading,
@@ -181,35 +190,40 @@ function PrefecturePage() {
         </div>
       </div>
 
-      {(availablePurposes.length > 0 || availableTypes.length > 0) && (
-        <div className="mt-4 space-y-3 rounded-lg bg-gray-100 p-4 dark:bg-gray-800/50">
-          {availablePurposes.length > 0 && (
-            <div>
-              <p className="mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
-                用途で絞り込み
-              </p>
-              <PurposeFilter
-                selected={selectedPurposes}
-                available={availablePurposes}
-                onChange={setSelectedPurposes}
-              />
-            </div>
-          )}
-
-          {availableTypes.length > 0 && (
-            <div>
-              <p className="mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
-                ダム形式で絞り込み
-              </p>
-              <DamTypeFilter
-                selected={selectedTypes}
-                available={availableTypes}
-                onChange={setSelectedTypes}
-              />
-            </div>
-          )}
+      <div className="mt-4 space-y-3 rounded-lg bg-gray-100 p-4 dark:bg-gray-800/50">
+        <div>
+          <p className="mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
+            ダム名で検索
+          </p>
+          <DamSearchInput value={q} onChange={setKeyword} />
         </div>
-      )}
+
+        {availablePurposes.length > 0 && (
+          <div>
+            <p className="mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
+              用途で絞り込み
+            </p>
+            <PurposeFilter
+              selected={selectedPurposes}
+              available={availablePurposes}
+              onChange={setSelectedPurposes}
+            />
+          </div>
+        )}
+
+        {availableTypes.length > 0 && (
+          <div>
+            <p className="mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
+              ダム形式で絞り込み
+            </p>
+            <DamTypeFilter
+              selected={selectedTypes}
+              available={availableTypes}
+              onChange={setSelectedTypes}
+            />
+          </div>
+        )}
+      </div>
 
       {(damsLoading || weatherLoading) && (
         <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">

@@ -21,6 +21,7 @@ export function useFilteredDams(
   majorOnly: boolean,
   selectedPurposes: Set<string>,
   selectedTypes: Set<string>,
+  keyword: string = "",
 ) {
   const { data: dams = [], isLoading, isError } = useDams(prefectureSlug);
 
@@ -31,26 +32,31 @@ export function useFilteredDams(
     return dams;
   }, [dams, majorOnly]);
 
+  const keywordFiltered = useMemo(() => {
+    if (!keyword) return baseDams;
+    return baseDams.filter((dam) => dam.damName.includes(keyword));
+  }, [baseDams, keyword]);
+
   const availablePurposes = useMemo(() => {
     const purposeSet = new Set<string>();
-    for (const dam of baseDams) {
+    for (const dam of keywordFiltered) {
       for (const p of dam.purposes) {
         purposeSet.add(p);
       }
     }
     return Array.from(purposeSet);
-  }, [baseDams]);
+  }, [keywordFiltered]);
 
   const availableTypes = useMemo(() => {
     const typeSet = new Set<string>();
-    for (const dam of baseDams) {
+    for (const dam of keywordFiltered) {
       typeSet.add(dam.damType || DAM_TYPE_UNSET);
     }
     return Array.from(typeSet);
-  }, [baseDams]);
+  }, [keywordFiltered]);
 
   const filtered = useMemo(() => {
-    return baseDams.filter((dam) => {
+    return keywordFiltered.filter((dam) => {
       if (selectedPurposes.size > 0 && !dam.purposes.some((p) => selectedPurposes.has(p))) {
         return false;
       }
@@ -60,7 +66,7 @@ export function useFilteredDams(
       }
       return true;
     });
-  }, [baseDams, selectedPurposes, selectedTypes]);
+  }, [keywordFiltered, selectedPurposes, selectedTypes]);
 
   return {
     dams: filtered,

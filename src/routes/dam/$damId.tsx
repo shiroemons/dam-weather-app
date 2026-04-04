@@ -99,7 +99,7 @@ function DamDetailPage() {
         <Link
           to="/prefecture/$prefectureSlug"
           params={{ prefectureSlug: dam.prefectureSlug }}
-          search={{ obs: true, group: "waterSystem", purposes: "", types: "" }}
+          search={{ obs: true, group: "waterSystem", purposes: "", types: "", q: "" }}
           className="hover:text-blue-500"
         >
           {dam.prefecture}
