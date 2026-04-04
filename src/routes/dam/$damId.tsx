@@ -12,8 +12,10 @@ import {
   Droplets,
   ExternalLink,
   Gauge,
+  Landmark,
   MapPin,
   Mountain,
+  Target,
   Waves,
 } from "lucide-react";
 import { getDamById, useDamById } from "@/hooks/useAllDams";
@@ -142,27 +144,6 @@ function DamDetailPage() {
             <ExternalLink className="size-3" />
           </a>
         </div>
-
-        {/* Badges */}
-        <div className="mt-2 flex flex-wrap items-center gap-2">
-          {dam.damType && (
-            <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
-              {dam.damType}
-            </span>
-          )}
-          {dam.purposes.map((purpose) => {
-            const short = PURPOSE_SHORT_MAP.get(purpose);
-            return short ? (
-              <span
-                key={purpose}
-                className="rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
-                title={purpose}
-              >
-                {short}
-              </span>
-            ) : null;
-          })}
-        </div>
       </div>
 
       {/* Weather Section */}
@@ -206,6 +187,31 @@ function DamDetailPage() {
       <div className="mt-6">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">ダム情報</h2>
         <dl className="mt-3 divide-y divide-gray-200 rounded-xl bg-white p-4 shadow-sm dark:divide-gray-700 dark:bg-gray-800">
+          {dam.damType && (
+            <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+              <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
+                <Landmark className="size-4 text-emerald-400" />
+                ダム型式
+              </dt>
+              <dd className="text-sm text-gray-900 dark:text-gray-100">{dam.damType}</dd>
+            </div>
+          )}
+          {dam.purposes.length > 0 && (
+            <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+              <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
+                <Target className="size-4 text-amber-400" />
+                用途
+              </dt>
+              <dd className="text-sm text-gray-900 dark:text-gray-100">
+                {dam.purposes
+                  .map((p) => {
+                    const short = PURPOSE_SHORT_MAP.get(p);
+                    return short ? `${p}（${short}）` : p;
+                  })
+                  .join("、")}
+              </dd>
+            </div>
+          )}
           {dam.address && (
             <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
               <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
