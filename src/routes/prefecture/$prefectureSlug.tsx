@@ -243,7 +243,7 @@ function PrefecturePage() {
         {availableTypes.length > 0 && (
           <div>
             <p className="mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
-              ダム形式で絞り込み
+              ダム型式で絞り込み
             </p>
             <DamTypeFilter
               selected={selectedTypes}
