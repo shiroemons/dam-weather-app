@@ -1,8 +1,11 @@
-import { lazy, Suspense, useMemo, useState } from "react";
+import { lazy, Suspense, useCallback, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQueries } from "@tanstack/react-query";
+import L from "leaflet";
 import { useAllDams } from "@/hooks/useAllDams";
-import { PREFECTURES, REGIONS } from "@/data/prefectures";
+import type { PrefectureSummary } from "@/components/map/MapView";
+import RegionCascadeMenu from "@/components/map/RegionCascadeMenu";
+import { PREFECTURES } from "@/data/prefectures";
 import { SITE_NAME, SITE_URL } from "@/config/seo";
 import type { DamWeather, PrefectureWeather } from "@/types/weather";
 import "leaflet/dist/leaflet.css";
@@ -39,7 +42,7 @@ export const Route = createFileRoute("/map")({
 
 function MapPage() {
   const allDams = useAllDams();
-  const [selectedRegion, setSelectedRegion] = useState<string>("");
+  const [selectedFilter, setSelectedFilter] = useState<string>("");
 
   const weatherQueries = useQueries({
     queries: PREFECTURES.map((pref) => ({
@@ -65,34 +68,78 @@ function MapPage() {
   }, [weatherQueries]);
 
   const filteredDams = useMemo(() => {
-    if (!selectedRegion) return allDams;
-    return allDams.filter((dam) => {
-      const pref = PREFECTURES.find((p) => p.slug === dam.prefectureSlug);
-      return pref?.region === selectedRegion;
-    });
-  }, [allDams, selectedRegion]);
+    if (!selectedFilter) return allDams;
+    if (selectedFilter.startsWith("region:")) {
+      const region = selectedFilter.slice(7);
+      return allDams.filter((dam) => {
+        const pref = PREFECTURES.find((p) => p.slug === dam.prefectureSlug);
+        return pref?.region === region;
+      });
+    }
+    if (selectedFilter.startsWith("pref:")) {
+      const slug = selectedFilter.slice(5);
+      return allDams.filter((dam) => dam.prefectureSlug === slug);
+    }
+    return allDams;
+  }, [allDams, selectedFilter]);
+
+  const bounds = useMemo(() => {
+    if (filteredDams.length === 0) return undefined;
+    if (filteredDams.length === 1) {
+      const d = filteredDams[0];
+      return L.latLngBounds(
+        [d.latitude - 0.05, d.longitude - 0.05],
+        [d.latitude + 0.05, d.longitude + 0.05],
+      );
+    }
+    return L.latLngBounds(filteredDams.map((d) => [d.latitude, d.longitude] as [number, number]));
+  }, [filteredDams]);
+
+  const prefectureSummaries = useMemo((): PrefectureSummary[] => {
+    const dams = selectedFilter === "" ? allDams : filteredDams;
+    const summaryMap = new Map<string, { lats: number[]; lngs: number[]; count: number }>();
+    for (const dam of dams) {
+      const entry = summaryMap.get(dam.prefectureSlug);
+      if (entry) {
+        entry.lats.push(dam.latitude);
+        entry.lngs.push(dam.longitude);
+        entry.count++;
+      } else {
+        summaryMap.set(dam.prefectureSlug, {
+          lats: [dam.latitude],
+          lngs: [dam.longitude],
+          count: 1,
+        });
+      }
+    }
+    const result: PrefectureSummary[] = [];
+    for (const [slug, data] of summaryMap) {
+      const pref = PREFECTURES.find((p) => p.slug === slug);
+      if (!pref) continue;
+      const avgLat = data.lats.reduce((a, b) => a + b, 0) / data.lats.length;
+      const avgLng = data.lngs.reduce((a, b) => a + b, 0) / data.lngs.length;
+      result.push({
+        slug,
+        name: pref.name,
+        center: [avgLat, avgLng],
+        damCount: data.count,
+      });
+    }
+    return result;
+  }, [allDams, filteredDams, selectedFilter]);
+
+  const handlePrefectureClick = useCallback((slug: string) => {
+    setSelectedFilter(`pref:${slug}`);
+  }, []);
 
   return (
     <div className="relative h-[calc(100vh-3rem)]">
-      <div className="absolute left-3 top-3 z-[1000] rounded-lg bg-white/90 p-2 shadow-md backdrop-blur-sm dark:bg-gray-800/90">
-        <select
-          value={selectedRegion}
-          onChange={(e) => setSelectedRegion(e.target.value)}
-          className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
-        >
-          <option value="">全国 ({allDams.length}基)</option>
-          {REGIONS.map((region) => {
-            const count = allDams.filter((d) => {
-              const p = PREFECTURES.find((pr) => pr.slug === d.prefectureSlug);
-              return p?.region === region;
-            }).length;
-            return (
-              <option key={region} value={region}>
-                {region} ({count}基)
-              </option>
-            );
-          })}
-        </select>
+      <div className="absolute left-3 top-3 z-[1000]">
+        <RegionCascadeMenu
+          allDams={allDams}
+          selectedFilter={selectedFilter}
+          onFilterChange={setSelectedFilter}
+        />
       </div>
 
       <Suspense
@@ -102,7 +149,14 @@ function MapPage() {
           </div>
         }
       >
-        <MapView dams={filteredDams} weatherMap={weatherMap} className="h-full w-full" />
+        <MapView
+          dams={filteredDams}
+          weatherMap={weatherMap}
+          bounds={bounds}
+          prefectureSummaries={prefectureSummaries}
+          onPrefectureClick={handlePrefectureClick}
+          className="h-full w-full"
+        />
       </Suspense>
     </div>
   );
