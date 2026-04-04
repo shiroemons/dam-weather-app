@@ -6,6 +6,7 @@ import { useWatchlistWeather } from "@/hooks/useWatchlistWeather";
 import WatchlistListCard from "@/components/watchlist/WatchlistListCard";
 import WatchlistCreateForm from "@/components/watchlist/WatchlistCreateForm";
 import WatchlistEmptyState from "@/components/watchlist/WatchlistEmptyState";
+import WatchlistImportExport from "@/components/watchlist/WatchlistImportExport";
 import { SITE_NAME, SITE_URL } from "@/config/seo";
 import type { Dam } from "@/types/dam";
 
@@ -59,8 +60,9 @@ function WatchlistPage() {
         お気に入りのダムをリストにまとめて天気をチェック
       </p>
 
-      <div className="mt-6">
+      <div className="mt-6 flex flex-wrap items-center gap-3">
         <WatchlistCreateForm />
+        <WatchlistImportExport />
       </div>
 
       {data.lists.length === 0 ? (
