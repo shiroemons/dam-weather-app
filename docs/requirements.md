@@ -52,7 +52,7 @@
   - エンドポイント: `https://api.open-meteo.com/v1/forecast`
   - APIキー不要（非商用利用）
   - バルクリクエスト対応（最大1000地点/回）
-- **取得方式**: GitHub Actionsで1日2回（6:00, 12:00 JST）取得
+- **取得方式**: GitHub Actionsで3時間ごと（1日8回）取得
 - **保存形式**: 都道府県ごとの静的JSONファイル（`public/weather/{prefecture_slug}.json`）
 - **フロー**:
   1. GitHub Actions が全ダムの緯度経度を使ってOpen-Meteo APIからバルク取得（3バッチ×1000地点）
@@ -81,7 +81,7 @@
 | アクセシビリティ   | セマンティックHTML、適切なaria属性                                |
 | ブラウザ対応       | Chrome, Safari, Firefox 最新版                                    |
 | エラーハンドリング | 天気データ未取得時にフォールバックUI表示                          |
-| データ鮮度         | 天気データは1日2回更新（GitHub Actionsビルド時）                  |
+| データ鮮度         | 天気データは3時間ごとに更新（GitHub Actionsビルド時）             |
 
 ## 6. URL設計
 
@@ -228,7 +228,7 @@ interface PrefectureWeather {
 
 | 項目         | 内容                                                     |
 | ------------ | -------------------------------------------------------- |
-| 取得方式     | GitHub Actions SSG（1日2回ビルド）                       |
+| 取得方式     | GitHub Actions SSG（3時間ごとビルド）                    |
 | 取得単位     | ダムの緯度経度によるバルクリクエスト（1000地点×3バッチ） |
 | 保存先       | `public/weather/{prefecture_slug}.json`                  |
 | 天気アイコン | WMOコードからmeteocons SVGアイコンにマッピング           |
