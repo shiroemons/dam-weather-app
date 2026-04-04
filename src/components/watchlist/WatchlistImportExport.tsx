@@ -1,4 +1,5 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Download, Upload } from "lucide-react";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 
@@ -12,6 +13,13 @@ export default function WatchlistImportExport() {
   const { exportData, importData, data } = useWatchlist();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [result, setResult] = useState<ImportResult | null>(null);
+
+  useEffect(() => {
+    if (result?.success) {
+      const timer = setTimeout(() => setResult(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [result]);
 
   function handleExport() {
     const json = exportData();
@@ -71,35 +79,37 @@ export default function WatchlistImportExport() {
           className="hidden"
         />
       </div>
-      {result && (
-        <div
-          className={`mt-3 rounded-lg px-4 py-3 text-sm ${
-            result.success
-              ? "bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400"
-              : "bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400"
-          }`}
-        >
-          {result.success ? (
-            <div>
-              <p>インポートが完了しました</p>
-              {result.skippedDams > 0 && (
-                <p className="mt-1 text-xs opacity-80">
-                  {result.skippedDams}個の無効なダムIDをスキップしました
-                </p>
-              )}
-            </div>
-          ) : (
-            <p>{result.error}</p>
-          )}
-          <button
-            type="button"
-            onClick={() => setResult(null)}
-            className="mt-2 text-xs underline opacity-70 hover:opacity-100"
+      {result &&
+        createPortal(
+          <div
+            className={`fixed top-4 right-4 z-50 rounded-lg px-4 py-3 text-sm shadow-lg ${
+              result.success
+                ? "bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400"
+                : "bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400"
+            }`}
           >
-            閉じる
-          </button>
-        </div>
-      )}
+            {result.success ? (
+              <div>
+                <p>インポートが完了しました</p>
+                {result.skippedDams > 0 && (
+                  <p className="mt-1 text-xs opacity-80">
+                    {result.skippedDams}個の無効なダムIDをスキップしました
+                  </p>
+                )}
+              </div>
+            ) : (
+              <p>{result.error}</p>
+            )}
+            <button
+              type="button"
+              onClick={() => setResult(null)}
+              className="mt-2 text-xs underline opacity-70 hover:opacity-100"
+            >
+              閉じる
+            </button>
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }

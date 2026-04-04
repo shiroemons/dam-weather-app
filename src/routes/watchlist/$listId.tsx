@@ -12,7 +12,7 @@ import {
 } from "@dnd-kit/core";
 import { SortableContext, rectSortingStrategy, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { ChevronRight, GripVertical, Pencil, Trash2 } from "lucide-react";
+import { ChevronRight, Download, GripVertical, Pencil, Trash2 } from "lucide-react";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 import { getDamById } from "@/hooks/useAllDams";
 import { useWatchlistWeather } from "@/hooks/useWatchlistWeather";
@@ -125,6 +125,24 @@ function WatchlistDetailPage() {
     removeDam(list.id, damId);
   }
 
+  function handleExportList() {
+    if (!list) return;
+    const exportObj = {
+      version: 1 as const,
+      lists: [list],
+      exportedAt: new Date().toISOString(),
+    };
+    const json = JSON.stringify(exportObj, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const date = new Date().toISOString().slice(0, 10);
+    a.href = url;
+    a.download = `watchlist-${list.name}-${date}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   function handleDragStart(event: DragStartEvent) {
     setActiveDamId(event.active.id as string);
   }
@@ -217,23 +235,34 @@ function WatchlistDetailPage() {
             </button>
           </form>
         ) : (
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{list.name}</h1>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{list.name}</h1>
+              <button
+                type="button"
+                onClick={handleStartEdit}
+                className="text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-gray-300"
+                aria-label="リスト名を編集"
+              >
+                <Pencil className="size-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowDeleteConfirm(true)}
+                className="text-gray-400 transition-colors hover:text-red-500"
+                aria-label="リストを削除"
+              >
+                <Trash2 className="size-4" />
+              </button>
+            </div>
             <button
               type="button"
-              onClick={handleStartEdit}
-              className="text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-gray-300"
-              aria-label="リスト名を編集"
+              onClick={handleExportList}
+              className="flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700"
+              aria-label="リストをエクスポート"
             >
-              <Pencil className="size-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowDeleteConfirm(true)}
-              className="text-gray-400 transition-colors hover:text-red-500"
-              aria-label="リストを削除"
-            >
-              <Trash2 className="size-4" />
+              <Download className="size-3.5" />
+              エクスポート
             </button>
           </div>
         )}
