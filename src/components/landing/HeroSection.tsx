@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ChevronRight, Droplets } from "lucide-react";
+import { Bookmark, ChevronRight, CloudSun, Droplets } from "lucide-react";
 
 export default function HeroSection() {
   return (
@@ -28,6 +28,22 @@ export default function HeroSection() {
             都道府県一覧を見る
             <ChevronRight className="size-5" />
           </Link>
+          <div className="mt-4 flex justify-center gap-3 sm:justify-start">
+            <Link
+              to="/today"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-white/20 px-5 py-2.5 text-sm font-medium text-white backdrop-blur-sm transition-all duration-200 hover:bg-white/30"
+            >
+              <CloudSun className="size-4" />
+              今日の天気
+            </Link>
+            <Link
+              to="/watchlist"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-white/20 px-5 py-2.5 text-sm font-medium text-white backdrop-blur-sm transition-all duration-200 hover:bg-white/30"
+            >
+              <Bookmark className="size-4" />
+              マイリスト
+            </Link>
+          </div>
         </div>
       </div>
     </section>

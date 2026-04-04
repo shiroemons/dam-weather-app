@@ -1,5 +1,4 @@
-import { Link } from "@tanstack/react-router";
-import { ChevronRight, Cloud, Droplets, MapPin, type LucideIcon } from "lucide-react";
+import { Bookmark, Cloud, Droplets, MapPin, type LucideIcon } from "lucide-react";
 
 type Feature = {
   icon: LucideIcon;
@@ -23,6 +22,12 @@ const FEATURES: Feature[] = [
     title: "観測所データ",
     description: "ダムに関連する観測所の情報も併せて確認できます。",
   },
+  {
+    icon: Bookmark,
+    title: "マイリスト",
+    description:
+      "お気に入りのダムをマイリストに登録。ローカルストレージに保存されるので、アカウント不要で天気をまとめてチェックできます。",
+  },
 ];
 
 export default function FeaturesSection() {
@@ -36,7 +41,7 @@ export default function FeaturesSection() {
           特徴
         </h2>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-3">
+        <div className="mt-10 grid gap-6 grid-cols-2 lg:grid-cols-4">
           {FEATURES.map(({ icon: Icon, title, description }) => (
             <div
               key={title}
@@ -53,16 +58,6 @@ export default function FeaturesSection() {
               </p>
             </div>
           ))}
-        </div>
-
-        <div className="mt-12 text-center">
-          <Link
-            to="/prefecture"
-            className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 px-8 py-4 text-base font-semibold text-white shadow-lg transition-all duration-200 hover:scale-[1.02] hover:from-sky-600 hover:to-blue-700 motion-reduce:hover:scale-100 dark:from-sky-600 dark:to-blue-700 dark:hover:from-sky-500 dark:hover:to-blue-600"
-          >
-            都道府県一覧を見る
-            <ChevronRight className="size-5" />
-          </Link>
         </div>
       </div>
     </section>

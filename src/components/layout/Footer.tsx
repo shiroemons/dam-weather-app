@@ -58,6 +58,12 @@ export default function Footer() {
               今日の天気
             </Link>
             <Link
+              to="/watchlist"
+              className="text-xs text-gray-500 transition-colors hover:text-sky-600 dark:text-gray-400 dark:hover:text-sky-400"
+            >
+              マイリスト
+            </Link>
+            <Link
               to="/about"
               className="text-xs text-gray-500 transition-colors hover:text-sky-600 dark:text-gray-400 dark:hover:text-sky-400"
             >
