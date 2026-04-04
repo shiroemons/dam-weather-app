@@ -1,6 +1,6 @@
 export type WeatherCategory = "sunny" | "cloudy" | "rain" | "snow" | "default";
 
-const WEATHER_CLASSES: Record<WeatherCategory, string> = {
+export const WEATHER_CLASSES: Record<WeatherCategory, string> = {
   sunny:
     "from-orange-50 to-amber-50/50 shadow-[6px_6px_12px_#e8d5b8,-6px_-6px_12px_#ffffff] dark:from-orange-950/40 dark:to-amber-950/30 dark:shadow-[6px_6px_12px_#1a1207,-6px_-6px_12px_#2d2010]",
   cloudy:

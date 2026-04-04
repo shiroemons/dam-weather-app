@@ -4,7 +4,7 @@ import { useQueries } from "@tanstack/react-query";
 import { Sun, Cloud, CloudRain, Snowflake } from "lucide-react";
 import { useAllDams } from "@/hooks/useAllDams";
 import { PREFECTURES, REGIONS } from "@/data/prefectures";
-import { getWeatherCategory } from "@/lib/weatherColors";
+import { getWeatherCategory, WEATHER_CLASSES } from "@/lib/weatherColors";
 import WeatherSummaryBar from "@/components/today/WeatherSummaryBar";
 import RegionWeatherSummary from "@/components/today/RegionWeatherSummary";
 import { SITE_NAME, SITE_URL } from "@/config/seo";
@@ -49,6 +49,13 @@ const CATEGORY_ICONS: Record<string, { icon: typeof Sun; label: string }> = {
   cloudy: { icon: Cloud, label: "曇り" },
   rain: { icon: CloudRain, label: "雨" },
   snow: { icon: Snowflake, label: "雪" },
+};
+
+const CATEGORY_ICON_COLORS: Record<string, string> = {
+  sunny: "text-orange-400 dark:text-orange-300",
+  cloudy: "text-gray-400 dark:text-gray-300",
+  rain: "text-blue-400 dark:text-blue-300",
+  snow: "text-sky-400 dark:text-sky-300",
 };
 
 function TodayPage() {
@@ -134,9 +141,9 @@ function TodayPage() {
               return (
                 <div
                   key={cat}
-                  className="flex items-center gap-3 rounded-xl bg-white p-4 shadow-sm dark:bg-gray-800"
+                  className={`flex items-center gap-3 rounded-xl bg-gradient-to-br p-4 ${WEATHER_CLASSES[cat]}`}
                 >
-                  <Icon className="size-8 text-gray-400" />
+                  <Icon className={`size-8 ${CATEGORY_ICON_COLORS[cat]}`} />
                   <div>
                     <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                       {totalCounts[cat]}
