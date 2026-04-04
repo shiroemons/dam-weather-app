@@ -110,6 +110,11 @@ export default function WatchlistAddButton({ damId, variant }: Props) {
                 value={newListName}
                 onChange={(e) => setNewListName(e.target.value)}
                 placeholder="例: お気に入り、釣りスポット"
+                autoComplete="off"
+                data-1p-ignore
+                data-lpignore="true"
+                data-bwignore="true"
+                data-form-type="other"
                 autoFocus
                 className="w-full rounded border border-gray-300 px-2 py-1 text-xs dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
               />

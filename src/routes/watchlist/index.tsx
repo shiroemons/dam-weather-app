@@ -60,7 +60,7 @@ function WatchlistPage() {
         お気に入りのダムをリストにまとめて天気をチェック
       </p>
 
-      <div className="mt-6 flex flex-wrap items-center gap-3">
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
         <WatchlistCreateForm />
         <WatchlistImportExport />
       </div>

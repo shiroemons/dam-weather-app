@@ -43,6 +43,11 @@ export default function WatchlistCreateForm() {
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="リスト名を入力"
+        autoComplete="off"
+        data-1p-ignore
+        data-lpignore="true"
+        data-bwignore="true"
+        data-form-type="other"
         autoFocus
         className="rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
       />
