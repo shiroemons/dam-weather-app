@@ -68,6 +68,7 @@ export const Route = createFileRoute("/dam/$damId")({
           },
         },
       ],
+      links: [{ rel: "canonical", href: `${SITE_URL}/dam/${dam.id}` }],
     };
   },
   component: DamDetailPage,

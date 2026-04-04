@@ -69,6 +69,12 @@ export const Route = createFileRoute("/prefecture/$prefectureSlug")({
           },
         },
       ],
+      links: [
+        {
+          rel: "canonical",
+          href: `${SITE_URL}/prefecture/${prefecture.slug}`,
+        },
+      ],
     };
   },
   component: PrefecturePage,

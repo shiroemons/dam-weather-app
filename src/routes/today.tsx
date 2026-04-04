@@ -35,6 +35,7 @@ export const Route = createFileRoute("/today")({
           },
         },
       ],
+      links: [{ rel: "canonical", href: `${SITE_URL}/today` }],
     };
   },
   component: TodayPage,

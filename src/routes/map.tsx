@@ -35,6 +35,7 @@ export const Route = createFileRoute("/map")({
           },
         },
       ],
+      links: [{ rel: "canonical", href: `${SITE_URL}/map` }],
     };
   },
   component: MapPage,

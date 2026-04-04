@@ -32,6 +32,7 @@ export const Route = createFileRoute("/prefecture/")({
         },
       },
     ],
+    links: [{ rel: "canonical", href: `${SITE_URL}/prefecture` }],
   }),
   component: PrefecturePage,
 });

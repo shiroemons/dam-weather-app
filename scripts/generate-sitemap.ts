@@ -65,6 +65,7 @@ const urls = [
   { loc: `${SITE_URL}/map`, priority: "0.7" },
   { loc: `${SITE_URL}/today`, priority: "0.7" },
   { loc: `${SITE_URL}/about`, priority: "0.5" },
+  { loc: `${SITE_URL}/glossary`, priority: "0.5" },
   ...PREFECTURE_SLUGS.map((slug) => ({
     loc: `${SITE_URL}/prefecture/${slug}`,
     priority: "0.8",

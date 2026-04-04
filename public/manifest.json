@@ -1,0 +1,17 @@
+{
+  "name": "日本のダム天気",
+  "short_name": "ダム天気",
+  "description": "全国のダムの天気予報をチェック。47都道府県のダム周辺の天気情報を一覧で確認できます。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#0ea5e9",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ],
+  "lang": "ja"
+}

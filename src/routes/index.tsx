@@ -23,6 +23,7 @@ export const Route = createFileRoute("/")({
         },
       },
     ],
+    links: [{ rel: "canonical", href: SITE_URL }],
   }),
   component: HomePage,
 });

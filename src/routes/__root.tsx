@@ -14,6 +14,7 @@ export const Route = createRootRoute({
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "ja_JP" },
       { property: "og:site_name", content: SITE_NAME },
+      { name: "application-name", content: SITE_NAME },
       { name: "twitter:card", content: "summary" },
     ],
   }),

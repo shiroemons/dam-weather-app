@@ -22,10 +22,24 @@ import WeatherSummaryBar from "@/components/today/WeatherSummaryBar";
 import DamCard from "@/components/dam/DamCard";
 import type { WeatherCategory } from "@/lib/weatherColors";
 import type { Dam } from "@/types/dam";
+import { SITE_NAME } from "@/config/seo";
 import type { DamStorage } from "@/types/storage";
 import type { DamWeather } from "@/types/weather";
 
 export const Route = createFileRoute("/watchlist/$listId")({
+  head: () => {
+    const title = `ウォッチリスト | ${SITE_NAME}`;
+    const description = "お気に入りのダムリストの天気予報を確認できます。";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { name: "robots", content: "noindex" },
+      ],
+    };
+  },
   component: WatchlistDetailPage,
 });
 

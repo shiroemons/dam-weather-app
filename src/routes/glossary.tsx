@@ -31,6 +31,7 @@ export const Route = createFileRoute("/glossary")({
           },
         },
       ],
+      links: [{ rel: "canonical", href: `${SITE_URL}/glossary` }],
     };
   },
   component: GlossaryPage,

@@ -4,7 +4,14 @@ import { SITE_NAME } from "@/config/seo";
 
 export const Route = createFileRoute("/$")({
   head: () => ({
-    meta: [{ title: `ページが見つかりません | ${SITE_NAME}` }],
+    meta: [
+      { title: `ページが見つかりません | ${SITE_NAME}` },
+      {
+        name: "description",
+        content: "お探しのページは見つかりませんでした。",
+      },
+      { name: "robots", content: "noindex" },
+    ],
   }),
   component: NotFoundPage,
 });
