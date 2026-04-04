@@ -34,7 +34,10 @@ export default function Header() {
               <Link
                 key={link.to}
                 to={link.to}
-                activeProps={{ className: "text-sky-600 dark:text-sky-400" }}
+                activeProps={{
+                  className: "text-sky-600 dark:text-sky-400",
+                  "aria-current": "page" as const,
+                }}
                 className="rounded-md px-2.5 py-1 text-sm text-gray-600 transition-colors hover:text-sky-600 dark:text-gray-400 dark:hover:text-sky-400"
               >
                 {link.label}
@@ -56,22 +59,29 @@ export default function Header() {
         </div>
       </nav>
 
-      {isOpen && (
-        <div className="border-t border-gray-200/80 bg-slate-50/95 backdrop-blur-md sm:hidden dark:border-gray-700/80 dark:bg-gray-900/95">
-          <div className="mx-auto max-w-6xl space-y-1 px-4 py-3">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                activeProps={{ className: "text-sky-600 dark:text-sky-400" }}
-                className="block rounded-md px-3 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-100 hover:text-sky-600 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-sky-400"
-              >
-                {link.label}
-              </Link>
-            ))}
+      <div
+        className={`grid transition-[grid-template-rows] duration-200 sm:hidden ${isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+      >
+        <div className="overflow-hidden">
+          <div className="border-t border-gray-200/80 bg-slate-50/95 backdrop-blur-md dark:border-gray-700/80 dark:bg-gray-900/95">
+            <div className="mx-auto max-w-6xl space-y-1 px-4 py-3">
+              {NAV_LINKS.map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  activeProps={{
+                    className: "text-sky-600 dark:text-sky-400",
+                    "aria-current": "page" as const,
+                  }}
+                  className="block rounded-md px-3 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-100 hover:text-sky-600 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-sky-400"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
-      )}
+      </div>
     </header>
   );
 }

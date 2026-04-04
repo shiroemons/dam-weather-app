@@ -45,7 +45,7 @@ export default function FeaturesSection() {
           {FEATURES.map(({ icon: Icon, title, description }) => (
             <div
               key={title}
-              className="rounded-2xl border border-sky-100 bg-white p-6 shadow-sm transition-all duration-200 hover:scale-[1.02] hover:shadow-md motion-reduce:hover:scale-100 dark:border-sky-900/30 dark:bg-gray-800"
+              className="rounded-2xl border border-sky-100 bg-white p-6 shadow-sm dark:border-sky-900/30 dark:bg-gray-800"
             >
               <div className="flex size-12 items-center justify-center rounded-xl bg-sky-50 dark:bg-sky-900/30">
                 <Icon className="size-6 text-sky-500 dark:text-sky-400" />
@@ -53,7 +53,7 @@ export default function FeaturesSection() {
               <h3 className="mt-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
                 {title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+              <p className="mt-2 text-sm leading-relaxed text-gray-500 dark:text-gray-300">
                 {description}
               </p>
             </div>

@@ -26,11 +26,11 @@ export default function StatsSection() {
         <dl className="grid grid-cols-2 gap-6 sm:gap-8">
           {STATS.map(({ label, value, unit }) => (
             <div key={label} className="text-center">
-              <dd className="text-3xl font-bold text-sky-600 sm:text-4xl dark:text-sky-400">
+              <dd className="text-3xl font-bold tabular-nums text-sky-600 sm:text-4xl dark:text-sky-400">
                 {value.toLocaleString()}
                 <span className="ml-1 text-base font-medium">{unit}</span>
               </dd>
-              <dt className="mt-1 text-sm text-gray-500 dark:text-gray-400">{label}</dt>
+              <dt className="mt-1 text-sm text-gray-500 dark:text-gray-300">{label}</dt>
             </div>
           ))}
         </dl>

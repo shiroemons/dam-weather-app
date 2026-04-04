@@ -31,14 +31,14 @@ export default function HeroSection() {
           <div className="mt-4 flex justify-center gap-3 sm:justify-start">
             <Link
               to="/today"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-white/20 px-5 py-2.5 text-sm font-medium text-white backdrop-blur-sm transition-all duration-200 hover:bg-white/30"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-white/20 px-5 py-3 text-sm font-medium text-white backdrop-blur-sm transition-all duration-200 hover:bg-white/30"
             >
               <CloudSun className="size-4" />
               今日の天気
             </Link>
             <Link
               to="/watchlist"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-white/20 px-5 py-2.5 text-sm font-medium text-white backdrop-blur-sm transition-all duration-200 hover:bg-white/30"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-white/20 px-5 py-3 text-sm font-medium text-white backdrop-blur-sm transition-all duration-200 hover:bg-white/30"
             >
               <Bookmark className="size-4" />
               マイリスト
