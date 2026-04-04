@@ -25,6 +25,7 @@ const SORT_DEFAULTS: Record<SortField, SortDirection> = {
   name: "asc",
   waterSystem: "asc",
   river: "asc",
+  damType: "asc",
   capacity: "desc",
   rate: "desc",
 };
@@ -117,6 +118,21 @@ export default function DamListView({
                     ))}
                 </button>
               </th>
+              <th className="px-3 py-2">
+                <button
+                  type="button"
+                  onClick={() => handleHeaderSort("damType")}
+                  className="inline-flex items-center gap-1 transition-colors hover:text-gray-900 dark:hover:text-gray-200"
+                >
+                  ダム型式
+                  {sortField === "damType" &&
+                    (sortDirection === "asc" ? (
+                      <ArrowUp className="size-3" />
+                    ) : (
+                      <ArrowDown className="size-3" />
+                    ))}
+                </button>
+              </th>
               <th className="px-3 py-2 text-right">
                 <button
                   type="button"
@@ -194,6 +210,11 @@ export default function DamListView({
 
                   {/* 河川 */}
                   <td className="px-3 py-3 text-gray-600 dark:text-gray-300">{dam.riverName}</td>
+
+                  {/* ダム型式 */}
+                  <td className="whitespace-nowrap px-3 py-3 text-xs text-gray-600 dark:text-gray-300">
+                    {dam.damType || ""}
+                  </td>
 
                   {/* 総貯水容量 */}
                   <td className="px-3 py-3 text-right text-gray-600 dark:text-gray-300">
@@ -320,9 +341,14 @@ export default function DamListView({
                 )}
               </div>
 
-              {/* 2行目: 所在地 + 雨雲レーダー + 総貯水容量 */}
+              {/* 2行目: 所在地 + ダム型式 + 雨雲レーダー + 総貯水容量 */}
               <div className="mt-1 flex items-center gap-2 pl-8 text-xs text-gray-400 dark:text-gray-500">
                 <span className="min-w-0 flex-1 truncate">{dam.address}</span>
+                {dam.damType && (
+                  <span className="shrink-0 rounded-full bg-emerald-50 px-1.5 py-0.5 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
+                    {dam.damType}
+                  </span>
+                )}
                 <a
                   href={getYahooRadarUrl(dam.latitude, dam.longitude)}
                   target="_blank"

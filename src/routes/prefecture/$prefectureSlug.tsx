@@ -32,7 +32,8 @@ export const Route = createFileRoute("/prefecture/$prefectureSlug")({
       search.sort === "capacity" ||
       search.sort === "rate" ||
       search.sort === "waterSystem" ||
-      search.sort === "river"
+      search.sort === "river" ||
+      search.sort === "damType"
         ? (search.sort as SortField)
         : ("name" as const),
     order: search.order === "desc" ? ("desc" as const) : ("asc" as const),

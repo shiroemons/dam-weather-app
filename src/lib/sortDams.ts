@@ -2,7 +2,7 @@ import type { Dam } from "@/types/dam";
 import type { DamStorage } from "@/types/storage";
 
 export type ViewMode = "grid" | "list";
-export type SortField = "name" | "waterSystem" | "river" | "capacity" | "rate";
+export type SortField = "name" | "waterSystem" | "river" | "damType" | "capacity" | "rate";
 export type SortDirection = "asc" | "desc";
 
 export function sortDams(
@@ -20,6 +20,8 @@ export function sortDams(
       result = (a.waterSystem || "").localeCompare(b.waterSystem || "", "ja");
     } else if (field === "river") {
       result = (a.riverName || "").localeCompare(b.riverName || "", "ja");
+    } else if (field === "damType") {
+      result = (a.damType || "").localeCompare(b.damType || "", "ja");
     } else if (field === "capacity") {
       const aVal = a.totalStorageCapacity;
       const bVal = b.totalStorageCapacity;
