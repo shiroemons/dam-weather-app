@@ -59,6 +59,8 @@ const PREFECTURE_SLUGS = [
 const damsPath = path.resolve(__dirname, "../src/data/dams.json");
 const damsData = JSON.parse(fs.readFileSync(damsPath, "utf-8")) as { id: string }[];
 
+const lastmod = new Date().toISOString().split("T")[0];
+
 const urls = [
   { loc: `${SITE_URL}/`, priority: "1.0" },
   { loc: `${SITE_URL}/prefecture`, priority: "1.0" },
@@ -82,6 +84,7 @@ ${urls
   .map(
     (url) => `  <url>
     <loc>${url.loc}</loc>
+    <lastmod>${lastmod}</lastmod>
     <priority>${url.priority}</priority>
   </url>`,
   )
