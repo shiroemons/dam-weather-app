@@ -8,6 +8,7 @@ const NAV_LINKS = [
   { to: "/map", label: "マップ" },
   { to: "/today", label: "今日の天気" },
   { to: "/watchlist", label: "マイリスト" },
+  { to: "/glossary", label: "用語解説" },
   { to: "/about", label: "About" },
 ] as const;
 

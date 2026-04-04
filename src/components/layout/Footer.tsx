@@ -73,6 +73,12 @@ export default function Footer() {
               マイリスト
             </Link>
             <Link
+              to="/glossary"
+              className="text-xs text-gray-500 transition-colors hover:text-sky-600 dark:text-gray-400 dark:hover:text-sky-400"
+            >
+              用語解説
+            </Link>
+            <Link
               to="/about"
               className="text-xs text-gray-500 transition-colors hover:text-sky-600 dark:text-gray-400 dark:hover:text-sky-400"
             >

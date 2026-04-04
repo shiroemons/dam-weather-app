@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TodayRouteImport } from './routes/today'
 import { Route as MapRouteImport } from './routes/map'
+import { Route as GlossaryRouteImport } from './routes/glossary'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
@@ -28,6 +29,11 @@ const TodayRoute = TodayRouteImport.update({
 const MapRoute = MapRouteImport.update({
   id: '/map',
   path: '/map',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GlossaryRoute = GlossaryRouteImport.update({
+  id: '/glossary',
+  path: '/glossary',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -76,6 +82,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/about': typeof AboutRoute
+  '/glossary': typeof GlossaryRoute
   '/map': typeof MapRoute
   '/today': typeof TodayRoute
   '/dam/$damId': typeof DamDamIdRoute
@@ -88,6 +95,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/about': typeof AboutRoute
+  '/glossary': typeof GlossaryRoute
   '/map': typeof MapRoute
   '/today': typeof TodayRoute
   '/dam/$damId': typeof DamDamIdRoute
@@ -101,6 +109,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/about': typeof AboutRoute
+  '/glossary': typeof GlossaryRoute
   '/map': typeof MapRoute
   '/today': typeof TodayRoute
   '/dam/$damId': typeof DamDamIdRoute
@@ -115,6 +124,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/about'
+    | '/glossary'
     | '/map'
     | '/today'
     | '/dam/$damId'
@@ -127,6 +137,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/about'
+    | '/glossary'
     | '/map'
     | '/today'
     | '/dam/$damId'
@@ -139,6 +150,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/about'
+    | '/glossary'
     | '/map'
     | '/today'
     | '/dam/$damId'
@@ -152,6 +164,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
   AboutRoute: typeof AboutRoute
+  GlossaryRoute: typeof GlossaryRoute
   MapRoute: typeof MapRoute
   TodayRoute: typeof TodayRoute
   DamDamIdRoute: typeof DamDamIdRoute
@@ -175,6 +188,13 @@ declare module '@tanstack/react-router' {
       path: '/map'
       fullPath: '/map'
       preLoaderRoute: typeof MapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/glossary': {
+      id: '/glossary'
+      path: '/glossary'
+      fullPath: '/glossary'
+      preLoaderRoute: typeof GlossaryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -240,6 +260,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
   AboutRoute: AboutRoute,
+  GlossaryRoute: GlossaryRoute,
   MapRoute: MapRoute,
   TodayRoute: TodayRoute,
   DamDamIdRoute: DamDamIdRoute,
