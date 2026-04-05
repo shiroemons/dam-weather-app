@@ -2493,6 +2493,12 @@
       "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
     }
   ],
+  "dam-2036": [
+    {
+      "label": "徳島県 水防情報 ダム諸量情報",
+      "url": "https://www.kasen.pref.tokushima.lg.jp/sp/status/dam_status.html"
+    }
+  ],
   "dam-2042": [
     {
       "label": "四国地方整備局 ダム管理情報",
@@ -2501,6 +2507,10 @@
     {
       "label": "水資源機構 貯水状況",
       "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    },
+    {
+      "label": "愛媛県 渇水情報",
+      "url": "https://www.pref.ehime.jp/page/5043.html"
     }
   ],
   "dam-2045": [
@@ -2515,12 +2525,20 @@
     {
       "label": "水資源機構 貯水状況",
       "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    },
+    {
+      "label": "徳島県 水防情報 ダム諸量情報",
+      "url": "https://www.kasen.pref.tokushima.lg.jp/sp/status/dam_status.html"
     }
   ],
   "dam-2048": [
     {
       "label": "四国地方整備局 ダム管理情報",
       "url": "https://www.skr.mlit.go.jp/kasen/damu/"
+    },
+    {
+      "label": "愛媛県 渇水情報",
+      "url": "https://www.pref.ehime.jp/page/5043.html"
     }
   ],
   "dam-2052": [
@@ -2535,6 +2553,10 @@
     {
       "label": "水資源機構 貯水状況",
       "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    },
+    {
+      "label": "高知県 河川課所管ダム",
+      "url": "https://www.pref.kochi.lg.jp/doc/kochidam/"
     }
   ],
   "dam-2053": [
@@ -2545,36 +2567,182 @@
     {
       "label": "水資源機構 貯水状況",
       "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    },
+    {
+      "label": "愛媛県 渇水情報",
+      "url": "https://www.pref.ehime.jp/page/5043.html"
+    }
+  ],
+  "dam-2056": [
+    {
+      "label": "徳島県 水防情報 ダム諸量情報",
+      "url": "https://www.kasen.pref.tokushima.lg.jp/sp/status/dam_status.html"
+    }
+  ],
+  "dam-2062": [
+    {
+      "label": "徳島県 水防情報 ダム諸量情報",
+      "url": "https://www.kasen.pref.tokushima.lg.jp/sp/status/dam_status.html"
     }
   ],
   "dam-2064": [
     {
       "label": "四国地方整備局 ダム管理情報",
       "url": "https://www.skr.mlit.go.jp/kasen/damu/"
+    },
+    {
+      "label": "徳島県 水防情報 ダム諸量情報",
+      "url": "https://www.kasen.pref.tokushima.lg.jp/sp/status/dam_status.html"
+    }
+  ],
+  "dam-2067": [
+    {
+      "label": "徳島県 水防情報 ダム諸量情報",
+      "url": "https://www.kasen.pref.tokushima.lg.jp/sp/status/dam_status.html"
+    }
+  ],
+  "dam-2068": [
+    {
+      "label": "徳島県 水防情報 ダム諸量情報",
+      "url": "https://www.kasen.pref.tokushima.lg.jp/sp/status/dam_status.html"
+    }
+  ],
+  "dam-2071": [
+    {
+      "label": "愛媛県 渇水情報",
+      "url": "https://www.pref.ehime.jp/page/5043.html"
+    }
+  ],
+  "dam-2073": [
+    {
+      "label": "愛媛県 渇水情報",
+      "url": "https://www.pref.ehime.jp/page/5043.html"
+    }
+  ],
+  "dam-2075": [
+    {
+      "label": "愛媛県 渇水情報",
+      "url": "https://www.pref.ehime.jp/page/5043.html"
+    }
+  ],
+  "dam-2093": [
+    {
+      "label": "高知県 河川課所管ダム",
+      "url": "https://www.pref.kochi.lg.jp/doc/kochidam/"
+    }
+  ],
+  "dam-2094": [
+    {
+      "label": "高知県 河川課所管ダム",
+      "url": "https://www.pref.kochi.lg.jp/doc/kochidam/"
+    }
+  ],
+  "dam-2104": [
+    {
+      "label": "高知県 河川課所管ダム",
+      "url": "https://www.pref.kochi.lg.jp/doc/kochidam/"
+    }
+  ],
+  "dam-2105": [
+    {
+      "label": "愛媛県 渇水情報",
+      "url": "https://www.pref.ehime.jp/page/5043.html"
     }
   ],
   "dam-2108": [
     {
       "label": "四国地方整備局 ダム管理情報",
       "url": "https://www.skr.mlit.go.jp/kasen/damu/"
+    },
+    {
+      "label": "高知県 河川課所管ダム",
+      "url": "https://www.pref.kochi.lg.jp/doc/kochidam/"
+    }
+  ],
+  "dam-2109": [
+    {
+      "label": "高知県 河川課所管ダム",
+      "url": "https://www.pref.kochi.lg.jp/doc/kochidam/"
     }
   ],
   "dam-2114": [
     {
       "label": "四国地方整備局 ダム管理情報",
       "url": "https://www.skr.mlit.go.jp/kasen/damu/"
+    },
+    {
+      "label": "高知県 河川課所管ダム",
+      "url": "https://www.pref.kochi.lg.jp/doc/kochidam/"
     }
   ],
   "dam-2115": [
     {
       "label": "四国地方整備局 ダム管理情報",
       "url": "https://www.skr.mlit.go.jp/kasen/damu/"
+    },
+    {
+      "label": "高知県 河川課所管ダム",
+      "url": "https://www.pref.kochi.lg.jp/doc/kochidam/"
+    }
+  ],
+  "dam-2118": [
+    {
+      "label": "高知県 河川課所管ダム",
+      "url": "https://www.pref.kochi.lg.jp/doc/kochidam/"
+    }
+  ],
+  "dam-2123": [
+    {
+      "label": "高知県 河川課所管ダム",
+      "url": "https://www.pref.kochi.lg.jp/doc/kochidam/"
+    }
+  ],
+  "dam-2194": [
+    {
+      "label": "愛媛県 渇水情報",
+      "url": "https://www.pref.ehime.jp/page/5043.html"
+    }
+  ],
+  "dam-2197": [
+    {
+      "label": "愛媛県 渇水情報",
+      "url": "https://www.pref.ehime.jp/page/5043.html"
+    }
+  ],
+  "dam-2200": [
+    {
+      "label": "愛媛県 渇水情報",
+      "url": "https://www.pref.ehime.jp/page/5043.html"
+    }
+  ],
+  "dam-2205": [
+    {
+      "label": "愛媛県 渇水情報",
+      "url": "https://www.pref.ehime.jp/page/5043.html"
     }
   ],
   "dam-2207": [
     {
       "label": "今治市 ダム貯水率",
       "url": "https://www.city.imabari.ehime.jp/suidou/suigen/dam/"
+    }
+  ],
+  "dam-2214": [
+    {
+      "label": "愛媛県 渇水情報",
+      "url": "https://www.pref.ehime.jp/page/5043.html"
+    }
+  ],
+  "dam-2216": [
+    {
+      "label": "愛媛県 渇水情報",
+      "url": "https://www.pref.ehime.jp/page/5043.html"
+    }
+  ],
+  "dam-2223": [
+    {
+      "label": "愛媛県 渇水情報",
+      "url": "https://www.pref.ehime.jp/page/5043.html"
     }
   ],
   "dam-2226": [
@@ -2585,84 +2753,346 @@
     {
       "label": "松山市 水源状況",
       "url": "https://www.matsuyama-waterworks.jp/suigen.html"
+    },
+    {
+      "label": "愛媛県 渇水情報",
+      "url": "https://www.pref.ehime.jp/page/5043.html"
+    }
+  ],
+  "dam-2227": [
+    {
+      "label": "愛媛県 渇水情報",
+      "url": "https://www.pref.ehime.jp/page/5043.html"
     }
   ],
   "dam-2230": [
     {
       "label": "四国地方整備局 ダム管理情報",
       "url": "https://www.skr.mlit.go.jp/kasen/damu/"
+    },
+    {
+      "label": "愛媛県 渇水情報",
+      "url": "https://www.pref.ehime.jp/page/5043.html"
     }
   ],
   "dam-2234": [
     {
       "label": "四国地方整備局 ダム管理情報",
       "url": "https://www.skr.mlit.go.jp/kasen/damu/"
+    },
+    {
+      "label": "愛媛県 渇水情報",
+      "url": "https://www.pref.ehime.jp/page/5043.html"
+    }
+  ],
+  "dam-2240": [
+    {
+      "label": "愛媛県 渇水情報",
+      "url": "https://www.pref.ehime.jp/page/5043.html"
+    }
+  ],
+  "dam-2253": [
+    {
+      "label": "福岡県 主要ダム貯水状況",
+      "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
     }
   ],
   "dam-2259": [
     {
       "label": "九州地方整備局 直轄ダム",
       "url": "https://www.qsr.mlit.go.jp/n-kawa/about/dam/kanridam/index.html"
+    },
+    {
+      "label": "大分県 管理ダム貯水位",
+      "url": "https://www.pref.oita.jp/soshiki/17200/25damchosuii.html"
+    }
+  ],
+  "dam-2286": [
+    {
+      "label": "大分県 管理ダム貯水位",
+      "url": "https://www.pref.oita.jp/soshiki/17200/25damchosuii.html"
+    }
+  ],
+  "dam-2291": [
+    {
+      "label": "大分県 管理ダム貯水位",
+      "url": "https://www.pref.oita.jp/soshiki/17200/25damchosuii.html"
+    }
+  ],
+  "dam-2303": [
+    {
+      "label": "大分県 管理ダム貯水位",
+      "url": "https://www.pref.oita.jp/soshiki/17200/25damchosuii.html"
     }
   ],
   "dam-2304": [
     {
       "label": "九州地方整備局 直轄ダム",
       "url": "https://www.qsr.mlit.go.jp/n-kawa/about/dam/kanridam/index.html"
+    },
+    {
+      "label": "大分県 管理ダム貯水位",
+      "url": "https://www.pref.oita.jp/soshiki/17200/25damchosuii.html"
+    }
+  ],
+  "dam-2309": [
+    {
+      "label": "大分県 管理ダム貯水位",
+      "url": "https://www.pref.oita.jp/soshiki/17200/25damchosuii.html"
+    }
+  ],
+  "dam-2312": [
+    {
+      "label": "大分県 管理ダム貯水位",
+      "url": "https://www.pref.oita.jp/soshiki/17200/25damchosuii.html"
+    }
+  ],
+  "dam-2315": [
+    {
+      "label": "大分県 管理ダム貯水位",
+      "url": "https://www.pref.oita.jp/soshiki/17200/25damchosuii.html"
+    }
+  ],
+  "dam-2329": [
+    {
+      "label": "大分県 管理ダム貯水位",
+      "url": "https://www.pref.oita.jp/soshiki/17200/25damchosuii.html"
+    }
+  ],
+  "dam-2333": [
+    {
+      "label": "大分県 管理ダム貯水位",
+      "url": "https://www.pref.oita.jp/soshiki/17200/25damchosuii.html"
+    }
+  ],
+  "dam-2334": [
+    {
+      "label": "大分県 管理ダム貯水位",
+      "url": "https://www.pref.oita.jp/soshiki/17200/25damchosuii.html"
+    }
+  ],
+  "dam-2337": [
+    {
+      "label": "大分県 管理ダム貯水位",
+      "url": "https://www.pref.oita.jp/soshiki/17200/25damchosuii.html"
+    }
+  ],
+  "dam-2342": [
+    {
+      "label": "宮崎県 県管理ダム",
+      "url": "https://www.pref.miyazaki.lg.jp/kasen/kurashi/shakaikiban/20200625154629.html"
+    }
+  ],
+  "dam-2344": [
+    {
+      "label": "宮崎県 県管理ダム",
+      "url": "https://www.pref.miyazaki.lg.jp/kasen/kurashi/shakaikiban/20200625154629.html"
+    }
+  ],
+  "dam-2357": [
+    {
+      "label": "宮崎県 県管理ダム",
+      "url": "https://www.pref.miyazaki.lg.jp/kasen/kurashi/shakaikiban/20200625154629.html"
+    }
+  ],
+  "dam-2363": [
+    {
+      "label": "宮崎県 県管理ダム",
+      "url": "https://www.pref.miyazaki.lg.jp/kasen/kurashi/shakaikiban/20200625154629.html"
+    }
+  ],
+  "dam-2368": [
+    {
+      "label": "宮崎県 県管理ダム",
+      "url": "https://www.pref.miyazaki.lg.jp/kasen/kurashi/shakaikiban/20200625154629.html"
+    }
+  ],
+  "dam-2370": [
+    {
+      "label": "宮崎県 県管理ダム",
+      "url": "https://www.pref.miyazaki.lg.jp/kasen/kurashi/shakaikiban/20200625154629.html"
+    }
+  ],
+  "dam-2379": [
+    {
+      "label": "宮崎県 県管理ダム",
+      "url": "https://www.pref.miyazaki.lg.jp/kasen/kurashi/shakaikiban/20200625154629.html"
+    }
+  ],
+  "dam-2382": [
+    {
+      "label": "宮崎県 県管理ダム",
+      "url": "https://www.pref.miyazaki.lg.jp/kasen/kurashi/shakaikiban/20200625154629.html"
+    }
+  ],
+  "dam-2383": [
+    {
+      "label": "宮崎県 県管理ダム",
+      "url": "https://www.pref.miyazaki.lg.jp/kasen/kurashi/shakaikiban/20200625154629.html"
+    }
+  ],
+  "dam-2384": [
+    {
+      "label": "宮崎県 県管理ダム",
+      "url": "https://www.pref.miyazaki.lg.jp/kasen/kurashi/shakaikiban/20200625154629.html"
+    }
+  ],
+  "dam-2385": [
+    {
+      "label": "宮崎県 県管理ダム",
+      "url": "https://www.pref.miyazaki.lg.jp/kasen/kurashi/shakaikiban/20200625154629.html"
+    }
+  ],
+  "dam-2388": [
+    {
+      "label": "宮崎県 県管理ダム",
+      "url": "https://www.pref.miyazaki.lg.jp/kasen/kurashi/shakaikiban/20200625154629.html"
+    }
+  ],
+  "dam-2389": [
+    {
+      "label": "宮崎県 県管理ダム",
+      "url": "https://www.pref.miyazaki.lg.jp/kasen/kurashi/shakaikiban/20200625154629.html"
+    }
+  ],
+  "dam-2413": [
+    {
+      "label": "福岡県 主要ダム貯水状況",
+      "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
+    }
+  ],
+  "dam-2419": [
+    {
+      "label": "福岡県 主要ダム貯水状況",
+      "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
+    }
+  ],
+  "dam-2422": [
+    {
+      "label": "福岡県 主要ダム貯水状況",
+      "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
+    }
+  ],
+  "dam-2434": [
+    {
+      "label": "福岡県 主要ダム貯水状況",
+      "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
     }
   ],
   "dam-2442": [
     {
       "label": "福岡市 きょうのダム状況",
       "url": "https://www.city.fukuoka.lg.jp/mizu/mizukanri/machi/002.html"
+    },
+    {
+      "label": "福岡県 主要ダム貯水状況",
+      "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
     }
   ],
   "dam-2444": [
     {
       "label": "福岡市 きょうのダム状況",
       "url": "https://www.city.fukuoka.lg.jp/mizu/mizukanri/machi/002.html"
+    },
+    {
+      "label": "福岡県 主要ダム貯水状況",
+      "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
+    }
+  ],
+  "dam-2445": [
+    {
+      "label": "福岡県 主要ダム貯水状況",
+      "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
     }
   ],
   "dam-2446": [
     {
       "label": "福岡市 きょうのダム状況",
       "url": "https://www.city.fukuoka.lg.jp/mizu/mizukanri/machi/002.html"
+    },
+    {
+      "label": "福岡県 主要ダム貯水状況",
+      "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
+    }
+  ],
+  "dam-2450": [
+    {
+      "label": "福岡県 主要ダム貯水状況",
+      "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
     }
   ],
   "dam-2454": [
     {
       "label": "福岡市 きょうのダム状況",
       "url": "https://www.city.fukuoka.lg.jp/mizu/mizukanri/machi/002.html"
+    },
+    {
+      "label": "福岡県 主要ダム貯水状況",
+      "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
     }
   ],
   "dam-2455": [
     {
       "label": "福岡市 きょうのダム状況",
       "url": "https://www.city.fukuoka.lg.jp/mizu/mizukanri/machi/002.html"
+    },
+    {
+      "label": "福岡県 主要ダム貯水状況",
+      "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
     }
   ],
   "dam-2457": [
     {
       "label": "福岡市 きょうのダム状況",
       "url": "https://www.city.fukuoka.lg.jp/mizu/mizukanri/machi/002.html"
+    },
+    {
+      "label": "福岡県 主要ダム貯水状況",
+      "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
     }
   ],
   "dam-2459": [
     {
       "label": "福岡市 きょうのダム状況",
       "url": "https://www.city.fukuoka.lg.jp/mizu/mizukanri/machi/002.html"
+    },
+    {
+      "label": "福岡県 主要ダム貯水状況",
+      "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
     }
   ],
   "dam-2460": [
     {
       "label": "福岡市 きょうのダム状況",
       "url": "https://www.city.fukuoka.lg.jp/mizu/mizukanri/machi/002.html"
+    },
+    {
+      "label": "福岡県 主要ダム貯水状況",
+      "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
+    }
+  ],
+  "dam-2463": [
+    {
+      "label": "福岡県 主要ダム貯水状況",
+      "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
     }
   ],
   "dam-2468": [
     {
       "label": "九州地方整備局 直轄ダム",
       "url": "https://www.qsr.mlit.go.jp/n-kawa/about/dam/kanridam/index.html"
+    }
+  ],
+  "dam-2472": [
+    {
+      "label": "福岡県 主要ダム貯水状況",
+      "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
+    }
+  ],
+  "dam-2474": [
+    {
+      "label": "福岡県 主要ダム貯水状況",
+      "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
     }
   ],
   "dam-2477": [
@@ -2699,34 +3129,168 @@
       "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
     }
   ],
+  "dam-2510": [
+    {
+      "label": "佐賀県 主要ダム貯水状況",
+      "url": "https://www.pref.saga.lg.jp/kiji00312382/index.html"
+    }
+  ],
+  "dam-2514": [
+    {
+      "label": "佐賀県 主要ダム貯水状況",
+      "url": "https://www.pref.saga.lg.jp/kiji00312382/index.html"
+    }
+  ],
+  "dam-2515": [
+    {
+      "label": "佐賀県 主要ダム貯水状況",
+      "url": "https://www.pref.saga.lg.jp/kiji00312382/index.html"
+    }
+  ],
+  "dam-2516": [
+    {
+      "label": "佐賀県 主要ダム貯水状況",
+      "url": "https://www.pref.saga.lg.jp/kiji00312382/index.html"
+    }
+  ],
+  "dam-2517": [
+    {
+      "label": "佐賀県 主要ダム貯水状況",
+      "url": "https://www.pref.saga.lg.jp/kiji00312382/index.html"
+    }
+  ],
+  "dam-2520": [
+    {
+      "label": "佐賀県 主要ダム貯水状況",
+      "url": "https://www.pref.saga.lg.jp/kiji00312382/index.html"
+    }
+  ],
   "dam-2521": [
     {
       "label": "九州地方整備局 直轄ダム",
       "url": "https://www.qsr.mlit.go.jp/n-kawa/about/dam/kanridam/index.html"
+    },
+    {
+      "label": "佐賀県 主要ダム貯水状況",
+      "url": "https://www.pref.saga.lg.jp/kiji00312382/index.html"
+    }
+  ],
+  "dam-2528": [
+    {
+      "label": "佐賀県 主要ダム貯水状況",
+      "url": "https://www.pref.saga.lg.jp/kiji00312382/index.html"
+    }
+  ],
+  "dam-2531": [
+    {
+      "label": "佐賀県 主要ダム貯水状況",
+      "url": "https://www.pref.saga.lg.jp/kiji00312382/index.html"
+    }
+  ],
+  "dam-2538": [
+    {
+      "label": "佐賀県 主要ダム貯水状況",
+      "url": "https://www.pref.saga.lg.jp/kiji00312382/index.html"
+    }
+  ],
+  "dam-2539": [
+    {
+      "label": "佐賀県 主要ダム貯水状況",
+      "url": "https://www.pref.saga.lg.jp/kiji00312382/index.html"
+    }
+  ],
+  "dam-2540": [
+    {
+      "label": "佐賀県 主要ダム貯水状況",
+      "url": "https://www.pref.saga.lg.jp/kiji00312382/index.html"
+    }
+  ],
+  "dam-2541": [
+    {
+      "label": "佐賀県 主要ダム貯水状況",
+      "url": "https://www.pref.saga.lg.jp/kiji00312382/index.html"
+    }
+  ],
+  "dam-2548": [
+    {
+      "label": "佐賀県 主要ダム貯水状況",
+      "url": "https://www.pref.saga.lg.jp/kiji00312382/index.html"
     }
   ],
   "dam-2556": [
     {
       "label": "九州地方整備局 直轄ダム",
       "url": "https://www.qsr.mlit.go.jp/n-kawa/about/dam/kanridam/index.html"
+    },
+    {
+      "label": "佐賀県 主要ダム貯水状況",
+      "url": "https://www.pref.saga.lg.jp/kiji00312382/index.html"
     }
   ],
   "dam-2659": [
     {
       "label": "九州地方整備局 直轄ダム",
       "url": "https://www.qsr.mlit.go.jp/n-kawa/about/dam/kanridam/index.html"
+    },
+    {
+      "label": "熊本県 土木部のダム",
+      "url": "https://www.pref.kumamoto.jp/soshiki/105/107223.html"
     }
   ],
   "dam-2661": [
     {
       "label": "九州地方整備局 直轄ダム",
       "url": "https://www.qsr.mlit.go.jp/n-kawa/about/dam/kanridam/index.html"
+    },
+    {
+      "label": "熊本県 土木部のダム",
+      "url": "https://www.pref.kumamoto.jp/soshiki/105/107223.html"
     }
   ],
   "dam-2663": [
     {
       "label": "九州地方整備局 直轄ダム",
       "url": "https://www.qsr.mlit.go.jp/n-kawa/about/dam/kanridam/index.html"
+    },
+    {
+      "label": "熊本県 土木部のダム",
+      "url": "https://www.pref.kumamoto.jp/soshiki/105/107223.html"
+    }
+  ],
+  "dam-2667": [
+    {
+      "label": "熊本県 土木部のダム",
+      "url": "https://www.pref.kumamoto.jp/soshiki/105/107223.html"
+    }
+  ],
+  "dam-2669": [
+    {
+      "label": "熊本県 土木部のダム",
+      "url": "https://www.pref.kumamoto.jp/soshiki/105/107223.html"
+    }
+  ],
+  "dam-2671": [
+    {
+      "label": "熊本県 土木部のダム",
+      "url": "https://www.pref.kumamoto.jp/soshiki/105/107223.html"
+    }
+  ],
+  "dam-2680": [
+    {
+      "label": "熊本県 土木部のダム",
+      "url": "https://www.pref.kumamoto.jp/soshiki/105/107223.html"
+    }
+  ],
+  "dam-2681": [
+    {
+      "label": "熊本県 土木部のダム",
+      "url": "https://www.pref.kumamoto.jp/soshiki/105/107223.html"
+    }
+  ],
+  "dam-2683": [
+    {
+      "label": "熊本県 土木部のダム",
+      "url": "https://www.pref.kumamoto.jp/soshiki/105/107223.html"
     }
   ],
   "dam-2697": [
