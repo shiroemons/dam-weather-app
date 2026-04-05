@@ -18,6 +18,7 @@ import ViewModeSelector from "@/components/dam/ViewModeSelector";
 import type { GroupByMode } from "@/components/dam/DamGroupedGrid";
 import ErrorFallback from "@/components/common/ErrorFallback";
 import { SITE_NAME, SITE_URL } from "@/config/seo";
+import WeatherSummaryBar from "@/components/today/WeatherSummaryBar";
 import type { ViewMode, SortField, SortDirection } from "@/lib/sortDams";
 
 export const Route = createFileRoute("/prefecture/$prefectureSlug")({
@@ -212,18 +213,37 @@ function PrefecturePage() {
         ← 一覧に戻る
       </Link>
 
-      <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-text-primary">{prefecture.name}</h1>
-          <p className="mt-1 text-sm text-text-secondary">
-            {dams.length}基のダム{obs && totalCount > dams.length && ` / 全${totalCount}基`}
-          </p>
+      <div className="mt-4">
+        <h1 className="text-2xl font-bold text-text-primary">{prefecture.name}</h1>
+        <p className="mt-1 text-sm text-text-secondary">
+          {dams.length}基のダム{obs && totalCount > dams.length && ` / 全${totalCount}基`}
+        </p>
+      </div>
+
+      {/* 天気分布（フィルタ・表示切替に依存しないのでここに配置）*/}
+      {!weatherLoading && !weatherError && weather?.distribution && (
+        <div className="mt-4 rounded-xl border border-border-primary bg-surface-primary p-4">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-text-primary">天気分布</h2>
+            {weather.updatedAt && (
+              <span className="text-xs text-text-tertiary">
+                更新:{" "}
+                {new Date(weather.updatedAt).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}
+              </span>
+            )}
+          </div>
+          <WeatherSummaryBar
+            counts={weather.distribution}
+            total={Object.values(weather.distribution).reduce((a, b) => a + b, 0)}
+          />
         </div>
-        <div className="flex flex-wrap items-center gap-3 self-end md:gap-4 md:self-auto">
-          {view === "grid" && <GroupBySelector value={group} onChange={setGroupBy} />}
-          <ViewModeSelector value={view} onChange={setViewMode} />
-          <FilterToggle enabled={obs} onChange={setObsOnly} />
-        </div>
+      )}
+
+      {/* 表示制御 */}
+      <div className="mt-4 flex flex-wrap items-center justify-end gap-3 md:gap-4">
+        {view === "grid" && <GroupBySelector value={group} onChange={setGroupBy} />}
+        <ViewModeSelector value={view} onChange={setViewMode} />
+        <FilterToggle enabled={obs} onChange={setObsOnly} />
       </div>
 
       <div className="mt-4 space-y-3 rounded-xl border border-border-primary bg-surface-primary p-4">
@@ -271,12 +291,6 @@ function PrefecturePage() {
 
       {!damsLoading && !weatherLoading && !damsError && !weatherError && (
         <>
-          {weather?.updatedAt && (
-            <p className="mt-2 text-xs text-text-tertiary">
-              更新日時:{" "}
-              {new Date(weather.updatedAt).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}
-            </p>
-          )}
           <div className="mt-6">
             {view === "grid" ? (
               <DamGroupedGrid dams={dams} weather={weather} storage={storageData} groupBy={group} />

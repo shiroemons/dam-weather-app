@@ -2,14 +2,13 @@ import { useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQueries } from "@tanstack/react-query";
 import { Sun, Cloud, CloudRain, Snowflake } from "lucide-react";
-import { useAllDams } from "@/hooks/useAllDams";
 import { PREFECTURES, REGIONS } from "@/data/prefectures";
-import { getWeatherCategory, WEATHER_CLASSES } from "@/lib/weatherColors";
+import { WEATHER_CLASSES } from "@/lib/weatherColors";
 import WeatherSummaryBar from "@/components/today/WeatherSummaryBar";
 import RegionWeatherSummary from "@/components/today/RegionWeatherSummary";
 import { SITE_NAME, SITE_URL } from "@/config/seo";
 import type { WeatherCategory } from "@/lib/weatherColors";
-import type { DamWeather, PrefectureWeather } from "@/types/weather";
+import type { PrefectureWeather } from "@/types/weather";
 
 const STALE_TIME = 30 * 60 * 1000;
 
@@ -60,8 +59,6 @@ const CATEGORY_ICON_COLORS: Record<string, string> = {
 };
 
 function TodayPage() {
-  const allDams = useAllDams();
-
   const weatherQueries = useQueries({
     queries: PREFECTURES.map((pref) => ({
       queryKey: ["weather", pref.slug],
@@ -76,47 +73,43 @@ function TodayPage() {
   const isLoading = weatherQueries.some((q) => q.isLoading);
   const loadedCount = weatherQueries.filter((q) => q.data).length;
 
-  const weatherMap = useMemo(() => {
-    const map = new Map<string, DamWeather>();
+  const totalCounts = useMemo(() => {
+    const counts = emptyCounts();
     for (const query of weatherQueries) {
-      if (query.data) {
-        for (const dw of query.data.dams) {
-          map.set(dw.damId, dw);
+      if (query.data?.distribution) {
+        for (const [cat, count] of Object.entries(query.data.distribution)) {
+          counts[cat as WeatherCategory] += count;
         }
       }
     }
-    return map;
+    return counts;
   }, [weatherQueries]);
 
-  const totalCounts = useMemo(() => {
-    const counts = emptyCounts();
-    for (const dw of weatherMap.values()) {
-      const cat = getWeatherCategory(dw.today.weatherCode);
-      counts[cat]++;
-    }
-    return counts;
-  }, [weatherMap]);
-
   const regionData = useMemo(() => {
+    const prefWeatherMap = new Map<string, PrefectureWeather>();
+    for (let i = 0; i < PREFECTURES.length; i++) {
+      const data = weatherQueries[i]?.data;
+      if (data) {
+        prefWeatherMap.set(PREFECTURES[i].slug, data);
+      }
+    }
     return REGIONS.map((region) => {
-      const regionPrefSlugs = new Set(
-        PREFECTURES.filter((p) => p.region === region).map((p) => p.slug),
-      );
-      const regionDams = allDams.filter((d) => regionPrefSlugs.has(d.prefectureSlug));
+      const regionPrefSlugs = PREFECTURES.filter((p) => p.region === region).map((p) => p.slug);
       const counts = emptyCounts();
-      for (const dam of regionDams) {
-        const dw = weatherMap.get(dam.id);
-        if (dw) {
-          const cat = getWeatherCategory(dw.today.weatherCode);
-          counts[cat]++;
+      for (const slug of regionPrefSlugs) {
+        const pw = prefWeatherMap.get(slug);
+        if (pw?.distribution) {
+          for (const [cat, count] of Object.entries(pw.distribution)) {
+            counts[cat as WeatherCategory] += count;
+          }
         }
       }
       const total = Object.values(counts).reduce((a, b) => a + b, 0);
       return { region, counts, total };
     });
-  }, [allDams, weatherMap]);
+  }, [weatherQueries]);
 
-  const totalDams = weatherMap.size;
+  const totalDams = Object.values(totalCounts).reduce((a, b) => a + b, 0);
 
   const latestUpdatedAt = useMemo(() => {
     let latest = "";

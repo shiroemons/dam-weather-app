@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Cloud, CloudRain, type LucideIcon, Snowflake, Sun } from "lucide-react";
 
+import WeatherMiniBar from "@/components/today/WeatherMiniBar";
 import type { WeatherCategory } from "@/lib/weatherColors";
 import type { Prefecture } from "@/types/prefecture";
 
@@ -54,9 +55,16 @@ const BADGE_CLASSES: Record<WeatherCategory, string> = {
 type Props = {
   prefecture: Prefecture;
   weatherCategory?: WeatherCategory;
+  weatherCounts?: Record<WeatherCategory, number>;
+  weatherTotal?: number;
 };
 
-export default function PrefectureCard({ prefecture, weatherCategory = "default" }: Props) {
+export default function PrefectureCard({
+  prefecture,
+  weatherCategory = "default",
+  weatherCounts,
+  weatherTotal,
+}: Props) {
   const { icon: WeatherIcon, classes: iconClasses } = WEATHER_ICONS[weatherCategory];
 
   return (
@@ -89,6 +97,11 @@ export default function PrefectureCard({ prefecture, weatherCategory = "default"
           観測所 {prefecture.obsCount}
         </span>
       </div>
+      {weatherCounts != null && weatherTotal != null && weatherTotal > 0 && (
+        <div className="mt-2">
+          <WeatherMiniBar counts={weatherCounts} total={weatherTotal} />
+        </div>
+      )}
     </Link>
   );
 }

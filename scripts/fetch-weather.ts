@@ -60,6 +60,7 @@ interface DamWeather {
 interface PrefectureWeather {
   prefectureSlug: string;
   updatedAt: string;
+  distribution: Record<WeatherCategory, number>;
   dams: DamWeather[];
 }
 
@@ -80,6 +81,21 @@ interface CoordGroup {
   lat: number;
   lng: number;
   damIds: string[];
+}
+
+// ---------------------------------------------------------------------------
+// WMO weather code helpers
+// ---------------------------------------------------------------------------
+
+type WeatherCategory = "sunny" | "cloudy" | "rain" | "snow" | "default";
+
+function getWeatherCategory(code: number): WeatherCategory {
+  if (code <= 1) return "sunny";
+  if (code <= 3 || code === 45 || code === 48) return "cloudy";
+  if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82) || (code >= 95 && code <= 99))
+    return "rain";
+  if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) return "snow";
+  return "default";
 }
 
 // ---------------------------------------------------------------------------
@@ -311,7 +327,17 @@ async function main(): Promise<void> {
   let successCount = 0;
 
   for (const [prefectureSlug, dams] of byPrefecture) {
-    const prefWeather: PrefectureWeather = { prefectureSlug, updatedAt, dams };
+    const distribution: Record<WeatherCategory, number> = {
+      sunny: 0,
+      cloudy: 0,
+      rain: 0,
+      snow: 0,
+      default: 0,
+    };
+    for (const dam of dams) {
+      distribution[getWeatherCategory(dam.today.weatherCode)]++;
+    }
+    const prefWeather: PrefectureWeather = { prefectureSlug, updatedAt, distribution, dams };
     const outputPath = path.join(OUTPUT_DIR, `${prefectureSlug}.json`);
     fs.writeFileSync(outputPath, JSON.stringify(prefWeather, null, 2), "utf-8");
     successCount++;

@@ -1,3 +1,5 @@
+import type { WeatherCategory } from "@/lib/weatherColors";
+
 export interface DayForecast {
   date: string;
   weatherCode: number;
@@ -17,5 +19,6 @@ export interface DamWeather {
 export interface PrefectureWeather {
   prefectureSlug: string;
   updatedAt: string;
+  distribution?: Record<WeatherCategory, number>;
   dams: DamWeather[];
 }

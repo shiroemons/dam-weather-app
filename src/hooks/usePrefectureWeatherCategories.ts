@@ -7,7 +7,13 @@ import type { PrefectureWeather } from "@/types/weather";
 
 const STALE_TIME = 30 * 60 * 1000;
 
-function getDominantCategory(weather: PrefectureWeather): WeatherCategory {
+export type PrefectureWeatherSummary = {
+  dominant: WeatherCategory;
+  counts: Record<WeatherCategory, number>;
+  total: number;
+};
+
+function computeCountsFromDams(weather: PrefectureWeather): Record<WeatherCategory, number> {
   const counts: Record<WeatherCategory, number> = {
     sunny: 0,
     cloudy: 0,
@@ -15,11 +21,15 @@ function getDominantCategory(weather: PrefectureWeather): WeatherCategory {
     snow: 0,
     default: 0,
   };
-
   for (const dam of weather.dams) {
-    const category = getWeatherCategory(dam.today.weatherCode);
-    counts[category]++;
+    counts[getWeatherCategory(dam.today.weatherCode)]++;
   }
+  return counts;
+}
+
+function computeWeatherSummary(weather: PrefectureWeather): PrefectureWeatherSummary {
+  const counts = weather.distribution ?? computeCountsFromDams(weather);
+  const total = Object.values(counts).reduce((a, b) => a + b, 0);
 
   let dominant: WeatherCategory = "default";
   let maxCount = 0;
@@ -30,10 +40,10 @@ function getDominantCategory(weather: PrefectureWeather): WeatherCategory {
     }
   }
 
-  return dominant;
+  return { dominant, counts, total };
 }
 
-export function usePrefectureWeatherCategories(): Record<string, WeatherCategory> {
+export function usePrefectureWeatherCategories(): Record<string, PrefectureWeatherSummary> {
   const results = useQueries({
     queries: PREFECTURES.map((p) => ({
       queryKey: ["weather", p.slug],
@@ -45,13 +55,13 @@ export function usePrefectureWeatherCategories(): Record<string, WeatherCategory
     })),
   });
 
-  const categories: Record<string, WeatherCategory> = {};
+  const summaries: Record<string, PrefectureWeatherSummary> = {};
   for (let i = 0; i < PREFECTURES.length; i++) {
     const result = results[i];
     if (result.data) {
-      categories[PREFECTURES[i].slug] = getDominantCategory(result.data);
+      summaries[PREFECTURES[i].slug] = computeWeatherSummary(result.data);
     }
   }
 
-  return categories;
+  return summaries;
 }

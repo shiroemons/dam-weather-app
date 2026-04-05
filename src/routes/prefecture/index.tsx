@@ -3,9 +3,11 @@ import { useEffect } from "react";
 import { createFileRoute, useLocation } from "@tanstack/react-router";
 
 import PrefectureGrid from "@/components/prefecture/PrefectureGrid";
+import WeatherSummaryBar from "@/components/today/WeatherSummaryBar";
 import { SITE_NAME, SITE_URL } from "@/config/seo";
 import { REGION_SLUG_MAP, getRegionsWithPrefectures } from "@/data/prefectures";
 import { usePrefectureWeatherCategories } from "@/hooks/usePrefectureWeatherCategories";
+import type { WeatherCategory } from "@/lib/weatherColors";
 import type { Region } from "@/types/prefecture";
 
 export const Route = createFileRoute("/prefecture/")({
@@ -49,13 +51,19 @@ function PrefecturePage() {
     }
   }, [hash]);
 
-  // 全国天候集計（weatherCategoriesは Record<slug, WeatherCategory>）
-  const totalCounts = { sunny: 0, cloudy: 0, rain: 0, snow: 0, default: 0 };
-  const entries = Object.values(weatherCategories);
-  for (const cat of entries) {
-    totalCounts[cat]++;
+  // 全国天候集計（weatherCategories は Record<slug, PrefectureWeatherSummary>）
+  const totalCounts: Record<WeatherCategory, number> = {
+    sunny: 0,
+    cloudy: 0,
+    rain: 0,
+    snow: 0,
+    default: 0,
+  };
+  const summaries = Object.values(weatherCategories);
+  for (const summary of summaries) {
+    totalCounts[summary.dominant]++;
   }
-  const totalPrefectures = entries.length;
+  const totalPrefectures = summaries.length;
   const isLoaded = totalPrefectures > 0;
 
   return (
@@ -72,59 +80,16 @@ function PrefecturePage() {
         <p className="mt-1 text-sm text-text-secondary">全国のダムの天気を都道府県から探す</p>
       </div>
 
-      {/* 全国天候サマリー */}
+      {/* 全国天気サマリー */}
       {isLoaded && (
         <div className="mt-6 rounded-xl border border-border-primary bg-surface-primary p-4">
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-text-primary">全国の天候分布</h2>
+            <h2 className="text-sm font-semibold text-text-primary">全国の天気分布</h2>
             <span className="text-xs text-text-tertiary">
               {totalPrefectures.toLocaleString()}都道府県
             </span>
           </div>
-          <div className="flex h-2.5 overflow-hidden rounded-full bg-surface-secondary">
-            {totalCounts.sunny > 0 && (
-              <div
-                className="bg-amber-400"
-                style={{ width: `${(totalCounts.sunny / totalPrefectures) * 100}%` }}
-              />
-            )}
-            {totalCounts.cloudy > 0 && (
-              <div
-                className="bg-gray-400"
-                style={{ width: `${(totalCounts.cloudy / totalPrefectures) * 100}%` }}
-              />
-            )}
-            {totalCounts.rain > 0 && (
-              <div
-                className="bg-blue-400"
-                style={{ width: `${(totalCounts.rain / totalPrefectures) * 100}%` }}
-              />
-            )}
-            {totalCounts.snow > 0 && (
-              <div
-                className="bg-sky-300"
-                style={{ width: `${(totalCounts.snow / totalPrefectures) * 100}%` }}
-              />
-            )}
-          </div>
-          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-            <div className="flex items-center gap-1.5 text-xs text-text-secondary">
-              <span className="inline-block size-2.5 rounded-full bg-amber-400" />
-              晴れ {totalCounts.sunny.toLocaleString()}
-            </div>
-            <div className="flex items-center gap-1.5 text-xs text-text-secondary">
-              <span className="inline-block size-2.5 rounded-full bg-gray-400" />
-              曇り {totalCounts.cloudy.toLocaleString()}
-            </div>
-            <div className="flex items-center gap-1.5 text-xs text-text-secondary">
-              <span className="inline-block size-2.5 rounded-full bg-blue-400" />雨{" "}
-              {totalCounts.rain.toLocaleString()}
-            </div>
-            <div className="flex items-center gap-1.5 text-xs text-text-secondary">
-              <span className="inline-block size-2.5 rounded-full bg-sky-300" />雪{" "}
-              {totalCounts.snow.toLocaleString()}
-            </div>
-          </div>
+          <WeatherSummaryBar counts={totalCounts} total={totalPrefectures} unit="" />
         </div>
       )}
 

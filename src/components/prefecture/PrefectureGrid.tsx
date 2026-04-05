@@ -1,4 +1,4 @@
-import type { WeatherCategory } from "@/lib/weatherColors";
+import type { PrefectureWeatherSummary } from "@/hooks/usePrefectureWeatherCategories";
 import type { Prefecture } from "@/types/prefecture";
 
 import PrefectureCard from "./PrefectureCard";
@@ -7,7 +7,7 @@ type Props = {
   region: string;
   regionSlug?: string;
   prefectures: Prefecture[];
-  weatherCategories?: Record<string, WeatherCategory>;
+  weatherCategories?: Record<string, PrefectureWeatherSummary>;
 };
 
 export default function PrefectureGrid({
@@ -29,7 +29,9 @@ export default function PrefectureGrid({
           <PrefectureCard
             key={prefecture.code}
             prefecture={prefecture}
-            weatherCategory={weatherCategories[prefecture.slug]}
+            weatherCategory={weatherCategories[prefecture.slug]?.dominant}
+            weatherCounts={weatherCategories[prefecture.slug]?.counts}
+            weatherTotal={weatherCategories[prefecture.slug]?.total}
           />
         ))}
       </div>

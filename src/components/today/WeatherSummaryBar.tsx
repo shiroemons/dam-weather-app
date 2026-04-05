@@ -3,6 +3,7 @@ import type { WeatherCategory } from "@/lib/weatherColors";
 type Props = {
   counts: Record<WeatherCategory, number>;
   total: number;
+  unit?: string;
 };
 
 const CATEGORY_CONFIG: Record<WeatherCategory, { label: string; bg: string; text: string }> = {
@@ -15,7 +16,7 @@ const CATEGORY_CONFIG: Record<WeatherCategory, { label: string; bg: string; text
 
 const DISPLAY_ORDER: WeatherCategory[] = ["sunny", "cloudy", "rain", "snow", "default"];
 
-export default function WeatherSummaryBar({ counts, total }: Props) {
+export default function WeatherSummaryBar({ counts, total, unit = "基" }: Props) {
   if (total === 0) return null;
 
   return (
@@ -30,7 +31,7 @@ export default function WeatherSummaryBar({ counts, total }: Props) {
               key={category}
               className={`${CATEGORY_CONFIG[category].bg} flex items-center justify-center text-xs font-medium text-white transition-all`}
               style={{ width: `${pct}%` }}
-              title={`${CATEGORY_CONFIG[category].label}: ${count}基 (${pct.toFixed(1)}%)`}
+              title={`${CATEGORY_CONFIG[category].label}: ${count}${unit} (${pct.toFixed(1)}%)`}
             >
               {pct >= 8 && `${CATEGORY_CONFIG[category].label}`}
             </div>
@@ -46,7 +47,10 @@ export default function WeatherSummaryBar({ counts, total }: Props) {
             <div key={category} className="flex items-center gap-2">
               <span className={`inline-block size-3 rounded-full ${config.bg}`} />
               <span className={`text-sm font-medium ${config.text}`}>{config.label}</span>
-              <span className="text-sm text-text-secondary">{count}基</span>
+              <span className="text-sm text-text-secondary">
+                {count}
+                {unit}
+              </span>
             </div>
           );
         })}
