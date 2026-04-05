@@ -154,7 +154,7 @@ function DamDetailPage() {
       <div className="mt-6">
         <h2 className="text-lg font-semibold text-text-primary">天気予報</h2>
         {weatherLoading ? (
-          <div className="mt-3 h-32 animate-pulse rounded-xl bg-surface-secondary" />
+          <div className="mt-3 h-32 animate-pulse rounded-xl border border-border-secondary bg-surface-primary" />
         ) : damWeather ? (
           <div
             className={`mt-3 rounded-xl p-5 ${getWeatherCardClasses(damWeather.today.weatherCode)}`}
@@ -181,7 +181,7 @@ function DamDetailPage() {
             </a>
           </div>
         ) : (
-          <div className="mt-3 rounded-xl bg-surface-secondary px-4 py-8 text-center text-sm text-text-secondary">
+          <div className="mt-3 rounded-xl border border-border-secondary bg-surface-primary px-4 py-8 text-center text-sm text-text-secondary">
             天気情報を取得できません
           </div>
         )}

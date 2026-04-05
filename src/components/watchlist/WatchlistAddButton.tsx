@@ -171,7 +171,7 @@ export default function WatchlistAddButton({ damId, variant }: Props) {
         className={`flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-medium transition-colors ${
           inAnyList
             ? "bg-accent-subtle text-accent hover:bg-accent-subtle"
-            : "bg-surface-secondary text-text-secondary hover:bg-accent-subtle hover:text-accent"
+            : "border border-border-primary bg-surface-secondary text-text-secondary hover:bg-accent-subtle hover:text-accent"
         }`}
       >
         <Bookmark className="size-3.5" fill={inAnyList ? "currentColor" : "none"} />

@@ -41,7 +41,7 @@ export default function DamSortSelector({ field, direction, onChange }: Props) {
             className={`flex items-center gap-1 rounded-md px-3 py-1 text-sm font-medium transition-colors ${
               isActive
                 ? "bg-accent text-white"
-                : "bg-surface-secondary text-text-secondary hover:bg-surface-primary"
+                : "border border-border-primary bg-surface-secondary text-text-secondary hover:bg-border-primary"
             }`}
           >
             {label}

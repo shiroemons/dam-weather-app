@@ -56,7 +56,7 @@ export default function StorageMetricsSection() {
       </div>
       <div className="mt-4 rounded-xl bg-surface-elevated p-4 shadow-sm">
         <h3 className="text-sm font-semibold text-text-primary">貯水率の計算式</h3>
-        <div className="mt-2 rounded-lg bg-surface-secondary px-4 py-3 font-mono text-sm text-text-primary">
+        <div className="mt-2 rounded-lg border border-border-secondary bg-surface-secondary px-4 py-3 font-mono text-sm text-text-primary">
           貯水率（%） = 現在の貯水量 ÷ 利水容量 × 100
         </div>
         <div className="mt-2 text-xs leading-relaxed text-text-secondary">

@@ -28,7 +28,7 @@ export default function ManagementSection() {
     >
       <div className="overflow-x-auto rounded-xl bg-surface-elevated shadow-sm">
         <table className="w-full text-sm">
-          <thead className="bg-surface-secondary">
+          <thead className="border-b border-border-primary bg-surface-secondary">
             <tr>
               <th className="px-4 py-2.5 text-left text-xs font-medium text-text-secondary">
                 管理区分

@@ -17,7 +17,7 @@ export default function DamSuffixesSection() {
         </p>
         <div className="mt-3 overflow-x-auto rounded-xl bg-surface-elevated shadow-sm">
           <table className="w-full text-sm">
-            <thead className="bg-surface-secondary">
+            <thead className="border-b border-border-primary bg-surface-secondary">
               <tr>
                 <th className="px-4 py-2.5 text-left text-xs font-medium text-text-secondary">
                   サフィックス
@@ -61,7 +61,7 @@ export default function DamSuffixesSection() {
         </p>
         <div className="mt-3 overflow-x-auto rounded-xl bg-surface-elevated shadow-sm">
           <table className="w-full text-sm">
-            <thead className="bg-surface-secondary">
+            <thead className="border-b border-border-primary bg-surface-secondary">
               <tr>
                 <th className="px-4 py-2.5 text-left text-xs font-medium text-text-secondary">
                   名称

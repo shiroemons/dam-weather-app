@@ -54,7 +54,7 @@ export default function DamCard({ dam, weather, storage, onRemove }: Props) {
 
       {/* 天気 Bento ブロック */}
       {weather === undefined ? (
-        <div className="mt-4 rounded-lg bg-surface-secondary px-4 py-6 text-center text-sm text-text-tertiary">
+        <div className="mt-4 rounded-lg border border-border-secondary bg-surface-primary px-4 py-6 text-center text-sm text-text-tertiary">
           天気情報を取得できません
         </div>
       ) : (

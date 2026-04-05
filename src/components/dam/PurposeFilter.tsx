@@ -32,7 +32,7 @@ export default function PurposeFilter({ selected, available, onChange }: Props) 
             className={`rounded-full px-3 py-1 text-sm font-medium transition-colors duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
               isSelected
                 ? "bg-accent text-white"
-                : "bg-surface-primary text-text-secondary hover:bg-surface-secondary"
+                : "border border-border-primary bg-surface-secondary text-text-secondary hover:bg-border-primary"
             }`}
           >
             {purpose.label} ({short})

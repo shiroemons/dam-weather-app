@@ -121,7 +121,7 @@ function AboutPage() {
           {TECH_STACK.map((tech) => (
             <span
               key={tech}
-              className="rounded-full bg-surface-secondary px-3 py-1 text-xs font-medium text-text-secondary"
+              className="rounded-full border border-border-primary bg-surface-secondary px-3 py-1 text-xs font-medium text-text-secondary"
             >
               {tech}
             </span>

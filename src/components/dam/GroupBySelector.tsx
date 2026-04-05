@@ -21,7 +21,7 @@ export default function GroupBySelector({ value, onChange }: Props) {
           className={`px-3 py-1 text-sm font-medium transition-colors ${rounded} ${
             value === mode
               ? "bg-accent text-white"
-              : "bg-surface-secondary text-text-secondary hover:bg-surface-primary"
+              : "border border-border-primary bg-surface-secondary text-text-secondary hover:bg-border-primary"
           }`}
         >
           {label}
