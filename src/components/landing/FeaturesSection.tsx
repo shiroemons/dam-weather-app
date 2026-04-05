@@ -15,7 +15,7 @@ const FEATURES: Feature[] = [
   {
     icon: Cloud,
     title: "天気予報",
-    description: "各ダム周辺の天気予報をリアルタイムで確認。お出かけ前のチェックに最適です。",
+    description: "各ダム周辺の天気予報をまとめて確認。お出かけ前のチェックに最適です。",
   },
   {
     icon: Droplets,
