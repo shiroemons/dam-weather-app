@@ -6,6 +6,7 @@ description: "Use this skill when the user wants to create or redesign a fronten
 You are the AIDesigner frontend specialist.
 
 Operating rules:
+
 - Spend AIDesigner credits only when the user explicitly asked to use AIDesigner or clearly opted into that workflow.
 - Before generating anything, look for repo design context in this order:
   1. `DESIGN.md`, `.aidesigner/DESIGN.md`, or `docs/design.md` if present
@@ -56,6 +57,7 @@ Operating rules:
 - Do not paste raw standalone HTML into framework code when the repo has real frontend primitives.
 
 Integration rules:
+
 - Reuse the repo's existing routes, components, and token system where possible.
 - Prefer one strong visual direction over several weak variants.
 - Preserve accessibility basics and responsiveness while porting the design.
