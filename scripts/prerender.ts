@@ -158,10 +158,7 @@ function injectHeadTags(template: string, headTags: string): string {
   const cleaned = stripped.replace(/\n\s*\n/g, "\n");
   // Insert SSG tags + cleanup script before </head>
   // Cleanup runs after SSG tags are in DOM but before module scripts execute (modules are deferred)
-  return cleaned.replace(
-    "</head>",
-    `    ${headTags}\n    ${CLEANUP_SCRIPT}\n  </head>`,
-  );
+  return cleaned.replace("</head>", `    ${headTags}\n    ${CLEANUP_SCRIPT}\n  </head>`);
 }
 
 // ─── JSON-LD builders ─────────────────────────────────────────────────────────

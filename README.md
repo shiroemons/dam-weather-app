@@ -26,21 +26,21 @@
 
 ## 技術スタック
 
-| カテゴリ       | 技術                                     |
-| -------------- | ---------------------------------------- |
-| ツールチェーン | [VitePlus](https://viteplus.dev/) (`vp`) |
-| フレームワーク | React                                    |
-| 言語           | TypeScript                               |
-| ルーティング   | TanStack Router                          |
-| スタイリング   | Tailwind CSS                             |
-| データフェッチ | TanStack Query                           |
-| 地図           | Leaflet / React Leaflet                  |
-| アイコン       | Lucide React / Meteocons                 |
-| ドラッグ＆ドロップ | @dnd-kit                              |
-| エラーハンドリング | react-error-boundary                  |
-| テスト         | Vitest                                   |
-| デプロイ       | Cloudflare Pages                         |
-| CI/CD          | GitHub Actions                           |
+| カテゴリ           | 技術                                     |
+| ------------------ | ---------------------------------------- |
+| ツールチェーン     | [VitePlus](https://viteplus.dev/) (`vp`) |
+| フレームワーク     | React                                    |
+| 言語               | TypeScript                               |
+| ルーティング       | TanStack Router                          |
+| スタイリング       | Tailwind CSS                             |
+| データフェッチ     | TanStack Query                           |
+| 地図               | Leaflet / React Leaflet                  |
+| アイコン           | Lucide React / Meteocons                 |
+| ドラッグ＆ドロップ | @dnd-kit                                 |
+| エラーハンドリング | react-error-boundary                     |
+| テスト             | Vitest                                   |
+| デプロイ           | Cloudflare Pages                         |
+| CI/CD              | GitHub Actions                           |
 
 ## データソース
 
