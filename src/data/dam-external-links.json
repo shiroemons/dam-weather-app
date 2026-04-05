@@ -1771,30 +1771,118 @@
     {
       "label": "近畿地方整備局 琵琶湖水位・ダム貯水率",
       "url": "https://www.kkr.mlit.go.jp/river/biwakosuiidamutyosuiritsu.html"
+    },
+    {
+      "label": "奈良県広域水道企業団 水源状況",
+      "url": "https://www.union.nara-water.lg.jp/0000000003.html"
+    }
+  ],
+  "dam-1352": [
+    {
+      "label": "奈良県広域水道企業団 水源状況",
+      "url": "https://www.union.nara-water.lg.jp/0000000003.html"
     }
   ],
   "dam-1360": [
     {
       "label": "近畿地方整備局 琵琶湖水位・ダム貯水率",
       "url": "https://www.kkr.mlit.go.jp/river/biwakosuiidamutyosuiritsu.html"
+    },
+    {
+      "label": "奈良県広域水道企業団 水源状況",
+      "url": "https://www.union.nara-water.lg.jp/0000000003.html"
+    }
+  ],
+  "dam-1361": [
+    {
+      "label": "奈良県広域水道企業団 水源状況",
+      "url": "https://www.union.nara-water.lg.jp/0000000003.html"
+    }
+  ],
+  "dam-1374": [
+    {
+      "label": "京都府 河川防災情報 ダム状況",
+      "url": "http://chisuibousai.pref.kyoto.jp/sp/status/dam_status.html"
+    }
+  ],
+  "dam-1375": [
+    {
+      "label": "京都府 河川防災情報 ダム状況",
+      "url": "http://chisuibousai.pref.kyoto.jp/sp/status/dam_status.html"
+    }
+  ],
+  "dam-1418": [
+    {
+      "label": "大阪府 河川防災情報 ダム情報",
+      "url": "https://www.osaka-kasen-portal.net/suibou/public/ja/choryuryo.html"
+    }
+  ],
+  "dam-1427": [
+    {
+      "label": "大阪府 河川防災情報 ダム情報",
+      "url": "https://www.osaka-kasen-portal.net/suibou/public/ja/choryuryo.html"
+    }
+  ],
+  "dam-1434": [
+    {
+      "label": "滋賀県 土木防災情報システム ダム観測情報",
+      "url": "https://shiga-bousai.jp/sp/dam/dam_table.php"
     }
   ],
   "dam-1436": [
     {
       "label": "近畿地方整備局 琵琶湖水位・ダム貯水率",
       "url": "https://www.kkr.mlit.go.jp/river/biwakosuiidamutyosuiritsu.html"
+    },
+    {
+      "label": "奈良県広域水道企業団 水源状況",
+      "url": "https://www.union.nara-water.lg.jp/0000000003.html"
     }
   ],
   "dam-1455": [
     {
       "label": "水資源機構 貯水状況",
       "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    },
+    {
+      "label": "兵庫県企業庁 貯水状況",
+      "url": "https://web.pref.hyogo.lg.jp/kc02/ea02_000000005.html"
+    }
+  ],
+  "dam-1459": [
+    {
+      "label": "滋賀県 土木防災情報システム ダム観測情報",
+      "url": "https://shiga-bousai.jp/sp/dam/dam_table.php"
+    }
+  ],
+  "dam-1461": [
+    {
+      "label": "滋賀県 土木防災情報システム ダム観測情報",
+      "url": "https://shiga-bousai.jp/sp/dam/dam_table.php"
+    }
+  ],
+  "dam-1466": [
+    {
+      "label": "大阪府 河川防災情報 ダム情報",
+      "url": "https://www.osaka-kasen-portal.net/suibou/public/ja/choryuryo.html"
+    }
+  ],
+  "dam-1467": [
+    {
+      "label": "大阪府 河川防災情報 ダム情報",
+      "url": "https://www.osaka-kasen-portal.net/suibou/public/ja/choryuryo.html"
     }
   ],
   "dam-1470": [
     {
       "label": "水資源機構 貯水状況",
       "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    }
+  ],
+  "dam-1472": [
+    {
+      "label": "滋賀県 土木防災情報システム ダム観測情報",
+      "url": "https://shiga-bousai.jp/sp/dam/dam_table.php"
     }
   ],
   "dam-1476": [
@@ -1819,6 +1907,10 @@
     {
       "label": "水資源機構 貯水状況",
       "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    },
+    {
+      "label": "奈良県広域水道企業団 水源状況",
+      "url": "https://www.union.nara-water.lg.jp/0000000003.html"
     }
   ],
   "dam-1489": [
@@ -1833,10 +1925,94 @@
       "url": "https://www.kkr.mlit.go.jp/river/biwakosuiidamutyosuiritsu.html"
     }
   ],
+  "dam-1501": [
+    {
+      "label": "滋賀県 土木防災情報システム ダム観測情報",
+      "url": "https://shiga-bousai.jp/sp/dam/dam_table.php"
+    }
+  ],
   "dam-1503": [
     {
       "label": "水資源機構 貯水状況",
       "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    }
+  ],
+  "dam-1513": [
+    {
+      "label": "兵庫県企業庁 貯水状況",
+      "url": "https://web.pref.hyogo.lg.jp/kc02/ea02_000000005.html"
+    }
+  ],
+  "dam-1528": [
+    {
+      "label": "兵庫県企業庁 貯水状況",
+      "url": "https://web.pref.hyogo.lg.jp/kc02/ea02_000000005.html"
+    }
+  ],
+  "dam-1529": [
+    {
+      "label": "兵庫県企業庁 貯水状況",
+      "url": "https://web.pref.hyogo.lg.jp/kc02/ea02_000000005.html"
+    }
+  ],
+  "dam-1530": [
+    {
+      "label": "兵庫県企業庁 貯水状況",
+      "url": "https://web.pref.hyogo.lg.jp/kc02/ea02_000000005.html"
+    }
+  ],
+  "dam-1534": [
+    {
+      "label": "兵庫県企業庁 貯水状況",
+      "url": "https://web.pref.hyogo.lg.jp/kc02/ea02_000000005.html"
+    }
+  ],
+  "dam-1535": [
+    {
+      "label": "兵庫県企業庁 貯水状況",
+      "url": "https://web.pref.hyogo.lg.jp/kc02/ea02_000000005.html"
+    }
+  ],
+  "dam-1537": [
+    {
+      "label": "兵庫県企業庁 貯水状況",
+      "url": "https://web.pref.hyogo.lg.jp/kc02/ea02_000000005.html"
+    }
+  ],
+  "dam-1552": [
+    {
+      "label": "兵庫県企業庁 貯水状況",
+      "url": "https://web.pref.hyogo.lg.jp/kc02/ea02_000000005.html"
+    }
+  ],
+  "dam-1557": [
+    {
+      "label": "兵庫県企業庁 貯水状況",
+      "url": "https://web.pref.hyogo.lg.jp/kc02/ea02_000000005.html"
+    }
+  ],
+  "dam-1563": [
+    {
+      "label": "兵庫県企業庁 貯水状況",
+      "url": "https://web.pref.hyogo.lg.jp/kc02/ea02_000000005.html"
+    }
+  ],
+  "dam-1564": [
+    {
+      "label": "兵庫県企業庁 貯水状況",
+      "url": "https://web.pref.hyogo.lg.jp/kc02/ea02_000000005.html"
+    }
+  ],
+  "dam-1572": [
+    {
+      "label": "兵庫県企業庁 貯水状況",
+      "url": "https://web.pref.hyogo.lg.jp/kc02/ea02_000000005.html"
+    }
+  ],
+  "dam-1601": [
+    {
+      "label": "鳥取県 ダム情報提供システム",
+      "url": "https://tottoridam.jp/"
     }
   ],
   "dam-1605": [
@@ -1849,18 +2025,66 @@
     {
       "label": "中国地方整備局 渇水情報",
       "url": "https://www.cgr.mlit.go.jp/kasen/kassui/index.html"
+    },
+    {
+      "label": "鳥取県 ダム情報提供システム",
+      "url": "https://tottoridam.jp/"
     }
   ],
   "dam-1633": [
     {
       "label": "中国地方整備局 渇水情報",
       "url": "https://www.cgr.mlit.go.jp/kasen/kassui/index.html"
+    },
+    {
+      "label": "島根県 ダム諸量データ",
+      "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
+    }
+  ],
+  "dam-1637": [
+    {
+      "label": "島根県 ダム諸量データ",
+      "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
+    }
+  ],
+  "dam-1638": [
+    {
+      "label": "島根県 ダム諸量データ",
+      "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
+    }
+  ],
+  "dam-1643": [
+    {
+      "label": "島根県 ダム諸量データ",
+      "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
     }
   ],
   "dam-1645": [
     {
       "label": "中国地方整備局 渇水情報",
       "url": "https://www.cgr.mlit.go.jp/kasen/kassui/index.html"
+    },
+    {
+      "label": "島根県 ダム諸量データ",
+      "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
+    }
+  ],
+  "dam-1652": [
+    {
+      "label": "島根県 ダム諸量データ",
+      "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
+    }
+  ],
+  "dam-1657": [
+    {
+      "label": "島根県 ダム諸量データ",
+      "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
+    }
+  ],
+  "dam-1658": [
+    {
+      "label": "島根県 ダム諸量データ",
+      "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
     }
   ],
   "dam-1665": [
@@ -1889,10 +2113,188 @@
       "url": "https://www.kasen-bousai.pref.hiroshima.lg.jp/rivercontents/p60101/10/1_1.html"
     }
   ],
+  "dam-1677": [
+    {
+      "label": "島根県 ダム諸量データ",
+      "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
+    }
+  ],
+  "dam-1681": [
+    {
+      "label": "島根県 ダム諸量データ",
+      "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
+    }
+  ],
+  "dam-1683": [
+    {
+      "label": "島根県 ダム諸量データ",
+      "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
+    }
+  ],
+  "dam-1685": [
+    {
+      "label": "島根県 ダム諸量データ",
+      "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
+    }
+  ],
+  "dam-1688": [
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
+    }
+  ],
+  "dam-1691": [
+    {
+      "label": "島根県 ダム諸量データ",
+      "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
+    }
+  ],
+  "dam-1692": [
+    {
+      "label": "島根県 ダム諸量データ",
+      "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
+    }
+  ],
+  "dam-1694": [
+    {
+      "label": "島根県 ダム諸量データ",
+      "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
+    }
+  ],
+  "dam-1695": [
+    {
+      "label": "島根県 ダム諸量データ",
+      "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
+    }
+  ],
+  "dam-1696": [
+    {
+      "label": "島根県 ダム諸量データ",
+      "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
+    }
+  ],
+  "dam-1697": [
+    {
+      "label": "島根県 ダム諸量データ",
+      "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
+    }
+  ],
+  "dam-1698": [
+    {
+      "label": "島根県 ダム諸量データ",
+      "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
+    }
+  ],
+  "dam-1700": [
+    {
+      "label": "島根県 ダム諸量データ",
+      "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
+    }
+  ],
+  "dam-1701": [
+    {
+      "label": "島根県 ダム諸量データ",
+      "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
+    }
+  ],
+  "dam-1712": [
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
+    }
+  ],
+  "dam-1721": [
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
+    }
+  ],
+  "dam-1778": [
+    {
+      "label": "岡山県 おかやま防災ポータル ダム情報",
+      "url": "https://www.bousai.pref.okayama.jp/?p=observation/dam"
+    }
+  ],
+  "dam-1782": [
+    {
+      "label": "岡山県 おかやま防災ポータル ダム情報",
+      "url": "https://www.bousai.pref.okayama.jp/?p=observation/dam"
+    }
+  ],
   "dam-1786": [
     {
       "label": "中国地方整備局 渇水情報",
       "url": "https://www.cgr.mlit.go.jp/kasen/kassui/index.html"
+    },
+    {
+      "label": "岡山県 おかやま防災ポータル ダム情報",
+      "url": "https://www.bousai.pref.okayama.jp/?p=observation/dam"
+    }
+  ],
+  "dam-1794": [
+    {
+      "label": "岡山県 おかやま防災ポータル ダム情報",
+      "url": "https://www.bousai.pref.okayama.jp/?p=observation/dam"
+    }
+  ],
+  "dam-1810": [
+    {
+      "label": "岡山県 おかやま防災ポータル ダム情報",
+      "url": "https://www.bousai.pref.okayama.jp/?p=observation/dam"
+    }
+  ],
+  "dam-1811": [
+    {
+      "label": "岡山県 おかやま防災ポータル ダム情報",
+      "url": "https://www.bousai.pref.okayama.jp/?p=observation/dam"
+    }
+  ],
+  "dam-1827": [
+    {
+      "label": "岡山県 おかやま防災ポータル ダム情報",
+      "url": "https://www.bousai.pref.okayama.jp/?p=observation/dam"
+    }
+  ],
+  "dam-1828": [
+    {
+      "label": "岡山県 おかやま防災ポータル ダム情報",
+      "url": "https://www.bousai.pref.okayama.jp/?p=observation/dam"
+    }
+  ],
+  "dam-1854": [
+    {
+      "label": "岡山県 おかやま防災ポータル ダム情報",
+      "url": "https://www.bousai.pref.okayama.jp/?p=observation/dam"
+    }
+  ],
+  "dam-1862": [
+    {
+      "label": "岡山県 おかやま防災ポータル ダム情報",
+      "url": "https://www.bousai.pref.okayama.jp/?p=observation/dam"
+    }
+  ],
+  "dam-1864": [
+    {
+      "label": "岡山県 おかやま防災ポータル ダム情報",
+      "url": "https://www.bousai.pref.okayama.jp/?p=observation/dam"
+    }
+  ],
+  "dam-1873": [
+    {
+      "label": "岡山県 おかやま防災ポータル ダム情報",
+      "url": "https://www.bousai.pref.okayama.jp/?p=observation/dam"
+    }
+  ],
+  "dam-1875": [
+    {
+      "label": "岡山県 おかやま防災ポータル ダム情報",
+      "url": "https://www.bousai.pref.okayama.jp/?p=observation/dam"
+    }
+  ],
+  "dam-1885": [
+    {
+      "label": "岡山県 おかやま防災ポータル ダム情報",
+      "url": "https://www.bousai.pref.okayama.jp/?p=observation/dam"
     }
   ],
   "dam-1910": [
@@ -1955,6 +2357,10 @@
     {
       "label": "広島県 河川防災情報システム ダム貯水率",
       "url": "https://www.kasen-bousai.pref.hiroshima.lg.jp/rivercontents/p60101/10/1_1.html"
+    },
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
     }
   ],
   "dam-1969": [
@@ -1963,10 +2369,128 @@
       "url": "https://www.cgr.mlit.go.jp/kasen/kassui/index.html"
     }
   ],
+  "dam-1979": [
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
+    }
+  ],
+  "dam-1982": [
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
+    }
+  ],
+  "dam-1985": [
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
+    }
+  ],
+  "dam-1986": [
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
+    }
+  ],
+  "dam-1989": [
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
+    }
+  ],
+  "dam-1991": [
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
+    }
+  ],
+  "dam-1992": [
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
+    }
+  ],
+  "dam-1995": [
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
+    }
+  ],
+  "dam-1996": [
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
+    }
+  ],
+  "dam-1999": [
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
+    }
+  ],
   "dam-2003": [
     {
       "label": "中国地方整備局 渇水情報",
       "url": "https://www.cgr.mlit.go.jp/kasen/kassui/index.html"
+    },
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
+    }
+  ],
+  "dam-2005": [
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
+    }
+  ],
+  "dam-2007": [
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
+    }
+  ],
+  "dam-2008": [
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
+    }
+  ],
+  "dam-2010": [
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
+    }
+  ],
+  "dam-2013": [
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
+    }
+  ],
+  "dam-2018": [
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
+    }
+  ],
+  "dam-2022": [
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
+    }
+  ],
+  "dam-2025": [
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
+    }
+  ],
+  "dam-2033": [
+    {
+      "label": "山口県 土木防災情報システム ダム情報",
+      "url": "https://y-bousai.pref.yamaguchi.lg.jp/citizen/dam/kdm_station_list.aspx"
     }
   ],
   "dam-2042": [
