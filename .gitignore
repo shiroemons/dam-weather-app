@@ -36,3 +36,5 @@ public/data/dams/
 
 # Generated dam storage data (fetched from river.go.jp API)
 public/storage/
+.aidesigner/*
+!.aidesigner/.gitkeep
