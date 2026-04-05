@@ -78,7 +78,7 @@ function SortableDamCard({
           type="button"
           {...attributes}
           {...listeners}
-          className="cursor-grab rounded-full bg-surface-elevated/80 p-1 text-white hover:bg-surface-elevated active:cursor-grabbing"
+          className="cursor-grab rounded-full bg-gray-700/80 p-1 text-white hover:bg-gray-700 active:cursor-grabbing"
           aria-label="ドラッグして並べ替え"
         >
           <GripVertical className="size-3.5" />
