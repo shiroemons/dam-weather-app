@@ -308,8 +308,7 @@ export default function DamListView({
             `https://www.river.go.jp/kawabou/pc/tm?zm=15&clat=${dam.latitude}&clon=${dam.longitude}&itmkndCd=7&mapType=0`;
 
           return (
-            <div key={dam.id} className="px-2 py-3">
-              {/* 1行目: 天気アイコン + ダム名 + アクション + 貯水率 */}
+            <div key={dam.id} className="px-2 py-3 even:bg-gray-50/50 dark:even:bg-gray-800/30">
               <div className="flex items-center gap-2">
                 {damWeather ? (
                   <WeatherIcon code={damWeather.today.weatherCode} size="sm" />
@@ -323,44 +322,20 @@ export default function DamListView({
                 >
                   {dam.damName}
                 </Link>
-                <div className="flex shrink-0 items-center gap-2">
-                  <a
-                    href={riverInfoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`inline-flex transition-colors hover:text-blue-500 ${dam.riverUrl ? "text-blue-500" : "text-gray-300 dark:text-gray-600"}`}
-                  >
-                    <ExternalLink className="size-3.5" />
-                  </a>
-                  <WatchlistAddButton damId={dam.id} variant="icon" />
-                </div>
                 {storageRate != null && (
                   <span className="shrink-0 text-sm font-medium text-gray-600 dark:text-gray-300">
                     {storageRate}%
                   </span>
                 )}
-              </div>
-
-              {/* 2行目: 所在地 + ダム型式 + 雨雲レーダー + 総貯水容量 */}
-              <div className="mt-1 flex items-center gap-2 pl-8 text-xs text-gray-400 dark:text-gray-500">
-                <span className="min-w-0 flex-1 truncate">{dam.address}</span>
-                {dam.damType && (
-                  <span className="shrink-0 rounded-full bg-emerald-50 px-1.5 py-0.5 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
-                    {dam.damType}
-                  </span>
-                )}
                 <a
-                  href={getYahooRadarUrl(dam.latitude, dam.longitude)}
+                  href={riverInfoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-0.5 text-gray-400 hover:text-blue-500 dark:text-gray-500 dark:hover:text-blue-400"
+                  className={`inline-flex shrink-0 transition-colors hover:text-blue-500 ${dam.riverUrl ? "text-blue-500" : "text-gray-300 dark:text-gray-600"}`}
                 >
-                  <CloudRain className="size-3" />
-                  <span>雨雲</span>
+                  <ExternalLink className="size-3.5" />
                 </a>
-                {dam.totalStorageCapacity != null && (
-                  <span className="shrink-0">{dam.totalStorageCapacity.toLocaleString()}千m³</span>
-                )}
+                <WatchlistAddButton damId={dam.id} variant="icon" />
               </div>
             </div>
           );
