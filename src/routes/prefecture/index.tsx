@@ -55,8 +55,8 @@ function PrefecturePage() {
   for (const cat of entries) {
     totalCounts[cat]++;
   }
-  const totalDams = entries.length;
-  const isLoaded = totalDams > 0;
+  const totalPrefectures = entries.length;
+  const isLoaded = totalPrefectures > 0;
 
   return (
     <div className="mx-auto max-w-(--width-content) px-4 py-8 sm:px-6 sm:py-12">
@@ -77,31 +77,33 @@ function PrefecturePage() {
         <div className="mt-6 rounded-xl border border-border-primary bg-surface-primary p-4">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-sm font-semibold text-text-primary">全国の天候分布</h2>
-            <span className="text-xs text-text-tertiary">{totalDams.toLocaleString()}基</span>
+            <span className="text-xs text-text-tertiary">
+              {totalPrefectures.toLocaleString()}都道府県
+            </span>
           </div>
           <div className="flex h-2.5 overflow-hidden rounded-full bg-surface-secondary">
             {totalCounts.sunny > 0 && (
               <div
                 className="bg-amber-400"
-                style={{ width: `${(totalCounts.sunny / totalDams) * 100}%` }}
+                style={{ width: `${(totalCounts.sunny / totalPrefectures) * 100}%` }}
               />
             )}
             {totalCounts.cloudy > 0 && (
               <div
                 className="bg-gray-400"
-                style={{ width: `${(totalCounts.cloudy / totalDams) * 100}%` }}
+                style={{ width: `${(totalCounts.cloudy / totalPrefectures) * 100}%` }}
               />
             )}
             {totalCounts.rain > 0 && (
               <div
                 className="bg-blue-400"
-                style={{ width: `${(totalCounts.rain / totalDams) * 100}%` }}
+                style={{ width: `${(totalCounts.rain / totalPrefectures) * 100}%` }}
               />
             )}
             {totalCounts.snow > 0 && (
               <div
                 className="bg-sky-300"
-                style={{ width: `${(totalCounts.snow / totalDams) * 100}%` }}
+                style={{ width: `${(totalCounts.snow / totalPrefectures) * 100}%` }}
               />
             )}
           </div>
