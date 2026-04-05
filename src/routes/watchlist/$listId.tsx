@@ -71,7 +71,7 @@ function SortableDamCard({
     <div
       ref={setNodeRef}
       style={style}
-      className={`relative ${isDragging ? "z-10 opacity-50" : ""}`}
+      className={`relative h-full ${isDragging ? "z-10 opacity-50" : ""}`}
     >
       <span className="group/drag absolute left-2 top-2 z-10 opacity-0 transition-opacity [div:hover>&]:opacity-100">
         <button
@@ -353,7 +353,7 @@ function WatchlistDetailPage() {
           onDragEnd={handleDragEnd}
         >
           <SortableContext items={damIds} strategy={rectSortingStrategy}>
-            <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-6 grid auto-rows-fr grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {dams.map((dam) => (
                 <SortableDamCard
                   key={dam.id}

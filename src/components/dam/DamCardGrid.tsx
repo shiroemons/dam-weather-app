@@ -16,7 +16,7 @@ export default function DamCardGrid({ dams, weather, storage }: Props) {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid auto-rows-fr grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {dams.map((dam) => {
         const damWeather: DamWeather | undefined = weather?.dams.find((dw) => dw.damId === dam.id);
         const damStorage: DamStorage | undefined = storage?.dams.find((ds) => ds.damId === dam.id);

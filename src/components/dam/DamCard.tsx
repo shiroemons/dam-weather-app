@@ -25,7 +25,7 @@ export default function DamCard({ dam, weather, storage, onRemove }: Props) {
 
   return (
     <div
-      className={`flex flex-col rounded-xl p-5 transition-all duration-200 hover:shadow-md ${getWeatherCardClasses(weather?.today.weatherCode)}`}
+      className={`flex h-full flex-col rounded-xl p-5 transition-all duration-200 hover:shadow-md ${getWeatherCardClasses(weather?.today.weatherCode)}`}
     >
       {/* ヘッダー: ダム名 + ダム種別 */}
       <div className="flex items-start justify-between gap-2">
