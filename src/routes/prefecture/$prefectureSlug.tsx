@@ -226,7 +226,7 @@ function PrefecturePage() {
         </div>
       </div>
 
-      <div className="mt-4 space-y-3 rounded-lg bg-surface-secondary p-4">
+      <div className="mt-4 space-y-3 rounded-xl border border-border-primary bg-surface-primary p-4">
         <div>
           <p className="mb-1.5 text-xs font-medium text-text-secondary">ダム名で検索</p>
           <DamSearchInput value={q} onChange={setKeyword} />
