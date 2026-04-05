@@ -78,7 +78,7 @@ function SortableDamCard({
           type="button"
           {...attributes}
           {...listeners}
-          className="cursor-grab rounded-full bg-gray-900/50 p-1 text-white hover:bg-gray-700 active:cursor-grabbing"
+          className="cursor-grab rounded-full bg-surface-elevated/80 p-1 text-white hover:bg-surface-elevated active:cursor-grabbing"
           aria-label="ドラッグして並べ替え"
         >
           <GripVertical className="size-3.5" />
@@ -199,27 +199,27 @@ function WatchlistDetailPage() {
 
   if (!list) {
     return (
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-        <Link to="/watchlist" className="text-sm text-blue-500 hover:text-blue-700">
+      <div className="mx-auto max-w-(--width-content) px-4 py-8 sm:px-6">
+        <Link to="/watchlist" className="text-sm text-accent hover:text-accent">
           ← マイウォッチリスト
         </Link>
         <div className="mt-12 text-center">
-          <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">404</p>
-          <p className="mt-2 text-gray-500 dark:text-gray-400">リストが見つかりません</p>
+          <p className="text-lg font-semibold text-text-primary">404</p>
+          <p className="mt-2 text-text-secondary">リストが見つかりません</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+    <div className="mx-auto max-w-(--width-content) px-4 py-8 sm:px-6">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
-        <Link to="/watchlist" className="hover:text-blue-500">
+      <nav className="flex items-center gap-1 text-sm text-text-secondary">
+        <Link to="/watchlist" className="hover:text-accent">
           マイウォッチリスト
         </Link>
         <ChevronRight className="size-3.5" />
-        <span className="text-gray-900 dark:text-gray-100">{list.name}</span>
+        <span className="text-text-primary">{list.name}</span>
       </nav>
 
       {/* Header */}
@@ -237,18 +237,18 @@ function WatchlistDetailPage() {
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
               autoFocus
-              className="rounded-lg border border-gray-300 px-3 py-1.5 text-xl font-bold dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+              className="rounded-lg border border-border-primary px-3 py-1.5 text-xl font-bold bg-surface-elevated text-text-primary"
             />
             <button
               type="submit"
-              className="rounded-lg bg-sky-500 px-3 py-1.5 text-sm font-medium text-white hover:bg-sky-600"
+              className="rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-white hover:bg-accent"
             >
               保存
             </button>
             <button
               type="button"
               onClick={handleCancelEdit}
-              className="text-sm text-gray-500 hover:text-gray-700"
+              className="text-sm text-text-secondary hover:text-text-primary"
             >
               キャンセル
             </button>
@@ -256,11 +256,11 @@ function WatchlistDetailPage() {
         ) : (
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{list.name}</h1>
+              <h1 className="text-2xl font-bold text-text-primary font-display">{list.name}</h1>
               <button
                 type="button"
                 onClick={handleStartEdit}
-                className="text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-gray-300"
+                className="text-text-tertiary transition-colors hover:text-text-secondary"
                 aria-label="リスト名を編集"
               >
                 <Pencil className="size-4" />
@@ -268,7 +268,7 @@ function WatchlistDetailPage() {
               <button
                 type="button"
                 onClick={() => setShowDeleteConfirm(true)}
-                className="text-gray-400 transition-colors hover:text-red-500"
+                className="text-text-tertiary transition-colors hover:text-red-500"
                 aria-label="リストを削除"
               >
                 <Trash2 className="size-4" />
@@ -277,7 +277,7 @@ function WatchlistDetailPage() {
             <button
               type="button"
               onClick={handleExportList}
-              className="flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700"
+              className="flex items-center gap-1.5 rounded-lg border border-border-primary px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:bg-surface-secondary"
               aria-label="リストをエクスポート"
             >
               <Download className="size-3.5" />
@@ -285,7 +285,7 @@ function WatchlistDetailPage() {
             </button>
           </div>
         )}
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{dams.length}基のダム</p>
+        <p className="mt-1 text-sm text-text-secondary">{dams.length}基のダム</p>
       </div>
 
       {/* Delete confirmation */}
@@ -308,7 +308,7 @@ function WatchlistDetailPage() {
             <button
               type="button"
               onClick={() => setShowDeleteConfirm(false)}
-              className="text-xs text-gray-500 hover:text-gray-700"
+              className="text-xs text-text-secondary hover:text-text-primary"
             >
               キャンセル
             </button>
@@ -319,16 +319,16 @@ function WatchlistDetailPage() {
       {/* Weather Summary */}
       {isLoading ? (
         <div className="mt-6">
-          <div className="h-8 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700" />
+          <div className="h-8 animate-pulse rounded-full bg-surface-secondary" />
         </div>
       ) : total > 0 ? (
         <div className="mt-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">天気サマリー</h2>
+          <h2 className="text-lg font-semibold text-text-primary">天気サマリー</h2>
           <div className="mt-3">
             <WeatherSummaryBar counts={counts} total={total} />
           </div>
           {updatedAt && (
-            <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
+            <p className="mt-2 text-xs text-text-tertiary">
               更新日時: {new Date(updatedAt).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}
             </p>
           )}
@@ -338,8 +338,8 @@ function WatchlistDetailPage() {
       {/* Dam Cards */}
       {dams.length === 0 ? (
         <div className="mt-12 text-center">
-          <p className="text-gray-500 dark:text-gray-400">このリストにはまだダムがありません</p>
-          <p className="mt-1 text-sm text-gray-400 dark:text-gray-500">
+          <p className="text-text-secondary">このリストにはまだダムがありません</p>
+          <p className="mt-1 text-sm text-text-tertiary">
             ダムの詳細ページからウォッチリストに追加できます
           </p>
         </div>

@@ -36,16 +36,14 @@ export default function WeatherTermsSection() {
     >
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {weatherTerms.map(({ term, unit, description }) => (
-          <div key={term} className="rounded-xl bg-white p-4 shadow-sm dark:bg-gray-800">
+          <div key={term} className="rounded-xl bg-surface-elevated p-4 shadow-sm">
             <div className="flex items-center gap-2">
               <span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400">
                 {term}
               </span>
-              <span className="text-xs text-gray-400 dark:text-gray-500">{unit}</span>
+              <span className="text-xs text-text-tertiary">{unit}</span>
             </div>
-            <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-              {description}
-            </p>
+            <p className="mt-2 text-sm leading-relaxed text-text-secondary">{description}</p>
           </div>
         ))}
       </div>

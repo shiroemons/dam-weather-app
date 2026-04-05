@@ -58,7 +58,7 @@ export default function WatchlistImportExport() {
           type="button"
           onClick={handleExport}
           disabled={data.lists.length === 0}
-          className="flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700"
+          className="flex items-center gap-1.5 rounded-lg border border-border-primary px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:bg-surface-secondary disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Download className="size-3.5" />
           エクスポート
@@ -66,7 +66,7 @@ export default function WatchlistImportExport() {
         <button
           type="button"
           onClick={handleImport}
-          className="flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700"
+          className="flex items-center gap-1.5 rounded-lg border border-border-primary px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:bg-surface-secondary"
         >
           <Upload className="size-3.5" />
           インポート

@@ -167,58 +167,56 @@ const damTypesForDisplay = DAM_TYPES.filter((t) => t.short !== "NA");
 
 function GlossaryPage() {
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">用語解説</h1>
+    <div className="mx-auto max-w-(--width-content) px-4 py-8 sm:px-6">
+      <h1 className="text-2xl font-bold text-text-primary font-display">用語解説</h1>
 
-      <p className="mt-3 leading-relaxed text-gray-600 dark:text-gray-300">
-        ダムに関する用語を解説します。
-      </p>
+      <p className="mt-3 leading-relaxed text-text-secondary">ダムに関する用語を解説します。</p>
 
-      <nav className="mt-6 rounded-xl bg-white p-4 shadow-sm dark:bg-gray-800">
-        <h2 className="text-sm font-semibold text-gray-800 dark:text-gray-200">目次</h2>
+      <nav className="mt-6 rounded-xl bg-surface-elevated p-4 shadow-sm">
+        <h2 className="text-sm font-semibold text-text-primary">目次</h2>
         <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5 text-sm">
           <li>
-            <a href="#dam-types" className="text-sky-600 hover:underline dark:text-sky-400">
+            <a href="#dam-types" className="text-accent hover:underline">
               ダム型式
             </a>
           </li>
           <li>
-            <a href="#purposes" className="text-sky-600 hover:underline dark:text-sky-400">
+            <a href="#purposes" className="text-accent hover:underline">
               用途
             </a>
           </li>
           <li>
-            <a href="#suffixes" className="text-sky-600 hover:underline dark:text-sky-400">
+            <a href="#suffixes" className="text-accent hover:underline">
               ダム名のサフィックス
             </a>
           </li>
           <li>
-            <a href="#management" className="text-sky-600 hover:underline dark:text-sky-400">
+            <a href="#management" className="text-accent hover:underline">
               管理区分
             </a>
           </li>
           <li>
-            <a href="#basic-info" className="text-sky-600 hover:underline dark:text-sky-400">
+            <a href="#basic-info" className="text-accent hover:underline">
               ダムの基本情報
             </a>
           </li>
           <li>
-            <a href="#storage-metrics" className="text-sky-600 hover:underline dark:text-sky-400">
+            <a href="#storage-metrics" className="text-accent hover:underline">
               貯水状況の指標
             </a>
           </li>
           <li>
-            <a href="#water-system" className="text-sky-600 hover:underline dark:text-sky-400">
+            <a href="#water-system" className="text-accent hover:underline">
               水系
             </a>
           </li>
           <li>
-            <a href="#weather-terms" className="text-sky-600 hover:underline dark:text-sky-400">
+            <a href="#weather-terms" className="text-accent hover:underline">
               天気予報の用語
             </a>
           </li>
           <li>
-            <a href="#river-info" className="text-sky-600 hover:underline dark:text-sky-400">
+            <a href="#river-info" className="text-accent hover:underline">
               川の防災情報
             </a>
           </li>
@@ -226,31 +224,29 @@ function GlossaryPage() {
       </nav>
 
       <section id="dam-types" className="mt-8" style={{ scrollMarginTop: "5rem" }}>
-        <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
+        <h2 className="flex items-center gap-2 text-lg font-semibold text-text-primary">
           <Landmark className="h-5 w-5 text-emerald-500" />
           ダム型式
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+        <p className="mt-2 text-sm leading-relaxed text-text-secondary">
           ダムの構造や建設方法による分類です。略号はダムカードなどで使用されます。
         </p>
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {damTypesForDisplay.map((type) => (
-            <div key={type.short} className="rounded-xl bg-white p-4 shadow-sm dark:bg-gray-800">
+            <div key={type.short} className="rounded-xl bg-surface-elevated p-4 shadow-sm">
               <div className="flex items-center gap-2">
                 <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
                   {type.label}
                 </span>
-                <span className="text-sm font-mono text-gray-500 dark:text-gray-400">
-                  {type.short}
-                </span>
-                <span className="text-xs text-gray-400 dark:text-gray-500">
+                <span className="text-sm font-mono text-text-secondary">{type.short}</span>
+                <span className="text-xs text-text-tertiary">
                   {DAM_TYPE_DESCRIPTIONS[type.short].abbr}
                 </span>
               </div>
-              <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+              <p className="mt-2 text-sm leading-relaxed text-text-secondary">
                 {DAM_TYPE_DESCRIPTIONS[type.short].description}
               </p>
-              <p className="mt-1.5 rounded-lg bg-sky-50 px-3 py-2 text-xs leading-relaxed text-sky-700 dark:bg-sky-900/20 dark:text-sky-300">
+              <p className="mt-1.5 rounded-lg bg-accent-subtle px-3 py-2 text-xs leading-relaxed text-accent">
                 <span className="mr-1 font-medium">やさしい解説:</span>
                 {DAM_TYPE_DESCRIPTIONS[type.short].kids}
               </p>
@@ -260,31 +256,29 @@ function GlossaryPage() {
       </section>
 
       <section id="purposes" className="mt-10" style={{ scrollMarginTop: "5rem" }}>
-        <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
+        <h2 className="flex items-center gap-2 text-lg font-semibold text-text-primary">
           <Target className="h-5 w-5 text-amber-500" />
           用途
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+        <p className="mt-2 text-sm leading-relaxed text-text-secondary">
           ダムが果たす役割を示す分類です。多くのダムは複数の用途を持っています。
         </p>
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {DAM_PURPOSES.map((purpose) => (
-            <div key={purpose.short} className="rounded-xl bg-white p-4 shadow-sm dark:bg-gray-800">
+            <div key={purpose.short} className="rounded-xl bg-surface-elevated p-4 shadow-sm">
               <div className="flex items-center gap-2">
                 <span className="rounded-full bg-amber-50 px-1.5 py-0.5 text-xs font-medium text-amber-600 dark:bg-amber-900/30 dark:text-amber-400">
                   {purpose.label}
                 </span>
-                <span className="text-sm font-mono text-gray-500 dark:text-gray-400">
-                  {purpose.short}
-                </span>
-                <span className="text-xs text-gray-400 dark:text-gray-500">
+                <span className="text-sm font-mono text-text-secondary">{purpose.short}</span>
+                <span className="text-xs text-text-tertiary">
                   {DAM_PURPOSE_DESCRIPTIONS[purpose.short].abbr}
                 </span>
               </div>
-              <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+              <p className="mt-2 text-sm leading-relaxed text-text-secondary">
                 {DAM_PURPOSE_DESCRIPTIONS[purpose.short].description}
               </p>
-              <p className="mt-1.5 rounded-lg bg-sky-50 px-3 py-2 text-xs leading-relaxed text-sky-700 dark:bg-sky-900/20 dark:text-sky-300">
+              <p className="mt-1.5 rounded-lg bg-accent-subtle px-3 py-2 text-xs leading-relaxed text-accent">
                 <span className="mr-1 font-medium">やさしい解説:</span>
                 {DAM_PURPOSE_DESCRIPTIONS[purpose.short].kids}
               </p>

@@ -10,10 +10,13 @@ export default function HeroSection() {
       <div className="absolute -right-10 -top-10 size-40 rounded-full bg-white/10" />
       <div className="absolute -bottom-8 -left-8 size-32 rounded-full bg-white/10" />
 
-      <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
+      <div className="relative mx-auto max-w-(--width-content) px-4 sm:px-6">
         <div className="flex items-center gap-3">
           <Droplets className="size-10 text-sky-200 sm:size-12" />
-          <h1 id="hero-heading" className="text-4xl font-bold text-white sm:text-5xl lg:text-6xl">
+          <h1
+            id="hero-heading"
+            className="font-display text-4xl font-bold text-white sm:text-5xl lg:text-6xl"
+          >
             日本のダム天気
           </h1>
         </div>

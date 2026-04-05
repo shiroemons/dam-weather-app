@@ -46,22 +46,20 @@ const TECH_STACK = [
 
 function AboutPage() {
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">このサイトについて</h1>
+    <div className="mx-auto max-w-(--width-content) px-4 py-8 sm:px-6">
+      <h1 className="text-2xl font-bold text-text-primary font-display">このサイトについて</h1>
 
       <section className="mt-8">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-          日本のダム天気とは
-        </h2>
-        <p className="mt-3 leading-relaxed text-gray-600 dark:text-gray-300">
+        <h2 className="text-lg font-semibold text-text-primary">日本のダム天気とは</h2>
+        <p className="mt-3 leading-relaxed text-text-secondary">
           日本のダム天気は、全国47都道府県にある約2,700基のダム周辺の天気予報を提供するサイトです。
           ダム巡りや釣り、アウトドア活動の計画にお役立てください。
         </p>
       </section>
 
       <section className="mt-8">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">作成のきっかけ</h2>
-        <p className="mt-3 leading-relaxed text-gray-600 dark:text-gray-300">
+        <h2 className="text-lg font-semibold text-text-primary">作成のきっかけ</h2>
+        <p className="mt-3 leading-relaxed text-text-secondary">
           最近あまり雨が降っていないとき、「近くのダムにはちゃんと雨が降っているだろうか？」とふと気になったのがきっかけです。
           身近なダムの天気だけ確認できれば十分でしたが、調べてみると日本全国のダムの天気をまとめて確認できるサイトが見つかりませんでした。
           それなら自分で作ってしまおう——そんな思いから、このサイトは生まれました。
@@ -69,16 +67,16 @@ function AboutPage() {
       </section>
 
       <section className="mt-8">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">データ出典</h2>
+        <h2 className="text-lg font-semibold text-text-primary">データ出典</h2>
         <dl className="mt-3 space-y-4">
           <div>
-            <dt className="font-medium text-gray-900 dark:text-gray-100">天気予報データ</dt>
-            <dd className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+            <dt className="font-medium text-text-primary">天気予報データ</dt>
+            <dd className="mt-1 text-sm leading-relaxed text-text-secondary">
               <a
                 href="https://open-meteo.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400"
+                className="text-accent hover:text-accent"
               >
                 Open-Meteo
               </a>{" "}
@@ -86,14 +84,14 @@ function AboutPage() {
             </dd>
           </div>
           <div>
-            <dt className="font-medium text-gray-900 dark:text-gray-100">ダム情報</dt>
-            <dd className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+            <dt className="font-medium text-text-primary">ダム情報</dt>
+            <dd className="mt-1 text-sm leading-relaxed text-text-secondary">
               国土交通省{" "}
               <a
                 href="https://nlftp.mlit.go.jp/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400"
+                className="text-accent hover:text-accent"
               >
                 国土数値情報
               </a>{" "}
@@ -104,7 +102,7 @@ function AboutPage() {
       </section>
 
       <section className="mt-8">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">免責事項</h2>
+        <h2 className="text-lg font-semibold text-text-primary">免責事項</h2>
         <div className="mt-3 rounded-xl bg-amber-50 p-4 text-sm leading-relaxed text-amber-800 dark:bg-amber-900/20 dark:text-amber-200">
           <ul className="list-inside list-disc space-y-1">
             <li>本サイトは非公式のサービスであり、国土交通省や気象庁とは一切関係ありません。</li>
@@ -118,12 +116,12 @@ function AboutPage() {
       </section>
 
       <section className="mt-8">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">技術スタック</h2>
+        <h2 className="text-lg font-semibold text-text-primary">技術スタック</h2>
         <div className="mt-3 flex flex-wrap gap-2">
           {TECH_STACK.map((tech) => (
             <span
               key={tech}
-              className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300"
+              className="rounded-full bg-surface-secondary px-3 py-1 text-xs font-medium text-text-secondary"
             >
               {tech}
             </span>

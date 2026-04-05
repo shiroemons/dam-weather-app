@@ -24,7 +24,7 @@ export default function ScrollToTopButton() {
       type="button"
       onClick={scrollToTop}
       aria-label="ページの先頭に戻る"
-      className={`fixed bottom-4 right-4 z-40 rounded-full bg-blue-600 p-3 text-white shadow-lg transition-opacity duration-300 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400 ${
+      className={`fixed bottom-4 right-4 z-40 rounded-full bg-accent p-3 text-white shadow-lg transition-opacity duration-300 hover:bg-accent ${
         visible ? "opacity-100" : "pointer-events-none opacity-0"
       }`}
     >

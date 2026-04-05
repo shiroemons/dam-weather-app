@@ -12,16 +12,16 @@ export default function DayWeather({ forecast, label }: Props) {
   const minTemp = forecast.tempMin !== null ? `${forecast.tempMin}°C` : "--";
 
   return (
-    <div className="flex flex-col items-center gap-1 rounded-2xl bg-white/80 p-4 shadow-sm dark:bg-gray-800/50">
-      <span className="text-xs font-medium text-gray-500 dark:text-gray-400">{label}</span>
+    <div className="flex flex-col items-center gap-1 rounded-xl bg-surface-elevated p-4 shadow-sm">
+      <span className="text-xs font-medium text-text-secondary">{label}</span>
       <WeatherIcon code={forecast.weatherCode} size="lg" />
-      <span className="text-xs text-gray-600 dark:text-gray-300">{forecast.weather}</span>
+      <span className="text-xs text-text-secondary">{forecast.weather}</span>
       <div className="flex items-center gap-2 text-sm font-medium">
         <span className="text-red-500">{maxTemp}</span>
         <span className="text-blue-500">{minTemp}</span>
       </div>
       {forecast.precipProbability !== null && (
-        <span className="text-xs text-blue-500">
+        <span className="text-xs text-accent">
           ☂{forecast.precipProbability}%
           {forecast.precipitationSum !== null && ` ${forecast.precipitationSum}mm`}
         </span>

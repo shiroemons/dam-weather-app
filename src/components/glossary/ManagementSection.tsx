@@ -26,29 +26,27 @@ export default function ManagementSection() {
       title="管理区分"
       description="ダムの管理者によって、貯水率情報の公開先が異なります。"
     >
-      <div className="overflow-x-auto rounded-xl bg-white shadow-sm dark:bg-gray-800">
+      <div className="overflow-x-auto rounded-xl bg-surface-elevated shadow-sm">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 dark:bg-gray-700/50">
+          <thead className="bg-surface-secondary">
             <tr>
-              <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
+              <th className="px-4 py-2.5 text-left text-xs font-medium text-text-secondary">
                 管理区分
               </th>
-              <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
+              <th className="px-4 py-2.5 text-left text-xs font-medium text-text-secondary">
                 管理者
               </th>
-              <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
+              <th className="px-4 py-2.5 text-left text-xs font-medium text-text-secondary">
                 主な情報公開先
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+          <tbody className="divide-y divide-border-primary">
             {rows.map((row) => (
               <tr key={row.category}>
-                <td className="px-4 py-3 font-medium text-gray-700 dark:text-gray-300">
-                  {row.category}
-                </td>
-                <td className="px-4 py-3 text-gray-700 dark:text-gray-300">{row.manager}</td>
-                <td className="px-4 py-3 text-gray-700 dark:text-gray-300">{row.source}</td>
+                <td className="px-4 py-3 font-medium text-text-primary">{row.category}</td>
+                <td className="px-4 py-3 text-text-primary">{row.manager}</td>
+                <td className="px-4 py-3 text-text-primary">{row.source}</td>
               </tr>
             ))}
           </tbody>

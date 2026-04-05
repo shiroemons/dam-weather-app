@@ -19,11 +19,11 @@ export default function WatchlistEmptyState() {
 
   return (
     <div className="mt-12 flex flex-col items-center justify-center text-center">
-      <ClipboardList className="size-16 text-gray-300 dark:text-gray-600" />
-      <h2 className="mt-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
+      <ClipboardList className="size-16 text-text-tertiary" />
+      <h2 className="mt-4 text-lg font-semibold text-text-primary">
         ウォッチリストはまだありません
       </h2>
-      <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+      <p className="mt-2 text-sm text-text-secondary">
         気になるダムをリストにまとめて
         <br />
         天気をまとめてチェックしましょう
@@ -42,11 +42,11 @@ export default function WatchlistEmptyState() {
               data-bwignore="true"
               data-form-type="other"
               autoFocus
-              className="rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+              className="rounded-lg border border-border-primary px-3 py-2 text-sm bg-surface-elevated text-text-primary"
             />
             <button
               type="submit"
-              className="rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-600"
+              className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent"
             >
               作成
             </button>
@@ -56,7 +56,7 @@ export default function WatchlistEmptyState() {
                 setIsOpen(false);
                 setName("");
               }}
-              className="text-sm text-gray-500 hover:text-gray-700"
+              className="text-sm text-text-secondary hover:text-text-primary"
             >
               キャンセル
             </button>
@@ -65,7 +65,7 @@ export default function WatchlistEmptyState() {
           <button
             type="button"
             onClick={() => setIsOpen(true)}
-            className="flex items-center gap-2 rounded-lg bg-sky-500 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-sky-600"
+            className="flex items-center gap-2 rounded-lg bg-accent px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-accent"
           >
             <Plus className="size-4" />
             最初のリストを作成する

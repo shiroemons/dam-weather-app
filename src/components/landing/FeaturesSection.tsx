@@ -32,11 +32,11 @@ const FEATURES: Feature[] = [
 
 export default function FeaturesSection() {
   return (
-    <section aria-labelledby="features-heading" className="bg-slate-50 dark:bg-gray-900">
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+    <section aria-labelledby="features-heading" className="bg-surface-secondary">
+      <div className="mx-auto max-w-(--width-content) px-4 py-12 sm:px-6 sm:py-16">
         <h2
           id="features-heading"
-          className="text-center text-2xl font-bold text-gray-900 sm:text-3xl dark:text-gray-100"
+          className="font-display text-center text-2xl font-bold text-text-primary sm:text-3xl"
         >
           特徴
         </h2>
@@ -45,17 +45,13 @@ export default function FeaturesSection() {
           {FEATURES.map(({ icon: Icon, title, description }) => (
             <div
               key={title}
-              className="rounded-2xl border border-sky-100 bg-white p-6 shadow-sm dark:border-sky-900/30 dark:bg-gray-800"
+              className="rounded-2xl border border-border-primary bg-surface-elevated p-6 shadow-sm"
             >
-              <div className="flex size-12 items-center justify-center rounded-xl bg-sky-50 dark:bg-sky-900/30">
-                <Icon className="size-6 text-sky-500 dark:text-sky-400" />
+              <div className="flex size-12 items-center justify-center rounded-xl bg-accent-subtle">
+                <Icon className="size-6 text-accent" />
               </div>
-              <h3 className="mt-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
-                {title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-gray-500 dark:text-gray-300">
-                {description}
-              </p>
+              <h3 className="mt-4 text-lg font-semibold text-text-primary">{title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-text-secondary">{description}</p>
             </div>
           ))}
         </div>

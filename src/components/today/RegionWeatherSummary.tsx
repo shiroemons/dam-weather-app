@@ -27,11 +27,11 @@ export default function RegionWeatherSummary({ region, counts, total }: Props) {
     <Link
       to="/prefecture"
       hash={REGION_SLUG_MAP[region]}
-      className="block rounded-xl bg-white p-4 shadow-sm transition-colors hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700/80"
+      className="block rounded-xl bg-surface-elevated p-4 shadow-sm transition-colors hover:bg-surface-secondary"
     >
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">{region}</h3>
-        <span className="text-xs text-gray-500 dark:text-gray-400">{total}基</span>
+        <h3 className="text-sm font-semibold text-text-primary">{region}</h3>
+        <span className="text-xs text-text-secondary">{total}基</span>
       </div>
       <div className="mt-2 flex h-3 overflow-hidden rounded-full">
         {DISPLAY_ORDER.map((category) => {
@@ -47,7 +47,7 @@ export default function RegionWeatherSummary({ region, counts, total }: Props) {
           );
         })}
       </div>
-      <div className="mt-2 flex gap-3 text-xs text-gray-500 dark:text-gray-400">
+      <div className="mt-2 flex gap-3 text-xs text-text-secondary">
         {DISPLAY_ORDER.map((category) => {
           const count = counts[category];
           if (count === 0) return null;

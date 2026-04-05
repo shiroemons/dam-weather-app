@@ -46,7 +46,7 @@ export default function WeatherSummaryBar({ counts, total }: Props) {
             <div key={category} className="flex items-center gap-2">
               <span className={`inline-block size-3 rounded-full ${config.bg}`} />
               <span className={`text-sm font-medium ${config.text}`}>{config.label}</span>
-              <span className="text-sm text-gray-500 dark:text-gray-400">{count}基</span>
+              <span className="text-sm text-text-secondary">{count}基</span>
             </div>
           );
         })}

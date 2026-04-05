@@ -53,11 +53,11 @@ export default function WatchlistListCard({ list, dams, weatherMap }: Props) {
     <Link
       to="/watchlist/$listId"
       params={{ listId: list.id }}
-      className="block rounded-xl bg-white p-4 shadow-sm transition-colors hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700/80"
+      className="block rounded-xl bg-surface-elevated p-4 shadow-sm transition-colors hover:bg-surface-secondary"
     >
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">{list.name}</h3>
-        <span className="text-xs text-gray-500 dark:text-gray-400">{total}基</span>
+        <h3 className="text-sm font-semibold text-text-primary">{list.name}</h3>
+        <span className="text-xs text-text-secondary">{total}基</span>
       </div>
       {total > 0 && (
         <div className="mt-3">
@@ -70,14 +70,12 @@ export default function WatchlistListCard({ list, dams, weatherMap }: Props) {
             const weather = weatherMap.get(dam.id);
             const emoji = weather ? getWeatherEmoji(weather.today.weatherCode) : "−";
             return (
-              <span key={dam.id} className="text-xs text-gray-600 dark:text-gray-400">
+              <span key={dam.id} className="text-xs text-text-secondary">
                 {emoji} {dam.damName}
               </span>
             );
           })}
-          {remaining > 0 && (
-            <span className="text-xs text-gray-400 dark:text-gray-500">+{remaining}基</span>
-          )}
+          {remaining > 0 && <span className="text-xs text-text-tertiary">+{remaining}基</span>}
         </div>
       )}
     </Link>

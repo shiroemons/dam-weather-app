@@ -129,19 +129,19 @@ function TodayPage() {
   }, [weatherQueries]);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">今日のダム天気</h1>
-      <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">全国のダムの天気概況</p>
+    <div className="mx-auto max-w-(--width-content) px-4 py-8 sm:px-6">
+      <h1 className="text-2xl font-bold text-text-primary">今日のダム天気</h1>
+      <p className="mt-1 text-sm text-text-secondary">全国のダムの天気概況</p>
       {latestUpdatedAt && (
-        <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">
+        <p className="mt-1 text-xs text-text-tertiary">
           更新日時: {new Date(latestUpdatedAt).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}
         </p>
       )}
 
       {isLoading && (
         <div className="mt-6">
-          <div className="h-8 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700" />
-          <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
+          <div className="h-8 animate-pulse rounded-full bg-surface-secondary" />
+          <p className="mt-2 text-xs text-text-tertiary">
             読み込み中... ({loadedCount}/{PREFECTURES.length}都道府県)
           </p>
         </div>
@@ -161,10 +161,8 @@ function TodayPage() {
                 >
                   <Icon className={`size-8 ${CATEGORY_ICON_COLORS[cat]}`} />
                   <div>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                      {totalCounts[cat]}
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">{config.label}</p>
+                    <p className="text-2xl font-bold text-text-primary">{totalCounts[cat]}</p>
+                    <p className="text-xs text-text-secondary">{config.label}</p>
                   </div>
                 </div>
               );
@@ -173,10 +171,8 @@ function TodayPage() {
 
           {/* Overall bar */}
           <div className="mt-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-              全体の天気分布
-            </h2>
-            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{totalDams}基</p>
+            <h2 className="text-lg font-semibold text-text-primary">全体の天気分布</h2>
+            <p className="mt-1 text-xs text-text-secondary">{totalDams}基</p>
             <div className="mt-3">
               <WeatherSummaryBar counts={totalCounts} total={totalDams} />
             </div>
@@ -184,9 +180,7 @@ function TodayPage() {
 
           {/* Per-region */}
           <div className="mt-8">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-              地方別の天気分布
-            </h2>
+            <h2 className="text-lg font-semibold text-text-primary">地方別の天気分布</h2>
             <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {regionData.map(({ region, counts, total }) => (
                 <RegionWeatherSummary key={region} region={region} counts={counts} total={total} />

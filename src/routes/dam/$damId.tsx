@@ -83,13 +83,13 @@ function DamDetailPage() {
 
   if (!dam) {
     return (
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-        <Link to="/" className="text-sm text-blue-500 hover:text-blue-700">
+      <div className="mx-auto max-w-(--width-content) px-4 py-8 sm:px-6">
+        <Link to="/" className="text-sm text-accent hover:text-accent">
           ← ホームに戻る
         </Link>
         <div className="mt-12 text-center">
-          <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">404</p>
-          <p className="mt-2 text-gray-500 dark:text-gray-400">ダムが見つかりません</p>
+          <p className="text-lg font-semibold text-text-primary">404</p>
+          <p className="mt-2 text-text-secondary">ダムが見つかりません</p>
         </div>
       </div>
     );
@@ -103,10 +103,10 @@ function DamDetailPage() {
   const yahooRadarUrl = getYahooRadarUrl(dam.latitude, dam.longitude);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+    <div className="mx-auto max-w-(--width-content) px-4 py-8 sm:px-6">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400">
-        <Link to="/" className="hover:text-blue-500">
+      <nav className="flex items-center gap-1 text-sm text-text-secondary">
+        <Link to="/" className="hover:text-accent">
           ホーム
         </Link>
         <ChevronRight className="size-3.5" />
@@ -123,18 +123,18 @@ function DamDetailPage() {
             sort: "name",
             order: "asc",
           }}
-          className="hover:text-blue-500"
+          className="hover:text-accent"
         >
           {dam.prefecture}
         </Link>
         <ChevronRight className="size-3.5" />
-        <span className="text-gray-900 dark:text-gray-100">{dam.damName}</span>
+        <span className="text-text-primary">{dam.damName}</span>
       </nav>
 
       {/* Dam Header */}
       <div className="mt-6">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{dam.damName}</h1>
+          <h1 className="text-2xl font-bold text-text-primary">{dam.damName}</h1>
           <div className="flex items-center gap-3">
             <WatchlistAddButton damId={dam.id} variant="button" />
             <a
@@ -152,9 +152,9 @@ function DamDetailPage() {
 
       {/* Weather Section */}
       <div className="mt-6">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">天気予報</h2>
+        <h2 className="text-lg font-semibold text-text-primary">天気予報</h2>
         {weatherLoading ? (
-          <div className="mt-3 h-32 animate-pulse rounded-2xl bg-gray-200 dark:bg-gray-700" />
+          <div className="mt-3 h-32 animate-pulse rounded-xl bg-surface-secondary" />
         ) : damWeather ? (
           <div
             className={`mt-3 rounded-xl p-5 ${getWeatherCardClasses(damWeather.today.weatherCode)}`}
@@ -164,7 +164,7 @@ function DamDetailPage() {
               <DayWeather forecast={damWeather.tomorrow} label="明日" />
             </div>
             {weather?.updatedAt && (
-              <p className="mt-3 text-right text-xs text-gray-400 dark:text-gray-500">
+              <p className="mt-3 text-right text-xs text-text-tertiary">
                 更新:{" "}
                 {new Date(weather.updatedAt).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}
               </p>
@@ -173,7 +173,7 @@ function DamDetailPage() {
               href={yahooRadarUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-2 flex items-center justify-end gap-1 text-xs text-gray-500 transition-colors hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400"
+              className="mt-2 flex items-center justify-end gap-1 text-xs text-text-secondary transition-colors hover:text-accent"
             >
               <CloudRain className="size-3" />
               <span>雨雲レーダー</span>
@@ -181,7 +181,7 @@ function DamDetailPage() {
             </a>
           </div>
         ) : (
-          <div className="mt-3 rounded-2xl bg-gray-100/50 px-4 py-8 text-center text-sm text-gray-500 dark:bg-gray-700/50 dark:text-gray-400">
+          <div className="mt-3 rounded-xl bg-surface-secondary px-4 py-8 text-center text-sm text-text-secondary">
             天気情報を取得できません
           </div>
         )}
@@ -189,24 +189,24 @@ function DamDetailPage() {
 
       {/* Dam Details */}
       <div className="mt-6">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">ダム情報</h2>
-        <dl className="mt-3 divide-y divide-gray-200 rounded-xl bg-white p-4 shadow-sm dark:divide-gray-700 dark:bg-gray-800">
+        <h2 className="text-lg font-semibold text-text-primary">ダム情報</h2>
+        <dl className="mt-3 divide-y divide-border-primary rounded-xl bg-surface-elevated p-4 shadow-sm">
           {dam.damType && (
             <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-              <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
+              <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-text-secondary">
                 <Landmark className="size-4 text-emerald-400" />
                 ダム型式
               </dt>
-              <dd className="text-sm text-gray-900 dark:text-gray-100">{dam.damType}</dd>
+              <dd className="text-sm text-text-primary">{dam.damType}</dd>
             </div>
           )}
           {dam.purposes.length > 0 && (
             <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-              <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
+              <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-text-secondary">
                 <Target className="size-4 text-amber-400" />
                 用途
               </dt>
-              <dd className="text-sm text-gray-900 dark:text-gray-100">
+              <dd className="text-sm text-text-primary">
                 {dam.purposes
                   .map((p) => {
                     const short = PURPOSE_SHORT_MAP.get(p);
@@ -218,61 +218,61 @@ function DamDetailPage() {
           )}
           {dam.address && (
             <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-              <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
+              <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-text-secondary">
                 <MapPin className="size-4 text-rose-400" />
                 所在地
               </dt>
-              <dd className="text-sm text-gray-900 dark:text-gray-100">{dam.address}</dd>
+              <dd className="text-sm text-text-primary">{dam.address}</dd>
             </div>
           )}
           <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-            <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
+            <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-text-secondary">
               <Building2 className="size-4 text-violet-400" />
               市区町村
             </dt>
-            <dd className="text-sm text-gray-900 dark:text-gray-100">{dam.municipality}</dd>
+            <dd className="text-sm text-text-primary">{dam.municipality}</dd>
           </div>
           <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-            <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
+            <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-text-secondary">
               <Droplets className="size-4 text-cyan-400" />
               水系
             </dt>
-            <dd className="text-sm text-gray-900 dark:text-gray-100">{dam.waterSystem}</dd>
+            <dd className="text-sm text-text-primary">{dam.waterSystem}</dd>
           </div>
           <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-            <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
+            <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-text-secondary">
               <Waves className="size-4 text-blue-400" />
               河川名
             </dt>
-            <dd className="text-sm text-gray-900 dark:text-gray-100">{dam.riverName}</dd>
+            <dd className="text-sm text-text-primary">{dam.riverName}</dd>
           </div>
           {dam.damHeight != null && (
             <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-              <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
+              <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-text-secondary">
                 <Mountain className="size-4 text-orange-400" />
                 堤高
               </dt>
-              <dd className="text-sm text-gray-900 dark:text-gray-100">{dam.damHeight}m</dd>
+              <dd className="text-sm text-text-primary">{dam.damHeight}m</dd>
             </div>
           )}
           {dam.totalStorageCapacity != null && (
             <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-              <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
+              <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-text-secondary">
                 <Box className="size-4 text-emerald-400" />
                 総貯水容量
               </dt>
-              <dd className="text-sm text-gray-900 dark:text-gray-100">
+              <dd className="text-sm text-text-primary">
                 {dam.totalStorageCapacity.toLocaleString()}千m³
               </dd>
             </div>
           )}
           {dam.completionYear != null && (
             <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-              <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
-                <Calendar className="size-4 text-gray-400" />
+              <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-text-secondary">
+                <Calendar className="size-4 text-text-tertiary" />
                 竣工年
               </dt>
-              <dd className="text-sm text-gray-900 dark:text-gray-100">{dam.completionYear}年</dd>
+              <dd className="text-sm text-text-primary">{dam.completionYear}年</dd>
             </div>
           )}
         </dl>
@@ -281,67 +281,57 @@ function DamDetailPage() {
       {/* Storage Section */}
       {damStorage && (
         <div className="mt-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">貯水状況</h2>
-          <dl className="mt-3 divide-y divide-gray-200 rounded-xl bg-white p-4 shadow-sm dark:divide-gray-700 dark:bg-gray-800">
+          <h2 className="text-lg font-semibold text-text-primary">貯水状況</h2>
+          <dl className="mt-3 divide-y divide-border-primary rounded-xl bg-surface-elevated p-4 shadow-sm">
             {damStorage.storageRate != null && (
               <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-                <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
+                <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-text-secondary">
                   <Activity className="size-4 text-violet-400" />
                   貯水率
                 </dt>
-                <dd className="text-sm text-gray-900 dark:text-gray-100">
-                  {damStorage.storageRate}%
-                </dd>
+                <dd className="text-sm text-text-primary">{damStorage.storageRate}%</dd>
               </div>
             )}
             {damStorage.storageLevel > 0 && (
               <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-                <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
+                <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-text-secondary">
                   <Gauge className="size-4 text-sky-400" />
                   貯水位
                 </dt>
-                <dd className="text-sm text-gray-900 dark:text-gray-100">
-                  {damStorage.storageLevel}m
-                </dd>
+                <dd className="text-sm text-text-primary">{damStorage.storageLevel}m</dd>
               </div>
             )}
             {damStorage.storageCapacity > 0 && (
               <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-                <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
+                <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-text-secondary">
                   <Droplets className="size-4 text-teal-400" />
                   貯水量
                 </dt>
-                <dd className="text-sm text-gray-900 dark:text-gray-100">
+                <dd className="text-sm text-text-primary">
                   {damStorage.storageCapacity.toLocaleString()}千m³
                 </dd>
               </div>
             )}
             {damStorage.inflow > 0 && (
               <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-                <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
+                <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-text-secondary">
                   <ArrowDownToLine className="size-4 text-blue-400" />
                   流入量
                 </dt>
-                <dd className="text-sm text-gray-900 dark:text-gray-100">
-                  {damStorage.inflow}m³/s
-                </dd>
+                <dd className="text-sm text-text-primary">{damStorage.inflow}m³/s</dd>
               </div>
             )}
             {damStorage.outflow > 0 && (
               <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-                <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400">
+                <dt className="flex w-28 shrink-0 items-center gap-1.5 text-sm font-medium text-text-secondary">
                   <ArrowUpFromLine className="size-4 text-orange-400" />
                   放流量
                 </dt>
-                <dd className="text-sm text-gray-900 dark:text-gray-100">
-                  {damStorage.outflow}m³/s
-                </dd>
+                <dd className="text-sm text-text-primary">{damStorage.outflow}m³/s</dd>
               </div>
             )}
           </dl>
-          <p className="mt-2 text-right text-xs text-gray-400 dark:text-gray-500">
-            観測: {damStorage.obsTime}
-          </p>
+          <p className="mt-2 text-right text-xs text-text-tertiary">観測: {damStorage.obsTime}</p>
         </div>
       )}
 
@@ -350,10 +340,10 @@ function DamDetailPage() {
 
       {/* Map */}
       <div className="mt-6">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">位置情報</h2>
+        <h2 className="text-lg font-semibold text-text-primary">位置情報</h2>
         <Suspense
           fallback={
-            <div className="mt-3 flex h-64 items-center justify-center rounded-xl bg-gray-100 text-sm text-gray-500 dark:bg-gray-800 dark:text-gray-400">
+            <div className="mt-3 flex h-64 items-center justify-center rounded-xl bg-surface-secondary text-sm text-text-secondary">
               地図を読み込み中...
             </div>
           }

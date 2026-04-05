@@ -54,9 +54,9 @@ function WatchlistPage() {
   }, [data.lists]);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">マイウォッチリスト</h1>
-      <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+    <div className="mx-auto max-w-(--width-content) px-4 py-8 sm:px-6">
+      <h1 className="text-2xl font-bold text-text-primary font-display">マイウォッチリスト</h1>
+      <p className="mt-1 text-sm text-text-secondary">
         お気に入りのダムをリストにまとめて天気をチェック
       </p>
 

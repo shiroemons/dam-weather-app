@@ -76,7 +76,7 @@ export default function WatchlistAddButton({ damId, variant }: Props) {
 
   function renderDropdown() {
     return (
-      <div className="absolute left-0 top-full z-50 mt-1 min-w-52 rounded-lg border border-gray-200 bg-white p-2 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+      <div className="absolute left-0 top-full z-50 mt-1 min-w-52 rounded-lg border border-border-primary bg-surface-elevated p-2 shadow-lg">
         {lists.length > 0 && !isCreating && (
           <>
             {lists.map((list) => {
@@ -84,7 +84,7 @@ export default function WatchlistAddButton({ damId, variant }: Props) {
               return (
                 <label
                   key={list.id}
-                  className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                  className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-surface-secondary"
                 >
                   <input
                     type="checkbox"
@@ -92,16 +92,16 @@ export default function WatchlistAddButton({ damId, variant }: Props) {
                     onChange={() => handleToggleList(list.id)}
                     className="size-3.5 rounded border-gray-300 text-sky-500"
                   />
-                  <span className="text-gray-700 dark:text-gray-300">{list.name}</span>
+                  <span className="text-text-primary">{list.name}</span>
                 </label>
               );
             })}
-            <hr className="my-1 border-gray-200 dark:border-gray-700" />
+            <hr className="my-1 border-border-primary" />
           </>
         )}
         {isCreating ? (
           <div className="p-1">
-            <p className="mb-1.5 text-xs font-medium text-gray-700 dark:text-gray-300">
+            <p className="mb-1.5 text-xs font-medium text-text-primary">
               新しいウォッチリストを作成
             </p>
             <form onSubmit={handleCreateList} className="flex items-center gap-1">
@@ -116,11 +116,11 @@ export default function WatchlistAddButton({ damId, variant }: Props) {
                 data-bwignore="true"
                 data-form-type="other"
                 autoFocus
-                className="w-full rounded border border-gray-300 px-2 py-1 text-xs dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                className="w-full rounded border border-border-primary px-2 py-1 text-xs bg-surface-elevated text-text-primary"
               />
               <button
                 type="submit"
-                className="whitespace-nowrap rounded bg-sky-500 px-2 py-1 text-xs text-white hover:bg-sky-600"
+                className="whitespace-nowrap rounded bg-accent px-2 py-1 text-xs text-white hover:bg-accent"
               >
                 作成
               </button>
@@ -130,7 +130,7 @@ export default function WatchlistAddButton({ damId, variant }: Props) {
           <button
             type="button"
             onClick={() => setIsCreating(true)}
-            className="flex w-full items-center gap-1.5 rounded-md px-2 py-1.5 text-xs text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
+            className="flex w-full items-center gap-1.5 rounded-md px-2 py-1.5 text-xs text-text-secondary hover:bg-surface-secondary"
           >
             + 新しいリストを作成
           </button>
@@ -148,9 +148,7 @@ export default function WatchlistAddButton({ damId, variant }: Props) {
           type="button"
           onClick={handleClick}
           className={`flex items-center leading-none transition-colors ${
-            inAnyList
-              ? "text-sky-500 hover:text-sky-600"
-              : "text-gray-300 hover:text-sky-400 dark:text-gray-600 dark:hover:text-sky-400"
+            inAnyList ? "text-accent hover:text-accent" : "text-text-tertiary hover:text-accent"
           }`}
           aria-label={tooltipText}
         >
@@ -172,8 +170,8 @@ export default function WatchlistAddButton({ damId, variant }: Props) {
         onClick={handleClick}
         className={`flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-medium transition-colors ${
           inAnyList
-            ? "bg-sky-50 text-sky-600 hover:bg-sky-100 dark:bg-sky-900/30 dark:text-sky-400 dark:hover:bg-sky-900/50"
-            : "bg-gray-100 text-gray-600 hover:bg-sky-50 hover:text-sky-600 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-sky-900/30 dark:hover:text-sky-400"
+            ? "bg-accent-subtle text-accent hover:bg-accent-subtle"
+            : "bg-surface-secondary text-text-secondary hover:bg-accent-subtle hover:text-accent"
         }`}
       >
         <Bookmark className="size-3.5" fill={inAnyList ? "currentColor" : "none"} />

@@ -8,17 +8,13 @@ export default function ErrorFallback({ error, resetErrorBoundary }: Props) {
 
   return (
     <div className="py-12 text-center">
-      <p className="text-base font-semibold text-gray-900 dark:text-gray-100">
-        データの読み込みに失敗しました
-      </p>
-      {errorMessage && (
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">{errorMessage}</p>
-      )}
+      <p className="text-base font-semibold text-text-primary">データの読み込みに失敗しました</p>
+      {errorMessage && <p className="mt-2 text-sm text-text-secondary">{errorMessage}</p>}
       {resetErrorBoundary && (
         <button
           type="button"
           onClick={resetErrorBoundary}
-          className="mt-4 rounded-xl bg-blue-500 px-6 py-2 text-sm font-medium text-white transition hover:bg-blue-600"
+          className="mt-4 rounded-xl bg-accent px-6 py-2 text-sm font-medium text-white transition hover:bg-accent"
         >
           再読み込み
         </button>
