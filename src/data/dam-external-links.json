@@ -107,10 +107,76 @@
       "url": "https://info-dam.hdb.hkd.mlit.go.jp/dam/"
     }
   ],
+  "dam-192": [
+    {
+      "label": "青森県 管理ダム概要",
+      "url": "https://www.pref.aomori.lg.jp/soshiki/kendo/kasensabo/kanri_dam_gaiyou.html"
+    }
+  ],
+  "dam-193": [
+    {
+      "label": "青森県 管理ダム概要",
+      "url": "https://www.pref.aomori.lg.jp/soshiki/kendo/kasensabo/kanri_dam_gaiyou.html"
+    }
+  ],
+  "dam-195": [
+    {
+      "label": "青森県 管理ダム概要",
+      "url": "https://www.pref.aomori.lg.jp/soshiki/kendo/kasensabo/kanri_dam_gaiyou.html"
+    }
+  ],
+  "dam-196": [
+    {
+      "label": "青森県 管理ダム概要",
+      "url": "https://www.pref.aomori.lg.jp/soshiki/kendo/kasensabo/kanri_dam_gaiyou.html"
+    }
+  ],
+  "dam-211": [
+    {
+      "label": "青森県 管理ダム概要",
+      "url": "https://www.pref.aomori.lg.jp/soshiki/kendo/kasensabo/kanri_dam_gaiyou.html"
+    }
+  ],
+  "dam-214": [
+    {
+      "label": "岩手県 ダムの貯水状況",
+      "url": "https://www.pref.iwate.jp/kendozukuri/kasensabou/dam/1081319/index.html"
+    }
+  ],
+  "dam-217": [
+    {
+      "label": "岩手県 ダムの貯水状況",
+      "url": "https://www.pref.iwate.jp/kendozukuri/kasensabou/dam/1081319/index.html"
+    }
+  ],
+  "dam-218": [
+    {
+      "label": "岩手県 ダムの貯水状況",
+      "url": "https://www.pref.iwate.jp/kendozukuri/kasensabou/dam/1081319/index.html"
+    }
+  ],
+  "dam-219": [
+    {
+      "label": "岩手県 ダムの貯水状況",
+      "url": "https://www.pref.iwate.jp/kendozukuri/kasensabou/dam/1081319/index.html"
+    }
+  ],
   "dam-221": [
     {
       "label": "宮城県 管理ダム貯水状況",
       "url": "https://www.pref.miyagi.jp/soshiki/kasen/dam-cyosuiiall.html"
+    }
+  ],
+  "dam-222": [
+    {
+      "label": "東北地方整備局 ダム貯水率",
+      "url": "https://www.thr.mlit.go.jp/bumon/b00037/k00290/river-hp/kasen/damu/"
+    }
+  ],
+  "dam-226": [
+    {
+      "label": "岩手県 ダムの貯水状況",
+      "url": "https://www.pref.iwate.jp/kendozukuri/kasensabou/dam/1081319/index.html"
     }
   ],
   "dam-227": [
@@ -129,6 +195,66 @@
     {
       "label": "宮城県 管理ダム貯水状況",
       "url": "https://www.pref.miyagi.jp/soshiki/kasen/dam-cyosuiiall.html"
+    }
+  ],
+  "dam-233": [
+    {
+      "label": "岩手県 ダムの貯水状況",
+      "url": "https://www.pref.iwate.jp/kendozukuri/kasensabou/dam/1081319/index.html"
+    }
+  ],
+  "dam-237": [
+    {
+      "label": "東北地方整備局 ダム貯水率",
+      "url": "https://www.thr.mlit.go.jp/bumon/b00037/k00290/river-hp/kasen/damu/"
+    }
+  ],
+  "dam-240": [
+    {
+      "label": "岩手県 ダムの貯水状況",
+      "url": "https://www.pref.iwate.jp/kendozukuri/kasensabou/dam/1081319/index.html"
+    }
+  ],
+  "dam-245": [
+    {
+      "label": "東北地方整備局 ダム貯水率",
+      "url": "https://www.thr.mlit.go.jp/bumon/b00037/k00290/river-hp/kasen/damu/"
+    }
+  ],
+  "dam-246": [
+    {
+      "label": "東北地方整備局 ダム貯水率",
+      "url": "https://www.thr.mlit.go.jp/bumon/b00037/k00290/river-hp/kasen/damu/"
+    }
+  ],
+  "dam-247": [
+    {
+      "label": "岩手県 ダムの貯水状況",
+      "url": "https://www.pref.iwate.jp/kendozukuri/kasensabou/dam/1081319/index.html"
+    }
+  ],
+  "dam-249": [
+    {
+      "label": "岩手県 ダムの貯水状況",
+      "url": "https://www.pref.iwate.jp/kendozukuri/kasensabou/dam/1081319/index.html"
+    }
+  ],
+  "dam-254": [
+    {
+      "label": "東北地方整備局 ダム貯水率",
+      "url": "https://www.thr.mlit.go.jp/bumon/b00037/k00290/river-hp/kasen/damu/"
+    }
+  ],
+  "dam-257": [
+    {
+      "label": "岩手県 ダムの貯水状況",
+      "url": "https://www.pref.iwate.jp/kendozukuri/kasensabou/dam/1081319/index.html"
+    }
+  ],
+  "dam-264": [
+    {
+      "label": "東北地方整備局 ダム貯水率",
+      "url": "https://www.thr.mlit.go.jp/bumon/b00037/k00290/river-hp/kasen/damu/"
     }
   ],
   "dam-267": [
@@ -191,6 +317,12 @@
       "url": "https://www.pref.miyagi.jp/soshiki/kasen/dam-cyosuiiall.html"
     }
   ],
+  "dam-287": [
+    {
+      "label": "東北地方整備局 ダム貯水率",
+      "url": "https://www.thr.mlit.go.jp/bumon/b00037/k00290/river-hp/kasen/damu/"
+    }
+  ],
   "dam-291": [
     {
       "label": "宮城県 管理ダム貯水状況",
@@ -203,16 +335,340 @@
       "url": "https://www.pref.miyagi.jp/soshiki/kasen/dam-cyosuiiall.html"
     }
   ],
+  "dam-301": [
+    {
+      "label": "東北地方整備局 ダム貯水率",
+      "url": "https://www.thr.mlit.go.jp/bumon/b00037/k00290/river-hp/kasen/damu/"
+    }
+  ],
+  "dam-304": [
+    {
+      "label": "福島県 河川流域総合情報システム ダム情報",
+      "url": "https://kaseninf.pref.fukushima.jp/web_pub/dam/010401_60_1_0.html"
+    }
+  ],
+  "dam-306": [
+    {
+      "label": "福島県 河川流域総合情報システム ダム情報",
+      "url": "https://kaseninf.pref.fukushima.jp/web_pub/dam/010401_60_1_0.html"
+    }
+  ],
+  "dam-308": [
+    {
+      "label": "東北地方整備局 ダム貯水率",
+      "url": "https://www.thr.mlit.go.jp/bumon/b00037/k00290/river-hp/kasen/damu/"
+    }
+  ],
+  "dam-313": [
+    {
+      "label": "東北地方整備局 ダム貯水率",
+      "url": "https://www.thr.mlit.go.jp/bumon/b00037/k00290/river-hp/kasen/damu/"
+    }
+  ],
+  "dam-326": [
+    {
+      "label": "福島県 河川流域総合情報システム ダム情報",
+      "url": "https://kaseninf.pref.fukushima.jp/web_pub/dam/010401_60_1_0.html"
+    }
+  ],
+  "dam-343": [
+    {
+      "label": "福島県 河川流域総合情報システム ダム情報",
+      "url": "https://kaseninf.pref.fukushima.jp/web_pub/dam/010401_60_1_0.html"
+    }
+  ],
+  "dam-348": [
+    {
+      "label": "福島県 河川流域総合情報システム ダム情報",
+      "url": "https://kaseninf.pref.fukushima.jp/web_pub/dam/010401_60_1_0.html"
+    }
+  ],
+  "dam-349": [
+    {
+      "label": "福島県 河川流域総合情報システム ダム情報",
+      "url": "https://kaseninf.pref.fukushima.jp/web_pub/dam/010401_60_1_0.html"
+    }
+  ],
+  "dam-350": [
+    {
+      "label": "福島県 河川流域総合情報システム ダム情報",
+      "url": "https://kaseninf.pref.fukushima.jp/web_pub/dam/010401_60_1_0.html"
+    }
+  ],
+  "dam-351": [
+    {
+      "label": "福島県 河川流域総合情報システム ダム情報",
+      "url": "https://kaseninf.pref.fukushima.jp/web_pub/dam/010401_60_1_0.html"
+    }
+  ],
+  "dam-355": [
+    {
+      "label": "青森県 管理ダム概要",
+      "url": "https://www.pref.aomori.lg.jp/soshiki/kendo/kasensabo/kanri_dam_gaiyou.html"
+    }
+  ],
+  "dam-358": [
+    {
+      "label": "東北地方整備局 ダム貯水率",
+      "url": "https://www.thr.mlit.go.jp/bumon/b00037/k00290/river-hp/kasen/damu/"
+    }
+  ],
+  "dam-363": [
+    {
+      "label": "青森県 管理ダム概要",
+      "url": "https://www.pref.aomori.lg.jp/soshiki/kendo/kasensabo/kanri_dam_gaiyou.html"
+    }
+  ],
+  "dam-364": [
+    {
+      "label": "東北地方整備局 ダム貯水率",
+      "url": "https://www.thr.mlit.go.jp/bumon/b00037/k00290/river-hp/kasen/damu/"
+    }
+  ],
+  "dam-366": [
+    {
+      "label": "青森県 管理ダム概要",
+      "url": "https://www.pref.aomori.lg.jp/soshiki/kendo/kasensabo/kanri_dam_gaiyou.html"
+    }
+  ],
+  "dam-370": [
+    {
+      "label": "青森県 管理ダム概要",
+      "url": "https://www.pref.aomori.lg.jp/soshiki/kendo/kasensabo/kanri_dam_gaiyou.html"
+    }
+  ],
+  "dam-373": [
+    {
+      "label": "秋田県 河川砂防情報システム ダム情報",
+      "url": "https://kasen.pref.akita.lg.jp/pc/?dtype=1&no=2&vtype=1&no2=0"
+    }
+  ],
+  "dam-377": [
+    {
+      "label": "秋田県 河川砂防情報システム ダム情報",
+      "url": "https://kasen.pref.akita.lg.jp/pc/?dtype=1&no=2&vtype=1&no2=0"
+    }
+  ],
+  "dam-380": [
+    {
+      "label": "秋田県 河川砂防情報システム ダム情報",
+      "url": "https://kasen.pref.akita.lg.jp/pc/?dtype=1&no=2&vtype=1&no2=0"
+    }
+  ],
+  "dam-383": [
+    {
+      "label": "秋田県 河川砂防情報システム ダム情報",
+      "url": "https://kasen.pref.akita.lg.jp/pc/?dtype=1&no=2&vtype=1&no2=0"
+    }
+  ],
+  "dam-384": [
+    {
+      "label": "秋田県 河川砂防情報システム ダム情報",
+      "url": "https://kasen.pref.akita.lg.jp/pc/?dtype=1&no=2&vtype=1&no2=0"
+    }
+  ],
+  "dam-386": [
+    {
+      "label": "秋田県 河川砂防情報システム ダム情報",
+      "url": "https://kasen.pref.akita.lg.jp/pc/?dtype=1&no=2&vtype=1&no2=0"
+    }
+  ],
+  "dam-389": [
+    {
+      "label": "東北地方整備局 ダム貯水率",
+      "url": "https://www.thr.mlit.go.jp/bumon/b00037/k00290/river-hp/kasen/damu/"
+    }
+  ],
+  "dam-390": [
+    {
+      "label": "秋田県 河川砂防情報システム ダム情報",
+      "url": "https://kasen.pref.akita.lg.jp/pc/?dtype=1&no=2&vtype=1&no2=0"
+    }
+  ],
+  "dam-403": [
+    {
+      "label": "秋田県 河川砂防情報システム ダム情報",
+      "url": "https://kasen.pref.akita.lg.jp/pc/?dtype=1&no=2&vtype=1&no2=0"
+    }
+  ],
+  "dam-408": [
+    {
+      "label": "秋田県 河川砂防情報システム ダム情報",
+      "url": "https://kasen.pref.akita.lg.jp/pc/?dtype=1&no=2&vtype=1&no2=0"
+    }
+  ],
+  "dam-409": [
+    {
+      "label": "秋田県 河川砂防情報システム ダム情報",
+      "url": "https://kasen.pref.akita.lg.jp/pc/?dtype=1&no=2&vtype=1&no2=0"
+    }
+  ],
+  "dam-411": [
+    {
+      "label": "秋田県 河川砂防情報システム ダム情報",
+      "url": "https://kasen.pref.akita.lg.jp/pc/?dtype=1&no=2&vtype=1&no2=0"
+    }
+  ],
+  "dam-412": [
+    {
+      "label": "秋田県 河川砂防情報システム ダム情報",
+      "url": "https://kasen.pref.akita.lg.jp/pc/?dtype=1&no=2&vtype=1&no2=0"
+    }
+  ],
+  "dam-413": [
+    {
+      "label": "秋田県 河川砂防情報システム ダム情報",
+      "url": "https://kasen.pref.akita.lg.jp/pc/?dtype=1&no=2&vtype=1&no2=0"
+    }
+  ],
+  "dam-422": [
+    {
+      "label": "東北地方整備局 ダム貯水率",
+      "url": "https://www.thr.mlit.go.jp/bumon/b00037/k00290/river-hp/kasen/damu/"
+    }
+  ],
+  "dam-423": [
+    {
+      "label": "秋田県 河川砂防情報システム ダム情報",
+      "url": "https://kasen.pref.akita.lg.jp/pc/?dtype=1&no=2&vtype=1&no2=0"
+    }
+  ],
+  "dam-435": [
+    {
+      "label": "秋田県 河川砂防情報システム ダム情報",
+      "url": "https://kasen.pref.akita.lg.jp/pc/?dtype=1&no=2&vtype=1&no2=0"
+    }
+  ],
+  "dam-438": [
+    {
+      "label": "山形県 河川・砂防情報システム ダム情報",
+      "url": "http://www.kasen.pref.yamagata.jp/bousai/main.html?fnm=openTable&no=4&no2=0"
+    }
+  ],
+  "dam-446": [
+    {
+      "label": "山形県 河川・砂防情報システム ダム情報",
+      "url": "http://www.kasen.pref.yamagata.jp/bousai/main.html?fnm=openTable&no=4&no2=0"
+    }
+  ],
+  "dam-450": [
+    {
+      "label": "山形県 河川・砂防情報システム ダム情報",
+      "url": "http://www.kasen.pref.yamagata.jp/bousai/main.html?fnm=openTable&no=4&no2=0"
+    }
+  ],
+  "dam-451": [
+    {
+      "label": "山形県 河川・砂防情報システム ダム情報",
+      "url": "http://www.kasen.pref.yamagata.jp/bousai/main.html?fnm=openTable&no=4&no2=0"
+    }
+  ],
+  "dam-460": [
+    {
+      "label": "東北地方整備局 ダム貯水率",
+      "url": "https://www.thr.mlit.go.jp/bumon/b00037/k00290/river-hp/kasen/damu/"
+    }
+  ],
+  "dam-465": [
+    {
+      "label": "山形県 河川・砂防情報システム ダム情報",
+      "url": "http://www.kasen.pref.yamagata.jp/bousai/main.html?fnm=openTable&no=4&no2=0"
+    }
+  ],
+  "dam-466": [
+    {
+      "label": "山形県 河川・砂防情報システム ダム情報",
+      "url": "http://www.kasen.pref.yamagata.jp/bousai/main.html?fnm=openTable&no=4&no2=0"
+    }
+  ],
+  "dam-467": [
+    {
+      "label": "東北地方整備局 ダム貯水率",
+      "url": "https://www.thr.mlit.go.jp/bumon/b00037/k00290/river-hp/kasen/damu/"
+    }
+  ],
+  "dam-473": [
+    {
+      "label": "山形県 河川・砂防情報システム ダム情報",
+      "url": "http://www.kasen.pref.yamagata.jp/bousai/main.html?fnm=openTable&no=4&no2=0"
+    }
+  ],
+  "dam-479": [
+    {
+      "label": "山形県 河川・砂防情報システム ダム情報",
+      "url": "http://www.kasen.pref.yamagata.jp/bousai/main.html?fnm=openTable&no=4&no2=0"
+    }
+  ],
+  "dam-483": [
+    {
+      "label": "山形県 河川・砂防情報システム ダム情報",
+      "url": "http://www.kasen.pref.yamagata.jp/bousai/main.html?fnm=openTable&no=4&no2=0"
+    }
+  ],
+  "dam-484": [
+    {
+      "label": "東北地方整備局 ダム貯水率",
+      "url": "https://www.thr.mlit.go.jp/bumon/b00037/k00290/river-hp/kasen/damu/"
+    }
+  ],
+  "dam-485": [
+    {
+      "label": "山形県 河川・砂防情報システム ダム情報",
+      "url": "http://www.kasen.pref.yamagata.jp/bousai/main.html?fnm=openTable&no=4&no2=0"
+    }
+  ],
+  "dam-488": [
+    {
+      "label": "山形県 河川・砂防情報システム ダム情報",
+      "url": "http://www.kasen.pref.yamagata.jp/bousai/main.html?fnm=openTable&no=4&no2=0"
+    }
+  ],
+  "dam-489": [
+    {
+      "label": "山形県 河川・砂防情報システム ダム情報",
+      "url": "http://www.kasen.pref.yamagata.jp/bousai/main.html?fnm=openTable&no=4&no2=0"
+    }
+  ],
+  "dam-493": [
+    {
+      "label": "東北地方整備局 ダム貯水率",
+      "url": "https://www.thr.mlit.go.jp/bumon/b00037/k00290/river-hp/kasen/damu/"
+    }
+  ],
+  "dam-494": [
+    {
+      "label": "山形県 河川・砂防情報システム ダム情報",
+      "url": "http://www.kasen.pref.yamagata.jp/bousai/main.html?fnm=openTable&no=4&no2=0"
+    }
+  ],
   "dam-495": [
     {
       "label": "北陸地方整備局 ダム防災情報",
       "url": "https://www.hrr.mlit.go.jp/river/dam-bousai/"
     }
   ],
+  "dam-501": [
+    {
+      "label": "福島県 河川流域総合情報システム ダム情報",
+      "url": "https://kaseninf.pref.fukushima.jp/web_pub/dam/010401_60_1_0.html"
+    }
+  ],
+  "dam-502": [
+    {
+      "label": "福島県 河川流域総合情報システム ダム情報",
+      "url": "https://kaseninf.pref.fukushima.jp/web_pub/dam/010401_60_1_0.html"
+    }
+  ],
   "dam-506": [
     {
       "label": "北陸地方整備局 ダム防災情報",
       "url": "https://www.hrr.mlit.go.jp/river/dam-bousai/"
+    }
+  ],
+  "dam-518": [
+    {
+      "label": "福島県 河川流域総合情報システム ダム情報",
+      "url": "https://kaseninf.pref.fukushima.jp/web_pub/dam/010401_60_1_0.html"
     }
   ],
   "dam-571": [
@@ -225,6 +681,10 @@
     {
       "label": "関東地方整備局 首都圏の水資源状況",
       "url": "https://www.ktr.mlit.go.jp/river/shihon/river_shihon00000226.html"
+    },
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
     }
   ],
   "dam-584": [
@@ -237,6 +697,10 @@
     {
       "label": "関東地方整備局 首都圏の水資源状況",
       "url": "https://www.ktr.mlit.go.jp/river/shihon/river_shihon00000226.html"
+    },
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
     }
   ],
   "dam-596": [
@@ -249,6 +713,10 @@
     {
       "label": "関東地方整備局 首都圏の水資源状況",
       "url": "https://www.ktr.mlit.go.jp/river/shihon/river_shihon00000226.html"
+    },
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
     }
   ],
   "dam-626": [
@@ -267,6 +735,10 @@
     {
       "label": "関東地方整備局 首都圏の水資源状況",
       "url": "https://www.ktr.mlit.go.jp/river/shihon/river_shihon00000226.html"
+    },
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
     }
   ],
   "dam-637": [
@@ -291,12 +763,20 @@
     {
       "label": "関東地方整備局 首都圏の水資源状況",
       "url": "https://www.ktr.mlit.go.jp/river/shihon/river_shihon00000226.html"
+    },
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
     }
   ],
   "dam-696": [
     {
       "label": "関東地方整備局 首都圏の水資源状況",
       "url": "https://www.ktr.mlit.go.jp/river/shihon/river_shihon00000226.html"
+    },
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
     }
   ],
   "dam-702": [
@@ -316,23 +796,61 @@
       "label": "関東地方整備局 首都圏の水資源状況",
       "url": "https://www.ktr.mlit.go.jp/river/shihon/river_shihon00000226.html"
     },
-    { "label": "かながわの水がめ", "url": "https://kanagawa-dam.jp/" }
+    {
+      "label": "かながわの水がめ",
+      "url": "https://kanagawa-dam.jp/"
+    }
   ],
   "dam-720": [
     {
       "label": "関東地方整備局 首都圏の水資源状況",
       "url": "https://www.ktr.mlit.go.jp/river/shihon/river_shihon00000226.html"
     },
-    { "label": "かながわの水がめ", "url": "https://kanagawa-dam.jp/" }
+    {
+      "label": "かながわの水がめ",
+      "url": "https://kanagawa-dam.jp/"
+    }
   ],
   "dam-722": [
     {
       "label": "関東地方整備局 首都圏の水資源状況",
       "url": "https://www.ktr.mlit.go.jp/river/shihon/river_shihon00000226.html"
     },
-    { "label": "かながわの水がめ", "url": "https://kanagawa-dam.jp/" }
+    {
+      "label": "かながわの水がめ",
+      "url": "https://kanagawa-dam.jp/"
+    }
   ],
-  "dam-730": [{ "label": "かながわの水がめ", "url": "https://kanagawa-dam.jp/" }],
+  "dam-730": [
+    {
+      "label": "かながわの水がめ",
+      "url": "https://kanagawa-dam.jp/"
+    }
+  ],
+  "dam-758": [
+    {
+      "label": "中部地方整備局 主要ダム貯水状況",
+      "url": "https://www.cbr.mlit.go.jp/kawatomizu/kassui_zyouhou/index.htm"
+    }
+  ],
+  "dam-793": [
+    {
+      "label": "中部地方整備局 主要ダム貯水状況",
+      "url": "https://www.cbr.mlit.go.jp/kawatomizu/kassui_zyouhou/index.htm"
+    }
+  ],
+  "dam-795": [
+    {
+      "label": "中部地方整備局 主要ダム貯水状況",
+      "url": "https://www.cbr.mlit.go.jp/kawatomizu/kassui_zyouhou/index.htm"
+    }
+  ],
+  "dam-801": [
+    {
+      "label": "中部地方整備局 主要ダム貯水状況",
+      "url": "https://www.cbr.mlit.go.jp/kawatomizu/kassui_zyouhou/index.htm"
+    }
+  ],
   "dam-807": [
     {
       "label": "愛知県 水源状況",
@@ -349,30 +867,74 @@
     {
       "label": "愛知県 水源状況",
       "url": "https://www.pref.aichi.jp/soshiki/kigyo-suido/0000014118.html"
+    },
+    {
+      "label": "中部地方整備局 主要ダム貯水状況",
+      "url": "https://www.cbr.mlit.go.jp/kawatomizu/kassui_zyouhou/index.htm"
+    }
+  ],
+  "dam-839": [
+    {
+      "label": "中部地方整備局 主要ダム貯水状況",
+      "url": "https://www.cbr.mlit.go.jp/kawatomizu/kassui_zyouhou/index.htm"
     }
   ],
   "dam-878": [
     {
       "label": "愛知県 水源状況",
       "url": "https://www.pref.aichi.jp/soshiki/kigyo-suido/0000014118.html"
+    },
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    }
+  ],
+  "dam-887": [
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
     }
   ],
   "dam-895": [
     {
       "label": "愛知県 水源状況",
       "url": "https://www.pref.aichi.jp/soshiki/kigyo-suido/0000014118.html"
+    },
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    }
+  ],
+  "dam-901": [
+    {
+      "label": "中部地方整備局 主要ダム貯水状況",
+      "url": "https://www.cbr.mlit.go.jp/kawatomizu/kassui_zyouhou/index.htm"
     }
   ],
   "dam-906": [
     {
       "label": "愛知県 水源状況",
       "url": "https://www.pref.aichi.jp/soshiki/kigyo-suido/0000014118.html"
+    },
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
     }
   ],
   "dam-920": [
     {
       "label": "愛知県 水源状況",
       "url": "https://www.pref.aichi.jp/soshiki/kigyo-suido/0000014118.html"
+    },
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    }
+  ],
+  "dam-935": [
+    {
+      "label": "中部地方整備局 主要ダム貯水状況",
+      "url": "https://www.cbr.mlit.go.jp/kawatomizu/kassui_zyouhou/index.htm"
     }
   ],
   "dam-949": [
@@ -405,6 +967,12 @@
       "url": "https://www.hrr.mlit.go.jp/river/dam-bousai/"
     }
   ],
+  "dam-1297": [
+    {
+      "label": "中部地方整備局 主要ダム貯水状況",
+      "url": "https://www.cbr.mlit.go.jp/kawatomizu/kassui_zyouhou/index.htm"
+    }
+  ],
   "dam-1334": [
     {
       "label": "近畿地方整備局 琵琶湖水位・ダム貯水率",
@@ -423,10 +991,52 @@
       "url": "https://www.kkr.mlit.go.jp/river/biwakosuiidamutyosuiritsu.html"
     }
   ],
+  "dam-1455": [
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    }
+  ],
+  "dam-1470": [
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    }
+  ],
+  "dam-1476": [
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    }
+  ],
+  "dam-1486": [
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    }
+  ],
+  "dam-1487": [
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    }
+  ],
+  "dam-1489": [
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    }
+  ],
   "dam-1495": [
     {
       "label": "近畿地方整備局 琵琶湖水位・ダム貯水率",
       "url": "https://www.kkr.mlit.go.jp/river/biwakosuiidamutyosuiritsu.html"
+    }
+  ],
+  "dam-1503": [
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
     }
   ],
   "dam-1605": [
@@ -560,52 +1170,110 @@
     }
   ],
   "dam-2042": [
-    { "label": "四国地方整備局 ダム管理情報", "url": "https://www.skr.mlit.go.jp/kasen/damu/" }
+    {
+      "label": "四国地方整備局 ダム管理情報",
+      "url": "https://www.skr.mlit.go.jp/kasen/damu/"
+    },
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    }
   ],
   "dam-2045": [
-    { "label": "四国地方整備局 ダム管理情報", "url": "https://www.skr.mlit.go.jp/kasen/damu/" },
+    {
+      "label": "四国地方整備局 ダム管理情報",
+      "url": "https://www.skr.mlit.go.jp/kasen/damu/"
+    },
     {
       "label": "香川県 かがわの水",
       "url": "https://www.pref.kagawa.lg.jp/mizusigen/mizu/kfvn.html"
+    },
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
     }
   ],
   "dam-2048": [
-    { "label": "四国地方整備局 ダム管理情報", "url": "https://www.skr.mlit.go.jp/kasen/damu/" }
+    {
+      "label": "四国地方整備局 ダム管理情報",
+      "url": "https://www.skr.mlit.go.jp/kasen/damu/"
+    }
   ],
   "dam-2052": [
-    { "label": "四国地方整備局 ダム管理情報", "url": "https://www.skr.mlit.go.jp/kasen/damu/" },
+    {
+      "label": "四国地方整備局 ダム管理情報",
+      "url": "https://www.skr.mlit.go.jp/kasen/damu/"
+    },
     {
       "label": "香川県 かがわの水",
       "url": "https://www.pref.kagawa.lg.jp/mizusigen/mizu/kfvn.html"
+    },
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
     }
   ],
   "dam-2053": [
-    { "label": "四国地方整備局 ダム管理情報", "url": "https://www.skr.mlit.go.jp/kasen/damu/" }
+    {
+      "label": "四国地方整備局 ダム管理情報",
+      "url": "https://www.skr.mlit.go.jp/kasen/damu/"
+    },
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    }
   ],
   "dam-2064": [
-    { "label": "四国地方整備局 ダム管理情報", "url": "https://www.skr.mlit.go.jp/kasen/damu/" }
+    {
+      "label": "四国地方整備局 ダム管理情報",
+      "url": "https://www.skr.mlit.go.jp/kasen/damu/"
+    }
   ],
   "dam-2108": [
-    { "label": "四国地方整備局 ダム管理情報", "url": "https://www.skr.mlit.go.jp/kasen/damu/" }
+    {
+      "label": "四国地方整備局 ダム管理情報",
+      "url": "https://www.skr.mlit.go.jp/kasen/damu/"
+    }
   ],
   "dam-2114": [
-    { "label": "四国地方整備局 ダム管理情報", "url": "https://www.skr.mlit.go.jp/kasen/damu/" }
+    {
+      "label": "四国地方整備局 ダム管理情報",
+      "url": "https://www.skr.mlit.go.jp/kasen/damu/"
+    }
   ],
   "dam-2115": [
-    { "label": "四国地方整備局 ダム管理情報", "url": "https://www.skr.mlit.go.jp/kasen/damu/" }
+    {
+      "label": "四国地方整備局 ダム管理情報",
+      "url": "https://www.skr.mlit.go.jp/kasen/damu/"
+    }
   ],
   "dam-2207": [
-    { "label": "今治市 ダム貯水率", "url": "https://www.city.imabari.ehime.jp/suidou/suigen/dam/" }
+    {
+      "label": "今治市 ダム貯水率",
+      "url": "https://www.city.imabari.ehime.jp/suidou/suigen/dam/"
+    }
   ],
   "dam-2226": [
-    { "label": "四国地方整備局 ダム管理情報", "url": "https://www.skr.mlit.go.jp/kasen/damu/" },
-    { "label": "松山市 水源状況", "url": "https://www.matsuyama-waterworks.jp/suigen.html" }
+    {
+      "label": "四国地方整備局 ダム管理情報",
+      "url": "https://www.skr.mlit.go.jp/kasen/damu/"
+    },
+    {
+      "label": "松山市 水源状況",
+      "url": "https://www.matsuyama-waterworks.jp/suigen.html"
+    }
   ],
   "dam-2230": [
-    { "label": "四国地方整備局 ダム管理情報", "url": "https://www.skr.mlit.go.jp/kasen/damu/" }
+    {
+      "label": "四国地方整備局 ダム管理情報",
+      "url": "https://www.skr.mlit.go.jp/kasen/damu/"
+    }
   ],
   "dam-2234": [
-    { "label": "四国地方整備局 ダム管理情報", "url": "https://www.skr.mlit.go.jp/kasen/damu/" }
+    {
+      "label": "四国地方整備局 ダム管理情報",
+      "url": "https://www.skr.mlit.go.jp/kasen/damu/"
+    }
   ],
   "dam-2259": [
     {
@@ -679,10 +1347,32 @@
       "url": "https://www.qsr.mlit.go.jp/n-kawa/about/dam/kanridam/index.html"
     }
   ],
+  "dam-2479": [
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    }
+  ],
+  "dam-2480": [
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    }
+  ],
+  "dam-2484": [
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    }
+  ],
   "dam-2486": [
     {
       "label": "福岡市 きょうのダム状況",
       "url": "https://www.city.fukuoka.lg.jp/mizu/mizukanri/machi/002.html"
+    },
+    {
+      "label": "水資源機構 貯水状況",
+      "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
     }
   ],
   "dam-2521": [
@@ -776,9 +1466,15 @@
     }
   ],
   "dam-2736": [
-    { "label": "沖縄県企業局 ダム貯水率", "url": "https://www.eb.pref.okinawa.jp/kassui/" }
+    {
+      "label": "沖縄県企業局 ダム貯水率",
+      "url": "https://www.eb.pref.okinawa.jp/kassui/"
+    }
   ],
   "dam-2739": [
-    { "label": "沖縄県企業局 ダム貯水率", "url": "https://www.eb.pref.okinawa.jp/kassui/" }
+    {
+      "label": "沖縄県企業局 ダム貯水率",
+      "url": "https://www.eb.pref.okinawa.jp/kassui/"
+    }
   ]
 }
