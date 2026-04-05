@@ -30,7 +30,7 @@ export default function DamSortSelector({ field, direction, onChange }: Props) {
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="text-sm text-gray-500 dark:text-gray-400">並び替え:</span>
+      <span className="text-sm text-text-secondary">並び替え:</span>
       {sortOptions.map(({ label, field: optField, defaultDir }) => {
         const isActive = optField === field;
         return (
@@ -40,8 +40,8 @@ export default function DamSortSelector({ field, direction, onChange }: Props) {
             onClick={() => handleClick(optField, defaultDir)}
             className={`flex items-center gap-1 rounded-md px-3 py-1 text-sm font-medium transition-colors ${
               isActive
-                ? "bg-blue-500 text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                ? "bg-accent text-white"
+                : "bg-surface-secondary text-text-secondary hover:bg-surface-primary"
             }`}
           >
             {label}

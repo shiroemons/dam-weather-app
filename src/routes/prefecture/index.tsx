@@ -50,10 +50,8 @@ function PrefecturePage() {
   }, [hash]);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
-      <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl dark:text-gray-100">
-        都道府県一覧
-      </h1>
+    <div className="mx-auto max-w-(--width-content) px-4 py-8 sm:px-6 sm:py-12">
+      <h1 className="text-2xl font-bold text-text-primary sm:text-3xl">都道府県一覧</h1>
 
       <div className="mt-8 flex flex-col gap-8">
         {regions.map(({ region, prefectures }) => (

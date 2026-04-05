@@ -194,28 +194,28 @@ function PrefecturePage() {
 
   if (!prefecture) {
     return (
-      <div className="mx-auto max-w-6xl px-4 py-8">
-        <Link to="/prefecture" className="text-sm text-blue-500 hover:text-blue-700">
+      <div className="mx-auto max-w-(--width-content) px-4 py-8">
+        <Link to="/prefecture" className="text-sm text-accent hover:text-accent">
           ← 一覧に戻る
         </Link>
         <div className="mt-12 text-center">
-          <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">404</p>
-          <p className="mt-2 text-gray-500 dark:text-gray-400">都道府県が見つかりません</p>
+          <p className="text-lg font-semibold text-text-primary">404</p>
+          <p className="mt-2 text-text-secondary">都道府県が見つかりません</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
-      <Link to="/prefecture" className="text-sm text-blue-500 hover:text-blue-700">
+    <div className="mx-auto max-w-(--width-content) px-4 py-8">
+      <Link to="/prefecture" className="text-sm text-accent hover:text-accent">
         ← 一覧に戻る
       </Link>
 
       <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{prefecture.name}</h1>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          <h1 className="text-2xl font-bold text-text-primary">{prefecture.name}</h1>
+          <p className="mt-1 text-sm text-text-secondary">
             {dams.length}基のダム{obs && totalCount > dams.length && ` / 全${totalCount}基`}
           </p>
         </div>
@@ -226,19 +226,15 @@ function PrefecturePage() {
         </div>
       </div>
 
-      <div className="mt-4 space-y-3 rounded-lg bg-gray-100 p-4 dark:bg-gray-800/50">
+      <div className="mt-4 space-y-3 rounded-lg bg-surface-secondary p-4">
         <div>
-          <p className="mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
-            ダム名で検索
-          </p>
+          <p className="mb-1.5 text-xs font-medium text-text-secondary">ダム名で検索</p>
           <DamSearchInput value={q} onChange={setKeyword} />
         </div>
 
         {availablePurposes.length > 0 && (
           <div>
-            <p className="mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
-              用途で絞り込み
-            </p>
+            <p className="mb-1.5 text-xs font-medium text-text-secondary">用途で絞り込み</p>
             <PurposeFilter
               selected={selectedPurposes}
               available={availablePurposes}
@@ -249,9 +245,7 @@ function PrefecturePage() {
 
         {availableTypes.length > 0 && (
           <div>
-            <p className="mb-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
-              ダム型式で絞り込み
-            </p>
+            <p className="mb-1.5 text-xs font-medium text-text-secondary">ダム型式で絞り込み</p>
             <DamTypeFilter
               selected={selectedTypes}
               available={availableTypes}
@@ -278,7 +272,7 @@ function PrefecturePage() {
       {!damsLoading && !weatherLoading && !damsError && !weatherError && (
         <>
           {weather?.updatedAt && (
-            <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
+            <p className="mt-2 text-xs text-text-tertiary">
               更新日時:{" "}
               {new Date(weather.updatedAt).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}
             </p>

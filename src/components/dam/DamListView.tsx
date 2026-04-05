@@ -61,9 +61,7 @@ export default function DamListView({
   );
 
   if (dams.length === 0) {
-    return (
-      <p className="py-12 text-center text-gray-500 dark:text-gray-400">ダムが見つかりません</p>
-    );
+    return <p className="py-12 text-center text-text-secondary">ダムが見つかりません</p>;
   }
 
   return (
@@ -72,12 +70,12 @@ export default function DamListView({
       <div className="hidden md:block">
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-gray-50 text-left text-xs font-medium text-gray-500 dark:bg-gray-700/50 dark:text-gray-400">
+            <tr className="bg-surface-secondary text-left text-xs font-medium text-text-secondary">
               <th className="px-3 py-2">
                 <button
                   type="button"
                   onClick={() => handleHeaderSort("name")}
-                  className="inline-flex items-center gap-1 transition-colors hover:text-gray-900 dark:hover:text-gray-200"
+                  className="inline-flex items-center gap-1 transition-colors hover:text-text-primary"
                 >
                   ダム名
                   {sortField === "name" &&
@@ -92,7 +90,7 @@ export default function DamListView({
                 <button
                   type="button"
                   onClick={() => handleHeaderSort("waterSystem")}
-                  className="inline-flex items-center gap-1 transition-colors hover:text-gray-900 dark:hover:text-gray-200"
+                  className="inline-flex items-center gap-1 transition-colors hover:text-text-primary"
                 >
                   水系
                   {sortField === "waterSystem" &&
@@ -107,7 +105,7 @@ export default function DamListView({
                 <button
                   type="button"
                   onClick={() => handleHeaderSort("river")}
-                  className="inline-flex items-center gap-1 transition-colors hover:text-gray-900 dark:hover:text-gray-200"
+                  className="inline-flex items-center gap-1 transition-colors hover:text-text-primary"
                 >
                   河川
                   {sortField === "river" &&
@@ -122,7 +120,7 @@ export default function DamListView({
                 <button
                   type="button"
                   onClick={() => handleHeaderSort("damType")}
-                  className="inline-flex items-center gap-1 transition-colors hover:text-gray-900 dark:hover:text-gray-200"
+                  className="inline-flex items-center gap-1 transition-colors hover:text-text-primary"
                 >
                   ダム型式
                   {sortField === "damType" &&
@@ -137,7 +135,7 @@ export default function DamListView({
                 <button
                   type="button"
                   onClick={() => handleHeaderSort("capacity")}
-                  className="inline-flex items-center gap-1 transition-colors hover:text-gray-900 dark:hover:text-gray-200"
+                  className="inline-flex items-center gap-1 transition-colors hover:text-text-primary"
                 >
                   総貯水容量
                   {sortField === "capacity" &&
@@ -152,7 +150,7 @@ export default function DamListView({
                 <button
                   type="button"
                   onClick={() => handleHeaderSort("rate")}
-                  className="inline-flex items-center gap-1 transition-colors hover:text-gray-900 dark:hover:text-gray-200"
+                  className="inline-flex items-center gap-1 transition-colors hover:text-text-primary"
                 >
                   貯水率
                   {sortField === "rate" &&
@@ -180,7 +178,7 @@ export default function DamListView({
               return (
                 <tr
                   key={dam.id}
-                  className="border-b border-gray-100 even:bg-gray-50/50 hover:bg-blue-50/30 dark:border-gray-700/50 dark:even:bg-gray-800/30 dark:hover:bg-gray-700/30"
+                  className="border-b border-border-secondary even:bg-surface-secondary/50 hover:bg-accent-subtle/30"
                 >
                   {/* ダム名 */}
                   <td className="px-3 py-3">
@@ -190,38 +188,38 @@ export default function DamListView({
                         href={riverInfoUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`inline-flex transition-colors hover:text-blue-500 ${dam.riverUrl ? "text-blue-500" : "text-gray-300 dark:text-gray-600"}`}
+                        className={`inline-flex transition-colors hover:text-accent ${dam.riverUrl ? "text-accent" : "text-text-tertiary"}`}
                       >
                         <ExternalLink className="size-3.5" />
                       </a>
                       <Link
                         to="/dam/$damId"
                         params={{ damId: dam.id }}
-                        className="font-medium text-gray-900 hover:text-blue-500 dark:text-gray-100 dark:hover:text-blue-400"
+                        className="font-medium text-text-primary hover:text-accent"
                       >
                         {dam.damName}
                       </Link>
                     </div>
-                    <div className="text-xs text-gray-400 dark:text-gray-500">{dam.address}</div>
+                    <div className="text-xs text-text-tertiary">{dam.address}</div>
                   </td>
 
                   {/* 水系 */}
-                  <td className="px-3 py-3 text-gray-600 dark:text-gray-300">{dam.waterSystem}</td>
+                  <td className="px-3 py-3 text-text-secondary">{dam.waterSystem}</td>
 
                   {/* 河川 */}
-                  <td className="px-3 py-3 text-gray-600 dark:text-gray-300">{dam.riverName}</td>
+                  <td className="px-3 py-3 text-text-secondary">{dam.riverName}</td>
 
                   {/* ダム型式 */}
-                  <td className="whitespace-nowrap px-3 py-3 text-xs text-gray-600 dark:text-gray-300">
+                  <td className="whitespace-nowrap px-3 py-3 text-xs text-text-secondary">
                     {dam.damType || ""}
                   </td>
 
                   {/* 総貯水容量 */}
-                  <td className="px-3 py-3 text-right text-gray-600 dark:text-gray-300">
+                  <td className="px-3 py-3 text-right text-text-secondary">
                     {dam.totalStorageCapacity != null ? (
                       <span>{dam.totalStorageCapacity.toLocaleString()}千m³</span>
                     ) : (
-                      <span className="text-gray-300 dark:text-gray-600">—</span>
+                      <span className="text-text-tertiary">—</span>
                     )}
                   </td>
 
@@ -229,16 +227,16 @@ export default function DamListView({
                   <td className="px-3 py-3">
                     {storageRate != null ? (
                       <div className="flex items-center gap-2">
-                        <div className="h-2 w-16 rounded-full bg-gray-200 dark:bg-gray-600">
+                        <div className="h-2 w-16 rounded-full bg-border-primary">
                           <div
-                            className="h-2 rounded-full bg-blue-400 dark:bg-blue-500"
+                            className="h-2 rounded-full bg-accent"
                             style={{ width: `${Math.min(storageRate, 100)}%` }}
                           />
                         </div>
-                        <span className="text-gray-600 dark:text-gray-300">{storageRate}%</span>
+                        <span className="text-text-secondary">{storageRate}%</span>
                       </div>
                     ) : (
-                      <span className="text-gray-300 dark:text-gray-600">—</span>
+                      <span className="text-text-tertiary">—</span>
                     )}
                   </td>
 
@@ -249,12 +247,12 @@ export default function DamListView({
                         <WeatherIcon code={damWeather.today.weatherCode} size="sm" />
                         <div className="text-xs">
                           <span className="text-red-500">{damWeather.today.tempMax ?? "--"}°</span>
-                          <span className="text-gray-400">/</span>
+                          <span className="text-text-tertiary">/</span>
                           <span className="text-blue-500">{damWeather.today.tempMin ?? "--"}°</span>
                         </div>
                       </div>
                     ) : (
-                      <span className="text-gray-300 dark:text-gray-600">—</span>
+                      <span className="text-text-tertiary">—</span>
                     )}
                   </td>
 
@@ -267,14 +265,14 @@ export default function DamListView({
                           <span className="text-red-500">
                             {damWeather.tomorrow.tempMax ?? "--"}°
                           </span>
-                          <span className="text-gray-400">/</span>
+                          <span className="text-text-tertiary">/</span>
                           <span className="text-blue-500">
                             {damWeather.tomorrow.tempMin ?? "--"}°
                           </span>
                         </div>
                       </div>
                     ) : (
-                      <span className="text-gray-300 dark:text-gray-600">—</span>
+                      <span className="text-text-tertiary">—</span>
                     )}
                   </td>
 
@@ -284,7 +282,7 @@ export default function DamListView({
                       href={getYahooRadarUrl(dam.latitude, dam.longitude)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-0.5 text-gray-400 hover:text-blue-500 dark:text-gray-500 dark:hover:text-blue-400"
+                      className="inline-flex items-center gap-0.5 text-text-tertiary hover:text-accent"
                     >
                       <CloudRain className="size-3.5" />
                       <ExternalLink className="size-3" />
@@ -298,7 +296,7 @@ export default function DamListView({
       </div>
 
       {/* モバイル: コンパクトカード表示 */}
-      <div className="divide-y divide-gray-100 md:hidden dark:divide-gray-700/50">
+      <div className="divide-y divide-border-secondary md:hidden">
         {sortedDams.map((dam) => {
           const damStorage = storageMap.get(dam.id);
           const storageRate = damStorage?.storageRate ?? null;
@@ -308,7 +306,7 @@ export default function DamListView({
             `https://www.river.go.jp/kawabou/pc/tm?zm=15&clat=${dam.latitude}&clon=${dam.longitude}&itmkndCd=7&mapType=0`;
 
           return (
-            <div key={dam.id} className="px-2 py-3 even:bg-gray-50/50 dark:even:bg-gray-800/30">
+            <div key={dam.id} className="px-2 py-3 even:bg-surface-secondary/50">
               <div className="flex items-center gap-2">
                 {damWeather ? (
                   <WeatherIcon code={damWeather.today.weatherCode} size="sm" />
@@ -318,12 +316,12 @@ export default function DamListView({
                 <Link
                   to="/dam/$damId"
                   params={{ damId: dam.id }}
-                  className="min-w-0 flex-1 truncate font-medium text-gray-900 hover:text-blue-500 dark:text-gray-100"
+                  className="min-w-0 flex-1 truncate font-medium text-text-primary hover:text-accent"
                 >
                   {dam.damName}
                 </Link>
                 {storageRate != null && (
-                  <span className="shrink-0 text-sm font-medium text-gray-600 dark:text-gray-300">
+                  <span className="shrink-0 text-sm font-medium text-text-secondary">
                     {storageRate}%
                   </span>
                 )}
@@ -331,7 +329,7 @@ export default function DamListView({
                   href={riverInfoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`inline-flex shrink-0 transition-colors hover:text-blue-500 ${dam.riverUrl ? "text-blue-500" : "text-gray-300 dark:text-gray-600"}`}
+                  className={`inline-flex shrink-0 transition-colors hover:text-accent ${dam.riverUrl ? "text-accent" : "text-text-tertiary"}`}
                 >
                   <ExternalLink className="size-3.5" />
                 </a>

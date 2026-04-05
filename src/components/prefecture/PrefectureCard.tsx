@@ -76,9 +76,7 @@ export default function PrefectureCard({ prefecture, weatherCategory = "default"
       className={`group block rounded-xl border p-5 shadow-sm transition-all duration-200 hover:scale-[1.02] hover:shadow-md motion-reduce:hover:scale-100 ${CARD_CLASSES[weatherCategory]}`}
     >
       <div className="flex items-center justify-between">
-        <p className="text-base font-semibold text-gray-900 dark:text-gray-100">
-          {prefecture.name}
-        </p>
+        <p className="text-base font-semibold text-text-primary">{prefecture.name}</p>
         <WeatherIcon className={`size-4 transition-colors ${iconClasses}`} />
       </div>
       <div className="mt-2 flex items-center gap-1.5">

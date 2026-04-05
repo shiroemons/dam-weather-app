@@ -41,7 +41,7 @@ export default function DamSearchInput({ value, onChange }: Props) {
   return (
     <div className="relative">
       <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
-        <Search size={16} className="text-gray-400" />
+        <Search size={16} className="text-text-tertiary" />
       </span>
       <input
         type="text"
@@ -50,7 +50,7 @@ export default function DamSearchInput({ value, onChange }: Props) {
         onCompositionStart={handleCompositionStart}
         onCompositionEnd={handleCompositionEnd}
         placeholder="ダム名で検索..."
-        className="w-full rounded-lg border border-gray-300 bg-white py-2 pl-9 pr-9 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400"
+        className="w-full rounded-lg border border-border-primary bg-surface-primary py-2 pl-9 pr-9 text-sm text-text-primary placeholder-text-tertiary focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
       />
       {localValue !== "" && (
         <button
@@ -58,7 +58,7 @@ export default function DamSearchInput({ value, onChange }: Props) {
           onClick={handleClear}
           className="absolute inset-y-0 right-3 flex items-center"
         >
-          <X size={16} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" />
+          <X size={16} className="text-text-tertiary hover:text-text-secondary" />
         </button>
       )}
     </div>

@@ -30,7 +30,7 @@ export default function DamCard({ dam, weather, storage, onRemove }: Props) {
         <Link
           to="/dam/$damId"
           params={{ damId: dam.id }}
-          className="truncate text-lg font-semibold text-gray-900 transition-colors hover:text-blue-500 dark:text-gray-100 dark:hover:text-blue-400"
+          className="truncate text-lg font-semibold text-text-primary transition-colors hover:text-accent"
         >
           {dam.damName}
         </Link>
@@ -41,7 +41,7 @@ export default function DamCard({ dam, weather, storage, onRemove }: Props) {
               href={riverInfoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className={`inline-flex transition-colors hover:text-blue-500 ${dam.riverUrl ? "text-blue-500" : "text-gray-300 dark:text-gray-600"}`}
+              className={`inline-flex transition-colors hover:text-accent ${dam.riverUrl ? "text-accent" : "text-text-tertiary"}`}
             >
               <ExternalLink className="size-4" />
             </a>
@@ -54,7 +54,7 @@ export default function DamCard({ dam, weather, storage, onRemove }: Props) {
               <button
                 type="button"
                 onClick={onRemove}
-                className="inline-flex text-gray-400 transition-colors hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400"
+                className="inline-flex text-text-tertiary transition-colors hover:text-red-500 dark:hover:text-red-400"
                 aria-label={`${dam.damName}をリストから削除`}
               >
                 <X className="size-4" />
@@ -70,7 +70,7 @@ export default function DamCard({ dam, weather, storage, onRemove }: Props) {
       {/* 2行目: 用途 */}
       {dam.purposes.some((p) => PURPOSE_SHORT_MAP.has(p)) && (
         <div className="mt-1 flex items-center gap-1.5 text-sm">
-          <span className="text-gray-500 dark:text-gray-400">用途：</span>
+          <span className="text-text-secondary">用途：</span>
           {dam.purposes.map((purpose) => {
             const short = PURPOSE_SHORT_MAP.get(purpose);
             return short ? (
@@ -98,27 +98,27 @@ export default function DamCard({ dam, weather, storage, onRemove }: Props) {
 
       <div className="mt-2 space-y-1">
         {dam.address && (
-          <div className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400">
+          <div className="flex items-center gap-1.5 text-sm text-text-secondary">
             <MapPin className="size-3.5 shrink-0 text-rose-400" />
             <span>{dam.address}</span>
           </div>
         )}
-        <div className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400">
+        <div className="flex items-center gap-1.5 text-sm text-text-secondary">
           <Droplets className="size-3.5 shrink-0 text-cyan-400" />
           <span>{dam.waterSystem}</span>
         </div>
-        <div className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400">
+        <div className="flex items-center gap-1.5 text-sm text-text-secondary">
           <Waves className="size-3.5 shrink-0 text-blue-400" />
           <span>{dam.riverName}</span>
         </div>
         {dam.totalStorageCapacity != null && (
-          <div className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400">
+          <div className="flex items-center gap-1.5 text-sm text-text-secondary">
             <Box className="size-3.5 shrink-0 text-emerald-400" />
             <span>{dam.totalStorageCapacity.toLocaleString()}千m³</span>
           </div>
         )}
         <div
-          className={`flex items-center gap-1.5 text-sm ${storage?.storageRate != null ? "text-gray-500 dark:text-gray-400" : "invisible"}`}
+          className={`flex items-center gap-1.5 text-sm ${storage?.storageRate != null ? "text-text-secondary" : "invisible"}`}
         >
           <Activity className="size-3.5 shrink-0 text-violet-400" />
           <span>貯水率 {storage?.storageRate ?? 0}%</span>
@@ -126,7 +126,7 @@ export default function DamCard({ dam, weather, storage, onRemove }: Props) {
       </div>
 
       {weather === undefined ? (
-        <div className="mt-4 rounded-xl bg-gray-100/50 px-4 py-6 text-center text-sm text-gray-500 dark:bg-gray-700/50 dark:text-gray-400">
+        <div className="mt-4 rounded-xl bg-surface-secondary px-4 py-6 text-center text-sm text-text-tertiary">
           天気情報を取得できません
         </div>
       ) : (
@@ -143,7 +143,7 @@ export default function DamCard({ dam, weather, storage, onRemove }: Props) {
             href={yahooRadarUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-2 flex items-center justify-end gap-1 text-xs text-gray-500 transition-colors hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400"
+            className="mt-2 flex items-center justify-end gap-1 text-xs text-text-secondary transition-colors hover:text-accent"
           >
             <CloudRain className="size-3" />
             <span>雨雲レーダー</span>

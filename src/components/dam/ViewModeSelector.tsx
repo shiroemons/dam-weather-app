@@ -23,8 +23,8 @@ export default function ViewModeSelector({ value, onChange }: Props) {
           onClick={() => onChange(mode)}
           className={`px-3 py-1 text-sm font-medium transition-colors ${rounded} ${
             value === mode
-              ? "bg-blue-500 text-white"
-              : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+              ? "bg-accent text-white"
+              : "bg-surface-secondary text-text-secondary hover:bg-surface-primary"
           }`}
         >
           <Icon className="size-5" />

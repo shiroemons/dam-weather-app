@@ -20,11 +20,9 @@ export default function PrefectureGrid({
 
   return (
     <div id={regionSlug} className="scroll-mt-20">
-      <div className="mb-4 flex items-baseline gap-3 border-l-4 border-sky-500 pl-3 dark:border-sky-400">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{region}</h2>
-        <span className="text-sm font-medium text-sky-600 dark:text-sky-400">
-          {regionDamCount.toLocaleString()}基
-        </span>
+      <div className="mb-4 flex items-baseline gap-3 border-l-4 border-accent pl-3">
+        <h2 className="text-xl font-bold text-text-primary">{region}</h2>
+        <span className="text-sm font-medium text-accent">{regionDamCount.toLocaleString()}基</span>
       </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
         {prefectures.map((prefecture) => (

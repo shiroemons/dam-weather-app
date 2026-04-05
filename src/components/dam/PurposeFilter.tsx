@@ -29,10 +29,10 @@ export default function PurposeFilter({ selected, available, onChange }: Props) 
             key={purpose.code}
             type="button"
             onClick={() => handleToggle(purpose.label)}
-            className={`rounded-full px-3 py-1 text-sm font-medium transition-colors duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 ${
+            className={`rounded-full px-3 py-1 text-sm font-medium transition-colors duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
               isSelected
-                ? "bg-amber-500 text-white dark:bg-amber-700"
-                : "bg-white text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                ? "bg-accent text-white"
+                : "bg-surface-primary text-text-secondary hover:bg-surface-secondary"
             }`}
           >
             {purpose.label} ({short})

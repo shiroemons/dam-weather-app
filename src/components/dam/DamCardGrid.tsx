@@ -12,9 +12,7 @@ type Props = {
 
 export default function DamCardGrid({ dams, weather, storage }: Props) {
   if (dams.length === 0) {
-    return (
-      <p className="py-12 text-center text-gray-500 dark:text-gray-400">ダムが見つかりません</p>
-    );
+    return <p className="py-12 text-center text-text-secondary">ダムが見つかりません</p>;
   }
 
   return (
