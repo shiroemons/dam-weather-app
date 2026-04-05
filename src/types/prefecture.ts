@@ -7,4 +7,5 @@ export interface Prefecture {
   region: Region;
   damCount: number;
   obsCount: number;
+  storageRateCount: number;
 }
