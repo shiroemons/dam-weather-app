@@ -12,19 +12,22 @@ export default function DayWeather({ forecast, label }: Props) {
   const minTemp = forecast.tempMin !== null ? `${forecast.tempMin}°C` : "--";
 
   return (
-    <div className="flex flex-col items-center gap-1 rounded-xl bg-surface-elevated p-4 shadow-sm">
-      <span className="text-xs font-medium text-text-secondary">{label}</span>
-      <WeatherIcon code={forecast.weatherCode} size="lg" />
-      <span className="text-xs text-text-secondary">{forecast.weather}</span>
-      <div className="flex items-center gap-2 text-sm font-medium">
-        <span className="text-red-500">{maxTemp}</span>
-        <span className="text-blue-500">{minTemp}</span>
+    <div className="rounded-lg border border-border-secondary bg-surface-elevated p-3">
+      <p className="mb-2 border-b border-border-secondary pb-1 text-[10px] font-bold uppercase tracking-widest text-text-tertiary">
+        {label}
+      </p>
+      <div className="flex items-center justify-between">
+        <WeatherIcon code={forecast.weatherCode} size="md" />
+        <div className="text-right">
+          <p className="font-mono text-sm font-bold text-text-primary">{maxTemp}</p>
+          <p className="font-mono text-[11px] text-text-tertiary">{minTemp}</p>
+        </div>
       </div>
       {forecast.precipProbability !== null && (
-        <span className="text-xs text-accent">
-          ☂{forecast.precipProbability}%
-          {forecast.precipitationSum !== null && ` ${forecast.precipitationSum}mm`}
-        </span>
+        <p className="mt-1.5 text-right text-[10px] font-medium text-accent">
+          ☂ {forecast.precipProbability}%
+          {forecast.precipitationSum !== null && ` / ${forecast.precipitationSum}mm`}
+        </p>
       )}
     </div>
   );
