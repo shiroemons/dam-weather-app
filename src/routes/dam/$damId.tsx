@@ -132,18 +132,20 @@ function DamDetailPage() {
 
       {/* Dam Header */}
       <div className="mt-6">
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{dam.damName}</h1>
-          <WatchlistAddButton damId={dam.id} variant="button" />
-          <a
-            href={riverInfoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1 rounded-lg bg-blue-50 px-3 py-1 text-xs font-medium text-blue-600 transition-colors hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50"
-          >
-            川の防災情報
-            <ExternalLink className="size-3" />
-          </a>
+          <div className="flex items-center gap-3">
+            <WatchlistAddButton damId={dam.id} variant="button" />
+            <a
+              href={riverInfoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 rounded-lg bg-blue-50 px-3 py-1 text-xs font-medium text-blue-600 transition-colors hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50"
+            >
+              川の防災情報
+              <ExternalLink className="size-3" />
+            </a>
+          </div>
         </div>
       </div>
 
