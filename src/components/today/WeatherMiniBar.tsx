@@ -42,9 +42,12 @@ export default function WeatherMiniBar({ counts, total, unit = "基" }: Props) {
           const count = counts[category];
           if (count === 0) return null;
           return (
-            <span key={category} className="text-[10px] text-text-secondary">
+            <span
+              key={category}
+              className="inline-flex items-center gap-0.5 text-[10px] text-text-secondary"
+            >
               <span
-                className={`mr-0.5 inline-block size-1.5 rounded-full align-middle ${CATEGORY_CONFIG[category].bg}`}
+                className={`inline-block size-1.5 shrink-0 rounded-full ${CATEGORY_CONFIG[category].bg}`}
                 title={CATEGORY_CONFIG[category].label}
               />
               {CATEGORY_CONFIG[category].shortLabel}
