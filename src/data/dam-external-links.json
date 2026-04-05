@@ -2045,12 +2045,20 @@
     {
       "label": "島根県 ダム諸量データ",
       "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
+    },
+    {
+      "label": "松江市上下水道局 貯水量・貯水率",
+      "url": "https://www.water.matsue.shimane.jp/shiryo/chosui-list.html"
     }
   ],
   "dam-1638": [
     {
       "label": "島根県 ダム諸量データ",
       "url": "https://www.pref.shimane.lg.jp/infra/river/dam/tyosui/"
+    },
+    {
+      "label": "松江市上下水道局 貯水量・貯水率",
+      "url": "https://www.water.matsue.shimane.jp/shiryo/chosui-list.html"
     }
   ],
   "dam-1643": [
@@ -3003,6 +3011,10 @@
     {
       "label": "福岡県 主要ダム貯水状況",
       "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
+    },
+    {
+      "label": "福岡地区水道企業団 水源情報",
+      "url": "https://www.f-suiki.or.jp/waterquality-info/water-info/"
     }
   ],
   "dam-2446": [
@@ -3029,6 +3041,10 @@
     {
       "label": "福岡県 主要ダム貯水状況",
       "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
+    },
+    {
+      "label": "福岡地区水道企業団 水源情報",
+      "url": "https://www.f-suiki.or.jp/waterquality-info/water-info/"
     }
   ],
   "dam-2455": [
@@ -3039,6 +3055,10 @@
     {
       "label": "福岡県 主要ダム貯水状況",
       "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
+    },
+    {
+      "label": "福岡地区水道企業団 水源情報",
+      "url": "https://www.f-suiki.or.jp/waterquality-info/water-info/"
     }
   ],
   "dam-2457": [
@@ -3049,6 +3069,10 @@
     {
       "label": "福岡県 主要ダム貯水状況",
       "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
+    },
+    {
+      "label": "福岡地区水道企業団 水源情報",
+      "url": "https://www.f-suiki.or.jp/waterquality-info/water-info/"
     }
   ],
   "dam-2459": [
@@ -3093,6 +3117,10 @@
     {
       "label": "福岡県 主要ダム貯水状況",
       "url": "https://www.pref.fukuoka.lg.jp/contents/damuchosui.html"
+    },
+    {
+      "label": "福岡地区水道企業団 水源情報",
+      "url": "https://www.f-suiki.or.jp/waterquality-info/water-info/"
     }
   ],
   "dam-2477": [
@@ -3111,12 +3139,20 @@
     {
       "label": "水資源機構 貯水状況",
       "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    },
+    {
+      "label": "福岡地区水道企業団 水源情報",
+      "url": "https://www.f-suiki.or.jp/waterquality-info/water-info/"
     }
   ],
   "dam-2484": [
     {
       "label": "水資源機構 貯水状況",
       "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    },
+    {
+      "label": "福岡地区水道企業団 水源情報",
+      "url": "https://www.f-suiki.or.jp/waterquality-info/water-info/"
     }
   ],
   "dam-2486": [
@@ -3127,6 +3163,10 @@
     {
       "label": "水資源機構 貯水状況",
       "url": "https://www.water.go.jp/honsya/honsya/suigen/junpo/"
+    },
+    {
+      "label": "福岡地区水道企業団 水源情報",
+      "url": "https://www.f-suiki.or.jp/waterquality-info/water-info/"
     }
   ],
   "dam-2510": [
@@ -3225,6 +3265,114 @@
     {
       "label": "佐賀県 主要ダム貯水状況",
       "url": "https://www.pref.saga.lg.jp/kiji00312382/index.html"
+    }
+  ],
+  "dam-2569": [
+    {
+      "label": "佐世保市水道局 貯水率",
+      "url": "https://www.city.sasebo.lg.jp/suidokyoku/suisou/chosuiritsu.html"
+    }
+  ],
+  "dam-2574": [
+    {
+      "label": "佐世保市水道局 貯水率",
+      "url": "https://www.city.sasebo.lg.jp/suidokyoku/suisou/chosuiritsu.html"
+    }
+  ],
+  "dam-2578": [
+    {
+      "label": "長崎市 ダム貯水量一覧",
+      "url": "https://www.city.nagasaki.lg.jp/page/53407.html"
+    }
+  ],
+  "dam-2579": [
+    {
+      "label": "長崎市 ダム貯水量一覧",
+      "url": "https://www.city.nagasaki.lg.jp/page/53407.html"
+    }
+  ],
+  "dam-2592": [
+    {
+      "label": "長崎市 ダム貯水量一覧",
+      "url": "https://www.city.nagasaki.lg.jp/page/53407.html"
+    }
+  ],
+  "dam-2593": [
+    {
+      "label": "長崎市 ダム貯水量一覧",
+      "url": "https://www.city.nagasaki.lg.jp/page/53407.html"
+    }
+  ],
+  "dam-2594": [
+    {
+      "label": "長崎市 ダム貯水量一覧",
+      "url": "https://www.city.nagasaki.lg.jp/page/53407.html"
+    }
+  ],
+  "dam-2599": [
+    {
+      "label": "長崎市 ダム貯水量一覧",
+      "url": "https://www.city.nagasaki.lg.jp/page/53407.html"
+    }
+  ],
+  "dam-2600": [
+    {
+      "label": "長崎市 ダム貯水量一覧",
+      "url": "https://www.city.nagasaki.lg.jp/page/53407.html"
+    }
+  ],
+  "dam-2601": [
+    {
+      "label": "長崎市 ダム貯水量一覧",
+      "url": "https://www.city.nagasaki.lg.jp/page/53407.html"
+    }
+  ],
+  "dam-2604": [
+    {
+      "label": "長崎市 ダム貯水量一覧",
+      "url": "https://www.city.nagasaki.lg.jp/page/53407.html"
+    }
+  ],
+  "dam-2606": [
+    {
+      "label": "長崎市 ダム貯水量一覧",
+      "url": "https://www.city.nagasaki.lg.jp/page/53407.html"
+    }
+  ],
+  "dam-2607": [
+    {
+      "label": "長崎市 ダム貯水量一覧",
+      "url": "https://www.city.nagasaki.lg.jp/page/53407.html"
+    }
+  ],
+  "dam-2608": [
+    {
+      "label": "長崎市 ダム貯水量一覧",
+      "url": "https://www.city.nagasaki.lg.jp/page/53407.html"
+    }
+  ],
+  "dam-2609": [
+    {
+      "label": "長崎市 ダム貯水量一覧",
+      "url": "https://www.city.nagasaki.lg.jp/page/53407.html"
+    }
+  ],
+  "dam-2610": [
+    {
+      "label": "長崎市 ダム貯水量一覧",
+      "url": "https://www.city.nagasaki.lg.jp/page/53407.html"
+    }
+  ],
+  "dam-2611": [
+    {
+      "label": "長崎市 ダム貯水量一覧",
+      "url": "https://www.city.nagasaki.lg.jp/page/53407.html"
+    }
+  ],
+  "dam-2616": [
+    {
+      "label": "長崎市 ダム貯水量一覧",
+      "url": "https://www.city.nagasaki.lg.jp/page/53407.html"
     }
   ],
   "dam-2659": [
