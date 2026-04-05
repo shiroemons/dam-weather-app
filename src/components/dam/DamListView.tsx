@@ -67,7 +67,7 @@ export default function DamListView({
   return (
     <>
       {/* デスクトップ: テーブル表示 */}
-      <div className="hidden md:block">
+      <div className="hidden overflow-hidden rounded-xl border border-border-primary bg-surface-primary md:block">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-surface-secondary text-left text-xs font-medium text-text-secondary">
@@ -296,7 +296,7 @@ export default function DamListView({
       </div>
 
       {/* モバイル: コンパクトカード表示 */}
-      <div className="divide-y divide-border-secondary md:hidden">
+      <div className="divide-y divide-border-secondary overflow-hidden rounded-xl border border-border-primary bg-surface-primary md:hidden">
         {sortedDams.map((dam) => {
           const damStorage = storageMap.get(dam.id);
           const storageRate = damStorage?.storageRate ?? null;
