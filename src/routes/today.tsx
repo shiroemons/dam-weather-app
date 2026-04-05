@@ -140,7 +140,15 @@ function TodayPage() {
 
       {isLoading && (
         <div className="mt-6">
-          <div className="h-8 animate-pulse rounded-full bg-surface-secondary" />
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {[...Array(4)].map((_, i) => (
+              <div
+                key={i}
+                className="h-20 animate-pulse rounded-xl border border-border-secondary bg-surface-primary"
+              />
+            ))}
+          </div>
+          <div className="mt-4 h-2.5 animate-pulse rounded-full border border-border-secondary bg-surface-primary" />
           <p className="mt-2 text-xs text-text-tertiary">
             読み込み中... ({loadedCount}/{PREFECTURES.length}都道府県)
           </p>
@@ -161,7 +169,12 @@ function TodayPage() {
                 >
                   <Icon className={`size-8 ${CATEGORY_ICON_COLORS[cat]}`} />
                   <div>
-                    <p className="text-2xl font-bold text-text-primary">{totalCounts[cat]}</p>
+                    <p className="text-2xl font-bold text-text-primary">
+                      {totalCounts[cat]}
+                      <span className="ml-1 text-xs font-normal text-text-tertiary">
+                        ({totalDams > 0 ? Math.round((totalCounts[cat] / totalDams) * 100) : 0}%)
+                      </span>
+                    </p>
                     <p className="text-xs text-text-secondary">{config.label}</p>
                   </div>
                 </div>

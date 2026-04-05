@@ -55,6 +55,7 @@ export default function RegionWeatherSummary({ region, counts, total }: Props) {
             <span key={category} className="flex items-center gap-1">
               <span className={`inline-block size-2 rounded-full ${BAR_COLORS[category]}`} />
               {count}
+              <span className="text-text-tertiary">({Math.round((count / total) * 100)}%)</span>
             </span>
           );
         })}
