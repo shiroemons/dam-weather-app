@@ -46,8 +46,10 @@ const TECH_STACK = [
 
 function AboutPage() {
   return (
-    <div className="mx-auto max-w-(--width-content) px-4 py-8 sm:px-6">
-      <h1 className="text-2xl font-bold text-text-primary font-display">このサイトについて</h1>
+    <div className="mx-auto max-w-(--width-content) px-4 py-8 sm:px-6 sm:py-12">
+      <h1 className="font-display text-2xl font-bold text-text-primary sm:text-3xl">
+        このサイトについて
+      </h1>
 
       <section className="mt-8">
         <h2 className="text-lg font-semibold text-text-primary">日本のダム天気とは</h2>

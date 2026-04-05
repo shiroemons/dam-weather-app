@@ -129,8 +129,10 @@ function TodayPage() {
   }, [weatherQueries]);
 
   return (
-    <div className="mx-auto max-w-(--width-content) px-4 py-8 sm:px-6">
-      <h1 className="text-2xl font-bold text-text-primary">今日のダム天気</h1>
+    <div className="mx-auto max-w-(--width-content) px-4 py-8 sm:px-6 sm:py-12">
+      <h1 className="font-display text-2xl font-bold text-text-primary sm:text-3xl">
+        今日のダム天気
+      </h1>
       <p className="mt-1 text-sm text-text-secondary">全国のダムの天気概況</p>
       {latestUpdatedAt && (
         <p className="mt-1 text-xs text-text-tertiary">

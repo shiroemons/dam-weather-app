@@ -199,7 +199,7 @@ function WatchlistDetailPage() {
 
   if (!list) {
     return (
-      <div className="mx-auto max-w-(--width-content) px-4 py-8 sm:px-6">
+      <div className="mx-auto max-w-(--width-content) px-4 py-8 sm:px-6 sm:py-12">
         <Link to="/watchlist" className="text-sm text-accent hover:text-accent">
           ← マイウォッチリスト
         </Link>
@@ -212,7 +212,7 @@ function WatchlistDetailPage() {
   }
 
   return (
-    <div className="mx-auto max-w-(--width-content) px-4 py-8 sm:px-6">
+    <div className="mx-auto max-w-(--width-content) px-4 py-8 sm:px-6 sm:py-12">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1 text-sm text-text-secondary">
         <Link to="/watchlist" className="hover:text-accent">
@@ -256,7 +256,9 @@ function WatchlistDetailPage() {
         ) : (
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-text-primary font-display">{list.name}</h1>
+              <h1 className="font-display text-2xl font-bold text-text-primary sm:text-3xl">
+                {list.name}
+              </h1>
               <button
                 type="button"
                 onClick={handleStartEdit}

@@ -68,16 +68,16 @@ export default function Footer() {
               都道府県
             </Link>
             <Link
-              to="/map"
-              className="text-xs text-text-tertiary transition-colors hover:text-accent"
-            >
-              マップ
-            </Link>
-            <Link
               to="/today"
               className="text-xs text-text-tertiary transition-colors hover:text-accent"
             >
               今日の天気
+            </Link>
+            <Link
+              to="/map"
+              className="text-xs text-text-tertiary transition-colors hover:text-accent"
+            >
+              マップ
             </Link>
             <Link
               to="/watchlist"

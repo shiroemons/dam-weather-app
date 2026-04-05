@@ -5,8 +5,8 @@ import ThemeSwitcher from "./ThemeSwitcher";
 
 const NAV_LINKS = [
   { to: "/prefecture", label: "都道府県" },
-  { to: "/map", label: "マップ" },
   { to: "/today", label: "今日の天気" },
+  { to: "/map", label: "マップ" },
   { to: "/watchlist", label: "マイリスト" },
   { to: "/glossary", label: "用語解説" },
   { to: "/about", label: "About" },

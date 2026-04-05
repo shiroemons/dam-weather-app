@@ -167,8 +167,8 @@ const damTypesForDisplay = DAM_TYPES.filter((t) => t.short !== "NA");
 
 function GlossaryPage() {
   return (
-    <div className="mx-auto max-w-(--width-content) px-4 py-8 sm:px-6">
-      <h1 className="text-2xl font-bold text-text-primary font-display">用語解説</h1>
+    <div className="mx-auto max-w-(--width-content) px-4 py-8 sm:px-6 sm:py-12">
+      <h1 className="font-display text-2xl font-bold text-text-primary sm:text-3xl">用語解説</h1>
 
       <p className="mt-3 leading-relaxed text-text-secondary">ダムに関する用語を解説します。</p>
 
