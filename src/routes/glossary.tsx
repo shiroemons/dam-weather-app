@@ -1,6 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Landmark, Target } from "lucide-react";
 
+import DamBasicInfoSection from "@/components/glossary/DamBasicInfoSection";
+import DamSuffixesSection from "@/components/glossary/DamSuffixesSection";
+import ManagementSection from "@/components/glossary/ManagementSection";
+import RiverInfoSection from "@/components/glossary/RiverInfoSection";
+import StorageMetricsSection from "@/components/glossary/StorageMetricsSection";
+import WaterSystemSection from "@/components/glossary/WaterSystemSection";
+import WeatherTermsSection from "@/components/glossary/WeatherTermsSection";
 import { SITE_NAME, SITE_URL } from "@/config/seo";
 import { DAM_TYPES } from "@/data/damTypes";
 import { DAM_PURPOSES } from "@/data/purposes";
@@ -8,7 +15,8 @@ import { DAM_PURPOSES } from "@/data/purposes";
 export const Route = createFileRoute("/glossary")({
   head: () => {
     const title = `用語解説 | ${SITE_NAME}`;
-    const description = "ダム型式や用途など、ダムに関する用語を解説します。";
+    const description =
+      "ダム型式、用途、管理区分、貯水率など、ダムと天気に関する用語を解説します。";
     return {
       meta: [
         { title },
@@ -166,7 +174,58 @@ function GlossaryPage() {
         ダムに関する用語を解説します。
       </p>
 
-      <section className="mt-8">
+      <nav className="mt-6 rounded-xl bg-white p-4 shadow-sm dark:bg-gray-800">
+        <h2 className="text-sm font-semibold text-gray-800 dark:text-gray-200">目次</h2>
+        <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5 text-sm">
+          <li>
+            <a href="#dam-types" className="text-sky-600 hover:underline dark:text-sky-400">
+              ダム型式
+            </a>
+          </li>
+          <li>
+            <a href="#purposes" className="text-sky-600 hover:underline dark:text-sky-400">
+              用途
+            </a>
+          </li>
+          <li>
+            <a href="#suffixes" className="text-sky-600 hover:underline dark:text-sky-400">
+              ダム名のサフィックス
+            </a>
+          </li>
+          <li>
+            <a href="#management" className="text-sky-600 hover:underline dark:text-sky-400">
+              管理区分
+            </a>
+          </li>
+          <li>
+            <a href="#basic-info" className="text-sky-600 hover:underline dark:text-sky-400">
+              ダムの基本情報
+            </a>
+          </li>
+          <li>
+            <a href="#storage-metrics" className="text-sky-600 hover:underline dark:text-sky-400">
+              貯水状況の指標
+            </a>
+          </li>
+          <li>
+            <a href="#water-system" className="text-sky-600 hover:underline dark:text-sky-400">
+              水系
+            </a>
+          </li>
+          <li>
+            <a href="#weather-terms" className="text-sky-600 hover:underline dark:text-sky-400">
+              天気予報の用語
+            </a>
+          </li>
+          <li>
+            <a href="#river-info" className="text-sky-600 hover:underline dark:text-sky-400">
+              川の防災情報
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <section id="dam-types" className="mt-8" style={{ scrollMarginTop: "5rem" }}>
         <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
           <Landmark className="h-5 w-5 text-emerald-500" />
           ダム型式
@@ -200,7 +259,7 @@ function GlossaryPage() {
         </div>
       </section>
 
-      <section className="mt-10">
+      <section id="purposes" className="mt-10" style={{ scrollMarginTop: "5rem" }}>
         <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
           <Target className="h-5 w-5 text-amber-500" />
           用途
@@ -233,6 +292,14 @@ function GlossaryPage() {
           ))}
         </div>
       </section>
+
+      <DamSuffixesSection />
+      <ManagementSection />
+      <DamBasicInfoSection />
+      <StorageMetricsSection />
+      <WaterSystemSection />
+      <WeatherTermsSection />
+      <RiverInfoSection />
     </div>
   );
 }
