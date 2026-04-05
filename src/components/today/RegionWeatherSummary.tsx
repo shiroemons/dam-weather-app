@@ -18,6 +18,14 @@ const BAR_COLORS: Record<WeatherCategory, string> = {
   default: "bg-gray-300",
 };
 
+const CATEGORY_LABELS: Record<WeatherCategory, string> = {
+  sunny: "晴れ",
+  cloudy: "曇り",
+  rain: "雨",
+  snow: "雪",
+  default: "その他",
+};
+
 const DISPLAY_ORDER: WeatherCategory[] = ["sunny", "cloudy", "rain", "snow", "default"];
 
 export default function RegionWeatherSummary({ region, counts, total }: Props) {
@@ -33,17 +41,21 @@ export default function RegionWeatherSummary({ region, counts, total }: Props) {
         <h3 className="text-sm font-semibold text-text-primary">{region}</h3>
         <span className="text-xs text-text-secondary">{total}基</span>
       </div>
-      <div className="mt-2 flex h-3 overflow-hidden rounded-full">
+      <div className="mt-2 flex h-3 rounded-full">
         {DISPLAY_ORDER.map((category) => {
           const count = counts[category];
           if (count === 0) return null;
+          const pct = (count / total) * 100;
           return (
             <div
               key={category}
-              className={`${BAR_COLORS[category]} transition-all`}
-              style={{ width: `${(count / total) * 100}%` }}
-              title={`${category}: ${count}基`}
-            />
+              className={`group/tooltip relative first:rounded-l-full last:rounded-r-full ${BAR_COLORS[category]} transition-all`}
+              style={{ width: `${pct}%` }}
+            >
+              <span className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover/tooltip:opacity-100 after:absolute after:left-1/2 after:top-full after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-800">
+                {CATEGORY_LABELS[category]}: {count}基 ({pct.toFixed(1)}%)
+              </span>
+            </div>
           );
         })}
       </div>

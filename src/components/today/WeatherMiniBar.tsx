@@ -22,7 +22,7 @@ export default function WeatherMiniBar({ counts, total, unit = "基" }: Props) {
 
   return (
     <div>
-      <div className="flex h-2 overflow-hidden rounded-full bg-surface-secondary">
+      <div className="flex h-2 rounded-full bg-surface-secondary">
         {DISPLAY_ORDER.map((category) => {
           const count = counts[category];
           if (count === 0) return null;
@@ -30,10 +30,14 @@ export default function WeatherMiniBar({ counts, total, unit = "基" }: Props) {
           return (
             <div
               key={category}
-              className={`${CATEGORY_CONFIG[category].bg} transition-all`}
+              className={`group/tooltip relative first:rounded-l-full last:rounded-r-full ${CATEGORY_CONFIG[category].bg} transition-all`}
               style={{ width: `${pct}%` }}
-              title={`${CATEGORY_CONFIG[category].label}: ${count}${unit} (${pct.toFixed(1)}%)`}
-            />
+            >
+              <span className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover/tooltip:opacity-100 after:absolute after:left-1/2 after:top-full after:-translate-x-1/2 after:border-4 after:border-transparent after:border-t-gray-800">
+                {CATEGORY_CONFIG[category].label}: {count}
+                {unit} ({pct.toFixed(1)}%)
+              </span>
+            </div>
           );
         })}
       </div>
