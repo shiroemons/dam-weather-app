@@ -219,7 +219,7 @@ function PrefecturePage() {
             {dams.length}基のダム{obs && totalCount > dams.length && ` / 全${totalCount}基`}
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-3 self-start md:gap-4 md:self-auto">
+        <div className="flex flex-wrap items-center gap-3 self-end md:gap-4 md:self-auto">
           {view === "grid" && <GroupBySelector value={group} onChange={setGroupBy} />}
           <ViewModeSelector value={view} onChange={setViewMode} />
           <FilterToggle enabled={obs} onChange={setObsOnly} />
