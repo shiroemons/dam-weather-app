@@ -26,6 +26,7 @@ import { PURPOSE_SHORT_MAP } from "@/data/purposes";
 import { getWeatherCardClasses } from "@/lib/weatherColors";
 import { getYahooRadarUrl } from "@/lib/externalLinks";
 import WatchlistAddButton from "@/components/watchlist/WatchlistAddButton";
+import ExternalLinksSection from "@/components/dam/ExternalLinksSection";
 import { SITE_NAME, SITE_URL } from "@/config/seo";
 import "leaflet/dist/leaflet.css";
 
@@ -343,6 +344,9 @@ function DamDetailPage() {
           </p>
         </div>
       )}
+
+      {/* External Links */}
+      <ExternalLinksSection damId={damId} />
 
       {/* Map */}
       <div className="mt-6">
