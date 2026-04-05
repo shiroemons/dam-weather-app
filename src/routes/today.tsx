@@ -157,7 +157,7 @@ function TodayPage() {
               return (
                 <div
                   key={cat}
-                  className={`flex items-center gap-3 rounded-xl bg-gradient-to-br p-4 ${WEATHER_CLASSES[cat]}`}
+                  className={`flex items-center gap-3 rounded-xl p-4 ${WEATHER_CLASSES[cat]}`}
                 >
                   <Icon className={`size-8 ${CATEGORY_ICON_COLORS[cat]}`} />
                   <div>

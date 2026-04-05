@@ -157,7 +157,7 @@ function DamDetailPage() {
           <div className="mt-3 h-32 animate-pulse rounded-2xl bg-gray-200 dark:bg-gray-700" />
         ) : damWeather ? (
           <div
-            className={`mt-3 rounded-2xl bg-gradient-to-br p-5 ${getWeatherCardClasses(damWeather.today.weatherCode)}`}
+            className={`mt-3 rounded-xl p-5 ${getWeatherCardClasses(damWeather.today.weatherCode)}`}
           >
             <div className="grid grid-cols-2 gap-4">
               <DayWeather forecast={damWeather.today} label="今日" />

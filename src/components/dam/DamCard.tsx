@@ -24,9 +24,7 @@ export default function DamCard({ dam, weather, storage, onRemove }: Props) {
   const yahooRadarUrl = getYahooRadarUrl(dam.latitude, dam.longitude);
 
   return (
-    <div
-      className={`rounded-2xl bg-gradient-to-br p-5 ${getWeatherCardClasses(weather?.today.weatherCode)}`}
-    >
+    <div className={`rounded-xl p-5 ${getWeatherCardClasses(weather?.today.weatherCode)}`}>
       {/* 1行目: ダム名 + 外部リンク */}
       <div className="flex items-center justify-between gap-2">
         <Link

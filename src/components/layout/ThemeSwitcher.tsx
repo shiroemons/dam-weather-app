@@ -61,7 +61,7 @@ export default function ThemeSwitcher() {
         ref={triggerRef}
         type="button"
         onClick={() => setOpen(!open)}
-        className="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-800"
+        className="rounded-md p-2 text-text-secondary transition-colors hover:bg-surface-secondary hover:text-text-primary"
         aria-label="テーマを切り替え"
         aria-haspopup="true"
         aria-expanded={open}
@@ -72,7 +72,7 @@ export default function ThemeSwitcher() {
       {open && (
         <div
           role="menu"
-          className="absolute right-0 mt-2 w-36 rounded-xl bg-white shadow-lg ring-1 ring-gray-200 py-1 dark:bg-gray-800 dark:ring-gray-700"
+          className="absolute right-0 mt-2 w-36 rounded-lg border border-border-primary bg-surface-elevated py-1 shadow-lg"
           onKeyDown={handleMenuKeyDown}
         >
           {OPTIONS.map(({ value, label, Icon }, index) => (
@@ -90,8 +90,8 @@ export default function ThemeSwitcher() {
               }}
               className={`flex w-full items-center gap-2 px-3 py-2 text-sm transition-colors ${
                 preference === value
-                  ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30"
-                  : "text-gray-700 dark:text-gray-300"
+                  ? "bg-accent-subtle text-accent"
+                  : "text-text-secondary hover:text-text-primary"
               }`}
             >
               <Icon className="size-4" />
