@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { getWeatherInfo, getWeatherIconUrl } from "@/lib/weatherCodes";
 
-type Size = "sm" | "md" | "lg";
+type Size = "sm" | "md" | "lg" | "xl";
 
 type Props = {
   code: number;
@@ -13,6 +13,7 @@ const SIZE_PX: Record<Size, number> = {
   sm: 24,
   md: 40,
   lg: 56,
+  xl: 80,
 };
 
 export default function WeatherIcon({ code, size = "md" }: Props) {

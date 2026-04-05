@@ -160,8 +160,8 @@ function DamDetailPage() {
             className={`mt-3 rounded-xl p-5 ${getWeatherCardClasses(damWeather.today.weatherCode)}`}
           >
             <div className="grid grid-cols-2 gap-4">
-              <DayWeather forecast={damWeather.today} label="今日" />
-              <DayWeather forecast={damWeather.tomorrow} label="明日" />
+              <DayWeather forecast={damWeather.today} label="今日" size="lg" />
+              <DayWeather forecast={damWeather.tomorrow} label="明日" size="lg" />
             </div>
             {weather?.updatedAt && (
               <p className="mt-3 text-right text-xs text-text-tertiary">
