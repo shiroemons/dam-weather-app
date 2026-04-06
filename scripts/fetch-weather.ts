@@ -294,14 +294,20 @@ async function main(): Promise<void> {
 
   let pendingBatches = batches;
   const MAX_ROUNDS = 3;
+  const MAX_RETRY_WAIT_MS = 180_000;
   let retryCooldownMs = 60_000;
 
   for (let round = 0; round < MAX_ROUNDS && pendingBatches.length > 0; round++) {
     if (round > 0) {
+      if (retryCooldownMs > MAX_RETRY_WAIT_MS) {
+        throw new Error(
+          `Retry-After ${retryCooldownMs / 1000}s exceeds maximum wait time of ${MAX_RETRY_WAIT_MS / 1000}s. Aborting.`,
+        );
+      }
       console.log(`\n=== Retry round ${round} (${pendingBatches.length} failed batches) ===`);
       console.log(`Waiting ${retryCooldownMs / 1000}s before retrying (from Retry-After)...`);
       await sleep(retryCooldownMs);
-      retryCooldownMs = 60_000; // reset for next round
+      retryCooldownMs = 60_000;
     }
 
     const failedBatches: typeof pendingBatches = [];
@@ -322,6 +328,7 @@ async function main(): Promise<void> {
         failedBatches.push(pendingBatches[b]);
         if (err instanceof RateLimitError) {
           retryCooldownMs = err.retryAfterMs;
+          console.warn(`  429 Rate limited. Retry-After: ${retryCooldownMs / 1000}s`);
         }
         if (b + 1 < pendingBatches.length) {
           await sleep(BATCH_DELAY_MS);
