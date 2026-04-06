@@ -38,7 +38,10 @@ export default function DayWeather({ forecast, label, size = "sm" }: Props) {
         {label}
       </p>
       <div className="flex items-center justify-between">
-        <WeatherIcon code={forecast.weatherCode} size="md" />
+        <div className="flex flex-col items-center">
+          <WeatherIcon code={forecast.weatherCode} size="md" />
+          <span className="mt-1 text-[10px] text-text-secondary">{forecast.weather}</span>
+        </div>
         <div className="text-right">
           <p className="font-mono text-sm font-bold text-text-primary">{maxTemp}</p>
           <p className="font-mono text-[11px] text-text-tertiary">{minTemp}</p>
