@@ -6,7 +6,7 @@ type Props = {
 export default function FilterToggle({ enabled, onChange }: Props) {
   return (
     <div className="flex items-center gap-2">
-      <span className="text-sm text-text-secondary">観測所情報あり</span>
+      <span className="text-sm text-text-secondary">観測所</span>
       <button
         type="button"
         role="switch"

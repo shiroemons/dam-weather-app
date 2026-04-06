@@ -8,7 +8,7 @@ const totalStorageRate = PREFECTURES.reduce((sum, p) => sum + p.storageRateCount
 
 const STATS = [
   { label: "ダム数", value: totalDams, unit: "基" },
-  { label: "観測所情報あり", value: totalObs, unit: "基" },
+  { label: "観測所", value: totalObs, unit: "基" },
   { label: "貯水率あり", value: totalStorageRate, unit: "基" },
 ];
 
