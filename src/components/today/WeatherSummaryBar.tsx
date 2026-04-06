@@ -21,7 +21,7 @@ export default function WeatherSummaryBar({ counts, total, unit = "基" }: Props
 
   return (
     <div>
-      <div className="flex h-8 rounded-full">
+      <div className="flex h-8 overflow-hidden rounded-full">
         {DISPLAY_ORDER.map((category) => {
           const count = counts[category];
           if (count === 0) return null;
@@ -29,7 +29,7 @@ export default function WeatherSummaryBar({ counts, total, unit = "基" }: Props
           return (
             <div
               key={category}
-              className={`group/tooltip relative first:rounded-l-full last:rounded-r-full ${CATEGORY_CONFIG[category].bg} flex items-center justify-center text-xs font-medium text-white transition-all`}
+              className={`group/tooltip relative ${CATEGORY_CONFIG[category].bg} flex items-center justify-center text-xs font-medium text-white transition-all`}
               style={{ width: `${pct}%` }}
             >
               {pct >= 8 && CATEGORY_CONFIG[category].label}
