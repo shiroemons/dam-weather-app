@@ -64,7 +64,7 @@ export default function HeroSection() {
         {/* 統計情報（旧StatsSection統合） */}
         <div className="mt-12 grid grid-cols-3 gap-6 border-t border-white/20 pt-8 sm:gap-8">
           {STATS.map(({ label, value, unit }) => (
-            <div key={label}>
+            <div key={label} className="text-center">
               <dd className="font-mono text-2xl font-bold text-white sm:text-3xl">
                 {value.toLocaleString()}
                 <span className="ml-1 text-sm font-medium text-sky-200">{unit}</span>
