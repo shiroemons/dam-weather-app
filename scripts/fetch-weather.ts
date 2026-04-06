@@ -272,39 +272,65 @@ async function main(): Promise<void> {
 
   // Fetch weather data per unique coordinate batch
   const weatherByCoordKey = new Map<string, OpenMeteoResponse>();
-  let batchIndex = 0;
 
+  // Build initial batch list
+  const batches: { index: number; coords: CoordGroup[] }[] = [];
   for (let i = 0; i < coordGroups.length; i += BATCH_SIZE) {
-    const batch = coordGroups.slice(i, i + BATCH_SIZE);
-    batchIndex++;
-    console.log(
-      `\nBatch ${batchIndex}: fetching ${batch.length} coordinates (index ${i}–${i + batch.length - 1})...`,
-    );
+    batches.push({ index: i, coords: coordGroups.slice(i, i + BATCH_SIZE) });
+  }
 
-    let responses: OpenMeteoResponse[];
-    try {
-      responses = await fetchBatch(batch);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      console.error(`  Batch ${batchIndex} failed: ${message}`);
-      if (i + BATCH_SIZE < coordGroups.length) {
+  let pendingBatches = batches;
+  const MAX_ROUNDS = 3;
+  const RETRY_COOLDOWN_MS = 60_000;
+
+  for (let round = 0; round < MAX_ROUNDS && pendingBatches.length > 0; round++) {
+    if (round > 0) {
+      console.log(`\n=== Retry round ${round} (${pendingBatches.length} failed batches) ===`);
+      console.log(`Waiting ${RETRY_COOLDOWN_MS / 1000}s before retrying...`);
+      await sleep(RETRY_COOLDOWN_MS);
+    }
+
+    const failedBatches: typeof pendingBatches = [];
+
+    for (let b = 0; b < pendingBatches.length; b++) {
+      const { index, coords } = pendingBatches[b];
+      const batchNum = Math.floor(index / BATCH_SIZE) + 1;
+      console.log(
+        `\nBatch ${batchNum}: fetching ${coords.length} coordinates (index ${index}–${index + coords.length - 1})...`,
+      );
+
+      let responses: OpenMeteoResponse[];
+      try {
+        responses = await fetchBatch(coords);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        console.error(`  Batch ${batchNum} failed: ${message}`);
+        failedBatches.push(pendingBatches[b]);
+        if (b + 1 < pendingBatches.length) {
+          await sleep(BATCH_DELAY_MS);
+        }
+        continue;
+      }
+
+      for (let j = 0; j < coords.length; j++) {
+        const group = coords[j];
+        const res = responses[j];
+        if (!group || !res) continue;
+        weatherByCoordKey.set(coordKey(group.lat, group.lng), res);
+      }
+
+      console.log(`  ${responses.length} responses processed`);
+
+      if (b + 1 < pendingBatches.length) {
         await sleep(BATCH_DELAY_MS);
       }
-      continue;
     }
 
-    for (let j = 0; j < batch.length; j++) {
-      const group = batch[j];
-      const res = responses[j];
-      if (!group || !res) continue;
-      weatherByCoordKey.set(coordKey(group.lat, group.lng), res);
-    }
+    pendingBatches = failedBatches;
+  }
 
-    console.log(`  ${responses.length} responses processed`);
-
-    if (i + BATCH_SIZE < coordGroups.length) {
-      await sleep(BATCH_DELAY_MS);
-    }
+  if (pendingBatches.length > 0) {
+    console.error(`\n${pendingBatches.length} batches failed after ${MAX_ROUNDS} rounds`);
   }
 
   // Map weather responses back to each dam via coordinate key
