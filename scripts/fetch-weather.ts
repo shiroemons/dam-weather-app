@@ -145,6 +145,13 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function shuffleArray<T>(array: T[]): void {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
 function buildDayForecast(daily: OpenMeteoDaily, index: number): DayForecast {
   const code = daily.weather_code[index] ?? 0;
   return {
@@ -254,6 +261,8 @@ async function main(): Promise<void> {
 
   // Group dams by rounded coordinates
   const allCoordGroups = groupByCoord(allDams);
+  // Shuffle to avoid rate-limit failures concentrating on specific prefectures
+  shuffleArray(allCoordGroups);
   console.log(`Unique coordinates: ${allCoordGroups.length} (from ${allDams.length} dams)`);
 
   const coordGroups = limit !== undefined ? allCoordGroups.slice(0, limit) : allCoordGroups;

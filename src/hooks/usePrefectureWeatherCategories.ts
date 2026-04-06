@@ -1,7 +1,7 @@
 import { useQueries } from "@tanstack/react-query";
 
 import { PREFECTURES } from "@/data/prefectures";
-import { getWeatherCategory } from "@/lib/weatherColors";
+import { getDistribution } from "@/lib/weatherUtils";
 import type { WeatherCategory } from "@/lib/weatherColors";
 import type { PrefectureWeather } from "@/types/weather";
 
@@ -13,22 +13,8 @@ export type PrefectureWeatherSummary = {
   total: number;
 };
 
-function computeCountsFromDams(weather: PrefectureWeather): Record<WeatherCategory, number> {
-  const counts: Record<WeatherCategory, number> = {
-    sunny: 0,
-    cloudy: 0,
-    rain: 0,
-    snow: 0,
-    default: 0,
-  };
-  for (const dam of weather.dams) {
-    counts[getWeatherCategory(dam.today.weatherCode)]++;
-  }
-  return counts;
-}
-
 function computeWeatherSummary(weather: PrefectureWeather): PrefectureWeatherSummary {
-  const counts = weather.distribution ?? computeCountsFromDams(weather);
+  const counts = getDistribution(weather);
   const total = Object.values(counts).reduce((a, b) => a + b, 0);
 
   let dominant: WeatherCategory = "default";

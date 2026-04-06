@@ -7,6 +7,7 @@ import { WEATHER_CLASSES } from "@/lib/weatherColors";
 import WeatherSummaryBar from "@/components/today/WeatherSummaryBar";
 import RegionWeatherSummary from "@/components/today/RegionWeatherSummary";
 import { SITE_NAME, SITE_URL } from "@/config/seo";
+import { getDistribution } from "@/lib/weatherUtils";
 import type { WeatherCategory } from "@/lib/weatherColors";
 import type { PrefectureWeather } from "@/types/weather";
 
@@ -76,8 +77,9 @@ function TodayPage() {
   const totalCounts = useMemo(() => {
     const counts = emptyCounts();
     for (const query of weatherQueries) {
-      if (query.data?.distribution) {
-        for (const [cat, count] of Object.entries(query.data.distribution)) {
+      if (query.data) {
+        const dist = getDistribution(query.data);
+        for (const [cat, count] of Object.entries(dist)) {
           counts[cat as WeatherCategory] += count;
         }
       }
@@ -98,8 +100,9 @@ function TodayPage() {
       const counts = emptyCounts();
       for (const slug of regionPrefSlugs) {
         const pw = prefWeatherMap.get(slug);
-        if (pw?.distribution) {
-          for (const [cat, count] of Object.entries(pw.distribution)) {
+        if (pw) {
+          const dist = getDistribution(pw);
+          for (const [cat, count] of Object.entries(dist)) {
             counts[cat as WeatherCategory] += count;
           }
         }

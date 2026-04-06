@@ -19,6 +19,7 @@ import type { GroupByMode } from "@/components/dam/DamGroupedGrid";
 import ErrorFallback from "@/components/common/ErrorFallback";
 import { SITE_NAME, SITE_URL } from "@/config/seo";
 import WeatherSummaryBar from "@/components/today/WeatherSummaryBar";
+import { getDistribution } from "@/lib/weatherUtils";
 import type { ViewMode, SortField, SortDirection } from "@/lib/sortDams";
 
 export const Route = createFileRoute("/prefecture/$prefectureSlug")({
@@ -191,6 +192,7 @@ function PrefecturePage() {
     isError: weatherError,
     refetch,
   } = useWeather(prefectureSlug);
+  const distribution = useMemo(() => (weather ? getDistribution(weather) : null), [weather]);
   const { data: storageData } = useStorage(prefectureSlug);
 
   if (!prefecture) {
@@ -221,11 +223,11 @@ function PrefecturePage() {
       </div>
 
       {/* 天気分布（フィルタ・表示切替に依存しないのでここに配置）*/}
-      {!weatherLoading && !weatherError && weather?.distribution && (
+      {!weatherLoading && !weatherError && distribution && (
         <div className="mt-4 rounded-xl border border-border-primary bg-surface-primary p-4">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-sm font-semibold text-text-primary">天気分布</h2>
-            {weather.updatedAt && (
+            {weather?.updatedAt && (
               <span className="text-xs text-text-tertiary">
                 更新:{" "}
                 {new Date(weather.updatedAt).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })}
@@ -233,8 +235,8 @@ function PrefecturePage() {
             )}
           </div>
           <WeatherSummaryBar
-            counts={weather.distribution}
-            total={Object.values(weather.distribution).reduce((a, b) => a + b, 0)}
+            counts={distribution}
+            total={Object.values(distribution).reduce((a, b) => a + b, 0)}
           />
         </div>
       )}
