@@ -83,6 +83,14 @@ interface CoordGroup {
   damIds: string[];
 }
 
+class RateLimitError extends Error {
+  retryAfterMs: number;
+  constructor(message: string, retryAfterMs: number) {
+    super(message);
+    this.retryAfterMs = retryAfterMs;
+  }
+}
+
 // ---------------------------------------------------------------------------
 // WMO weather code helpers
 // ---------------------------------------------------------------------------
@@ -236,6 +244,11 @@ async function fetchBatch(coords: CoordGroup[], attempt = 1): Promise<OpenMeteoR
       await sleep(waitMs);
       return fetchBatch(coords, attempt + 1);
     }
+    if (res.status === 429) {
+      const retryAfter = res.headers.get("Retry-After");
+      const retryAfterMs = retryAfter ? parseInt(retryAfter) * 1000 : 60_000;
+      throw new RateLimitError(message, retryAfterMs);
+    }
     throw new Error(message);
   }
 
@@ -281,13 +294,14 @@ async function main(): Promise<void> {
 
   let pendingBatches = batches;
   const MAX_ROUNDS = 3;
-  const RETRY_COOLDOWN_MS = 60_000;
+  let retryCooldownMs = 60_000;
 
   for (let round = 0; round < MAX_ROUNDS && pendingBatches.length > 0; round++) {
     if (round > 0) {
       console.log(`\n=== Retry round ${round} (${pendingBatches.length} failed batches) ===`);
-      console.log(`Waiting ${RETRY_COOLDOWN_MS / 1000}s before retrying...`);
-      await sleep(RETRY_COOLDOWN_MS);
+      console.log(`Waiting ${retryCooldownMs / 1000}s before retrying (from Retry-After)...`);
+      await sleep(retryCooldownMs);
+      retryCooldownMs = 60_000; // reset for next round
     }
 
     const failedBatches: typeof pendingBatches = [];
@@ -306,6 +320,9 @@ async function main(): Promise<void> {
         const message = err instanceof Error ? err.message : String(err);
         console.error(`  Batch ${batchNum} failed: ${message}`);
         failedBatches.push(pendingBatches[b]);
+        if (err instanceof RateLimitError) {
+          retryCooldownMs = err.retryAfterMs;
+        }
         if (b + 1 < pendingBatches.length) {
           await sleep(BATCH_DELAY_MS);
         }
