@@ -25,10 +25,12 @@ const OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast";
 // Constants
 // ---------------------------------------------------------------------------
 
-const BATCH_SIZE = 500;
-const MAX_URL_LENGTH = 8000;
-const MAX_RETRIES = 5;
-const BATCH_DELAY_MS = 15_000;
+const BATCH_SIZE = 200;
+const MAX_RETRIES = 2; // 1 initial + 1 retry
+const BATCH_DELAY_MS = 2_000; // 2s between batches
+const FETCH_TIMEOUT_MS = 30_000; // 30s per-request timeout
+const MAX_RETRY_WAIT_MS = 30_000; // cap Retry-After at 30s
+const MAX_CONSECUTIVE_FAILURES = 3; // circuit breaker threshold
 const COORD_PRECISION = 2;
 
 // ---------------------------------------------------------------------------
@@ -161,13 +163,6 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function shuffleArray<T>(array: T[]): void {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-}
-
 function buildDayForecast(daily: OpenMeteoDaily, index: number): DayForecast {
   const code = daily.weather_code[index] ?? 0;
   return {
@@ -211,69 +206,90 @@ function groupByCoord(dams: DamEntry[]): CoordGroup[] {
 // Open-Meteo fetch with retry
 // ---------------------------------------------------------------------------
 
-function buildUrl(coords: CoordGroup[]): string {
-  const latitudes = coords.map((c) => c.lat).join(",");
-  const longitudes = coords.map((c) => c.lng).join(",");
-  const daily =
-    "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max";
-  return `${OPEN_METEO_URL}?latitude=${latitudes}&longitude=${longitudes}&daily=${daily}&timezone=Asia%2FTokyo&forecast_days=2`;
-}
-
 async function fetchBatch(coords: CoordGroup[], attempt = 1): Promise<OpenMeteoResponse[]> {
-  const url = buildUrl(coords);
+  const body = {
+    latitude: coords.map((c) => c.lat),
+    longitude: coords.map((c) => c.lng),
+    daily: [
+      "weather_code",
+      "temperature_2m_max",
+      "temperature_2m_min",
+      "precipitation_sum",
+      "precipitation_probability_max",
+    ],
+    timezone: ["Asia/Tokyo"],
+    forecast_days: 2,
+  };
 
-  if (url.length > MAX_URL_LENGTH) {
-    // URL が長すぎる場合は半分に分割して再帰的に取得
-    const mid = Math.ceil(coords.length / 2);
-    console.warn(`  URL too long (${url.length} chars), splitting into 2 sub-batches`);
-    const [a, b] = await Promise.all([
-      fetchBatch(coords.slice(0, mid)),
-      fetchBatch(coords.slice(mid)),
-    ]);
-    return [...a, ...b];
+  console.log(`  POST ${coords.length} coordinates (attempt ${attempt}/${MAX_RETRIES})`);
+
+  let res: Response;
+  try {
+    res = await fetch(OPEN_METEO_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    if (attempt < MAX_RETRIES) {
+      console.warn(`  Request failed: ${message}. Waiting 5s before retry...`);
+      await sleep(5_000);
+      return fetchBatch(coords, attempt + 1);
+    }
+    throw new Error(`Request failed after ${MAX_RETRIES} attempts: ${message}`);
   }
 
-  console.log(`  URL length: ${url.length} chars (${coords.length} coords)`);
-  const res = await fetch(url);
   if (!res.ok) {
     let reason = "";
     if (res.status === 429) {
       try {
-        const body = (await res.json()) as { error?: boolean; reason?: string };
-        reason = body.reason ?? "";
+        const errBody = (await res.json()) as { error?: boolean; reason?: string };
+        reason = errBody.reason ?? "";
       } catch {
         // ignore parse errors
       }
     }
+
     const message = reason
       ? `HTTP ${res.status} ${res.statusText} (${reason})`
       : `HTTP ${res.status} ${res.statusText}`;
-    const isDaily = reason.toLowerCase().includes("daily");
-    if (res.status === 429 && isDaily) {
-      console.error(`  Daily API limit exceeded. Stopping retries.`);
-      throw new RateLimitError(message, 0, true);
-    }
-    if (attempt < MAX_RETRIES) {
-      let waitMs: number;
-      if (res.status === 429) {
-        const retryAfter = res.headers.get("Retry-After");
-        waitMs = retryAfter ? parseInt(retryAfter) * 1000 : 60_000;
-        console.warn(`  429 Rate limited: ${reason || "unknown reason"}`);
-        console.warn(
-          `  Waiting ${waitMs / 1000}s (Retry-After: ${retryAfter ?? "none, default 60s"})`,
-        );
-      } else {
-        waitMs = BATCH_DELAY_MS * Math.pow(2, attempt - 1);
-        console.warn(`  Retry ${attempt}/${MAX_RETRIES - 1}: ${message} (wait ${waitMs}ms)`);
-      }
-      await sleep(waitMs);
-      return fetchBatch(coords, attempt + 1);
-    }
+
     if (res.status === 429) {
+      const isDaily = reason.toLowerCase().includes("daily");
+      if (isDaily) {
+        console.error(`  Daily API limit exceeded. Stopping retries.`);
+        throw new RateLimitError(message, 0, true);
+      }
+
       const retryAfter = res.headers.get("Retry-After");
       const retryAfterMs = retryAfter ? parseInt(retryAfter) * 1000 : 60_000;
+
+      if (retryAfterMs > MAX_RETRY_WAIT_MS) {
+        console.error(
+          `  Retry-After ${retryAfterMs / 1000}s exceeds cap of ${MAX_RETRY_WAIT_MS / 1000}s. Aborting.`,
+        );
+        throw new RateLimitError(message, retryAfterMs);
+      }
+
+      if (attempt < MAX_RETRIES) {
+        console.warn(
+          `  429 Rate limited: ${reason || "unknown reason"}. Waiting ${retryAfterMs / 1000}s...`,
+        );
+        await sleep(retryAfterMs);
+        return fetchBatch(coords, attempt + 1);
+      }
+
       throw new RateLimitError(message, retryAfterMs);
     }
+
+    if (attempt < MAX_RETRIES) {
+      console.warn(`  Retry ${attempt}/${MAX_RETRIES}: ${message}. Waiting 5s...`);
+      await sleep(5_000);
+      return fetchBatch(coords, attempt + 1);
+    }
+
     throw new Error(message);
   }
 
@@ -282,94 +298,90 @@ async function fetchBatch(coords: CoordGroup[], attempt = 1): Promise<OpenMeteoR
 }
 
 // ---------------------------------------------------------------------------
-// Main
+// Circuit-breaker fetch loop
 // ---------------------------------------------------------------------------
 
-function buildBatches(coordGroups: CoordGroup[]): { index: number; coords: CoordGroup[] }[] {
-  const batches: { index: number; coords: CoordGroup[] }[] = [];
-  for (let i = 0; i < coordGroups.length; i += BATCH_SIZE) {
-    batches.push({ index: i, coords: coordGroups.slice(i, i + BATCH_SIZE) });
-  }
-  return batches;
+interface FetchLoopResult {
+  dailyLimitHit: boolean;
+  failedCoords: CoordGroup[];
 }
 
-async function fetchWithRounds(
-  initialBatches: { index: number; coords: CoordGroup[] }[],
+async function fetchLoop(
+  coordGroups: CoordGroup[],
   weatherByCoordKey: Map<string, OpenMeteoResponse>,
-): Promise<{ dailyLimitHit: boolean }> {
-  let pendingBatches = initialBatches;
-  const MAX_ROUNDS = 3;
-  const MAX_RETRY_WAIT_MS = 180_000;
-  let retryCooldownMs = 60_000;
+): Promise<FetchLoopResult> {
+  const batches: CoordGroup[][] = [];
+  for (let i = 0; i < coordGroups.length; i += BATCH_SIZE) {
+    batches.push(coordGroups.slice(i, i + BATCH_SIZE));
+  }
 
-  for (let round = 0; round < MAX_ROUNDS && pendingBatches.length > 0; round++) {
-    if (round > 0) {
-      if (retryCooldownMs > MAX_RETRY_WAIT_MS) {
-        throw new Error(
-          `Retry-After ${retryCooldownMs / 1000}s exceeds maximum wait time of ${MAX_RETRY_WAIT_MS / 1000}s. Aborting.`,
+  const failedCoords: CoordGroup[] = [];
+  let consecutiveFailures = 0;
+  let dailyLimitHit = false;
+
+  for (let b = 0; b < batches.length; b++) {
+    const coords = batches[b];
+    const batchNum = b + 1;
+    const startIndex = b * BATCH_SIZE;
+    console.log(
+      `\nBatch ${batchNum}/${batches.length}: fetching ${coords.length} coordinates (index ${startIndex}–${startIndex + coords.length - 1})...`,
+    );
+
+    let responses: OpenMeteoResponse[];
+    try {
+      responses = await fetchBatch(coords);
+      consecutiveFailures = 0;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error(`  Batch ${batchNum} failed: ${message}`);
+
+      if (err instanceof RateLimitError && err.daily) {
+        dailyLimitHit = true;
+        for (let r = b; r < batches.length; r++) {
+          failedCoords.push(...(batches[r] ?? []));
+        }
+        break;
+      }
+
+      consecutiveFailures++;
+      failedCoords.push(...coords);
+
+      if (consecutiveFailures >= MAX_CONSECUTIVE_FAILURES) {
+        console.error(
+          `  ${MAX_CONSECUTIVE_FAILURES} consecutive failures — API appears down, aborting.`,
         );
-      }
-      console.log(`\n=== Retry round ${round} (${pendingBatches.length} failed batches) ===`);
-      console.log(`Waiting ${retryCooldownMs / 1000}s before retrying (from Retry-After)...`);
-      await sleep(retryCooldownMs);
-      retryCooldownMs = 60_000;
-    }
-
-    const failedBatches: typeof pendingBatches = [];
-
-    for (let b = 0; b < pendingBatches.length; b++) {
-      const { index, coords } = pendingBatches[b];
-      const batchNum = Math.floor(index / BATCH_SIZE) + 1;
-      console.log(
-        `\nBatch ${batchNum}: fetching ${coords.length} coordinates (index ${index}–${index + coords.length - 1})...`,
-      );
-
-      let responses: OpenMeteoResponse[];
-      try {
-        responses = await fetchBatch(coords);
-      } catch (err) {
-        const message = err instanceof Error ? err.message : String(err);
-        console.error(`  Batch ${batchNum} failed: ${message}`);
-        if (err instanceof RateLimitError && err.daily) {
-          // Daily limit — add remaining batches as failed and stop
-          for (let r = b; r < pendingBatches.length; r++) {
-            failedBatches.push(pendingBatches[r]);
-          }
-          return { dailyLimitHit: true };
+        for (let r = b + 1; r < batches.length; r++) {
+          failedCoords.push(...(batches[r] ?? []));
         }
-        failedBatches.push(pendingBatches[b]);
-        if (err instanceof RateLimitError) {
-          retryCooldownMs = err.retryAfterMs;
-          console.warn(`  429 Rate limited. Retry-After: ${retryCooldownMs / 1000}s`);
-        }
-        if (b + 1 < pendingBatches.length) {
-          await sleep(BATCH_DELAY_MS);
-        }
-        continue;
+        break;
       }
 
-      for (let j = 0; j < coords.length; j++) {
-        const group = coords[j];
-        const res = responses[j];
-        if (!group || !res) continue;
-        weatherByCoordKey.set(coordKey(group.lat, group.lng), res);
-      }
-
-      console.log(`  ${responses.length} responses processed`);
-
-      if (b + 1 < pendingBatches.length) {
+      if (b + 1 < batches.length) {
         await sleep(BATCH_DELAY_MS);
       }
+      continue;
     }
 
-    pendingBatches = failedBatches;
+    for (let j = 0; j < coords.length; j++) {
+      const group = coords[j];
+      const res = responses[j];
+      if (!group || !res) continue;
+      weatherByCoordKey.set(coordKey(group.lat, group.lng), res);
+    }
+
+    console.log(`  ${responses.length} responses processed`);
+
+    if (b + 1 < batches.length) {
+      await sleep(BATCH_DELAY_MS);
+    }
   }
 
-  if (pendingBatches.length > 0) {
-    console.error(`\n${pendingBatches.length} batches failed after ${MAX_ROUNDS} rounds`);
-  }
-  return { dailyLimitHit: false };
+  return { dailyLimitHit, failedCoords };
 }
+
+// ---------------------------------------------------------------------------
+// Merge retry results into existing prefecture JSON files
+// ---------------------------------------------------------------------------
 
 function mergeRetryResults(
   weatherByCoordKey: Map<string, OpenMeteoResponse>,
@@ -439,6 +451,10 @@ function mergeRetryResults(
   }
 }
 
+// ---------------------------------------------------------------------------
+// --retry mode: reprocess _failed.json
+// ---------------------------------------------------------------------------
+
 async function retryFailedCoords(): Promise<void> {
   if (!fs.existsSync(FAILED_JSON_PATH)) {
     console.log("No _failed.json found. Nothing to retry.");
@@ -457,16 +473,15 @@ async function retryFailedCoords(): Promise<void> {
   console.log(`Retrying ${failedCoords.length} failed coordinates (saved at ${raw.savedAt})`);
 
   const weatherByCoordKey = new Map<string, OpenMeteoResponse>();
-  const batches = buildBatches(failedCoords);
-  const { dailyLimitHit } = await fetchWithRounds(batches, weatherByCoordKey);
+  const { dailyLimitHit } = await fetchLoop(failedCoords, weatherByCoordKey);
 
   if (dailyLimitHit) {
     console.error("Daily API limit exceeded. Cannot retry until tomorrow (UTC 0:00).");
   }
 
   const stillFailed = failedCoords.filter((g) => !weatherByCoordKey.has(coordKey(g.lat, g.lng)));
-
   const successCount = failedCoords.length - stillFailed.length;
+
   if (successCount > 0) {
     const successfulGroups = failedCoords.filter((g) =>
       weatherByCoordKey.has(coordKey(g.lat, g.lng)),
@@ -492,8 +507,11 @@ async function retryFailedCoords(): Promise<void> {
   console.log(`Still failing: ${stillFailed.length}`);
 }
 
+// ---------------------------------------------------------------------------
+// Main
+// ---------------------------------------------------------------------------
+
 async function main(): Promise<void> {
-  // Parse arguments
   const limitArg = process.argv.indexOf("--limit");
   const limit = limitArg !== -1 ? parseInt(process.argv[limitArg + 1]) : undefined;
   const retryFlag = process.argv.includes("--retry");
@@ -513,10 +531,7 @@ async function main(): Promise<void> {
   const allDams = JSON.parse(fs.readFileSync(DAMS_JSON_PATH, "utf-8")) as DamEntry[];
   console.log(`Loaded ${allDams.length} dams from dams.json`);
 
-  // Group dams by rounded coordinates
   const allCoordGroups = groupByCoord(allDams);
-  // Shuffle to avoid rate-limit failures concentrating on specific prefectures
-  shuffleArray(allCoordGroups);
   console.log(`Unique coordinates: ${allCoordGroups.length} (from ${allDams.length} dams)`);
 
   const coordGroups = limit !== undefined ? allCoordGroups.slice(0, limit) : allCoordGroups;
@@ -524,20 +539,15 @@ async function main(): Promise<void> {
     console.log(`Limiting to ${coordGroups.length} unique coordinates (--limit ${limit})`);
   }
 
-  // Fetch weather data per unique coordinate batch
   const weatherByCoordKey = new Map<string, OpenMeteoResponse>();
-
-  const batches = buildBatches(coordGroups);
-  const { dailyLimitHit } = await fetchWithRounds(batches, weatherByCoordKey);
+  const { failedCoords } = await fetchLoop(coordGroups, weatherByCoordKey);
 
   // Map weather responses back to each dam via coordinate key
   const damWeatherMap = new Map<string, DamWeather>();
-
   for (const dam of allDams) {
     const key = coordKey(dam.latitude, dam.longitude);
     const res = weatherByCoordKey.get(key);
     if (!res) continue;
-
     damWeatherMap.set(dam.id, {
       damId: dam.id,
       today: buildDayForecast(res.daily, 0),
@@ -576,44 +586,6 @@ async function main(): Promise<void> {
     console.log(`  ${dams.length} dams saved to ${prefectureSlug}.json`);
   }
 
-  // Auto-retry failed coordinates
-  let failedCoords = coordGroups.filter((g) => !weatherByCoordKey.has(coordKey(g.lat, g.lng)));
-  const initialFailedCount = failedCoords.length;
-  let retryRecoveredCount = 0;
-
-  if (failedCoords.length > 0 && dailyLimitHit) {
-    console.warn(
-      "\nDaily API limit exceeded. Skipping auto-retry (resets at UTC 0:00 / JST 9:00).",
-    );
-  }
-
-  if (failedCoords.length > 0 && !dailyLimitHit) {
-    const cooldownMs = 60_000;
-    console.log(`\n=== Auto-retry ===`);
-    console.log(`Failed coordinates: ${failedCoords.length}/${coordGroups.length}`);
-    console.log(`Waiting ${cooldownMs / 1000}s before retrying (rate-limit cooldown)...`);
-    await sleep(cooldownMs);
-    console.log(`Retrying failed coordinates...`);
-
-    const retryWeather = new Map<string, OpenMeteoResponse>();
-    const retryBatches = buildBatches(failedCoords);
-    await fetchWithRounds(retryBatches, retryWeather);
-
-    const successfulGroups = failedCoords.filter((g) => retryWeather.has(coordKey(g.lat, g.lng)));
-    retryRecoveredCount = successfulGroups.length;
-
-    if (successfulGroups.length > 0) {
-      mergeRetryResults(retryWeather, successfulGroups);
-    }
-
-    failedCoords = failedCoords.filter((g) => !retryWeather.has(coordKey(g.lat, g.lng)));
-
-    console.log(`\nAuto-retry result: ${retryRecoveredCount}/${initialFailedCount} recovered`);
-    if (failedCoords.length > 0) {
-      console.warn(`  ${failedCoords.length} coordinates still failed after auto-retry`);
-    }
-  }
-
   if (failedCoords.length > 0) {
     const payload: FailedCoordsFile = { savedAt: new Date().toISOString(), failedCoords };
     fs.writeFileSync(FAILED_JSON_PATH, JSON.stringify(payload, null, 2), "utf-8");
@@ -628,9 +600,6 @@ async function main(): Promise<void> {
   console.log(`Coordinates fetched: ${weatherByCoordKey.size}`);
   console.log(`Dams processed: ${damWeatherMap.size}/${allDams.length}`);
   console.log(`Prefectures written: ${successCount}`);
-  if (initialFailedCount > 0) {
-    console.log(`Auto-retry: ${retryRecoveredCount}/${initialFailedCount} recovered`);
-  }
   if (failedCoords.length > 0) {
     console.log(`Failed coordinates: ${failedCoords.length}`);
   }
