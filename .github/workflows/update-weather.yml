@@ -42,7 +42,7 @@ jobs:
 
       # Cloudflare Pages へデプロイ（天気データ取得成功時のみ実行）
       - if: success()
-        run: vp exec wrangler pages deploy dist --project-name=japan-dam-weather
+        run: vp exec wrangler pages deploy dist --project-name=japan-dam-weather --commit-message="$(git log -1 --format='%h %s' | cut -c1-100)"
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

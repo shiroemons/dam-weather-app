@@ -27,9 +27,9 @@ const OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast";
 
 const BATCH_SIZE = 200;
 const MAX_RETRIES = 2; // 1 initial + 1 retry
-const BATCH_DELAY_MS = 2_000; // 2s between batches
+const BATCH_DELAY_MS = 15_000; // 15s between batches
 const FETCH_TIMEOUT_MS = 30_000; // 30s per-request timeout
-const MAX_RETRY_WAIT_MS = 30_000; // cap Retry-After at 30s
+const MAX_RETRY_WAIT_MS = 60_000; // cap Retry-After at 60s
 const MAX_CONSECUTIVE_FAILURES = 3; // circuit breaker threshold
 const COORD_PRECISION = 2;
 
@@ -343,17 +343,21 @@ async function fetchLoop(
         break;
       }
 
-      consecutiveFailures++;
       failedCoords.push(...coords);
 
-      if (consecutiveFailures >= MAX_CONSECUTIVE_FAILURES) {
-        console.error(
-          `  ${MAX_CONSECUTIVE_FAILURES} consecutive failures — API appears down, aborting.`,
-        );
-        for (let r = b + 1; r < batches.length; r++) {
-          failedCoords.push(...(batches[r] ?? []));
+      if (err instanceof RateLimitError) {
+        // 429 rate limit: do not count toward circuit breaker
+      } else {
+        consecutiveFailures++;
+        if (consecutiveFailures >= MAX_CONSECUTIVE_FAILURES) {
+          console.error(
+            `  ${MAX_CONSECUTIVE_FAILURES} consecutive failures — API appears down, aborting.`,
+          );
+          for (let r = b + 1; r < batches.length; r++) {
+            failedCoords.push(...(batches[r] ?? []));
+          }
+          break;
         }
-        break;
       }
 
       if (b + 1 < batches.length) {
