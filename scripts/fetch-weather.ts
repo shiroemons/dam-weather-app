@@ -25,7 +25,7 @@ const OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast";
 // Constants
 // ---------------------------------------------------------------------------
 
-const BATCH_SIZE = 200;
+const BATCH_SIZE = 650;
 const MAX_RETRIES = 2; // 1 initial + 1 retry
 const BATCH_DELAY_MS = 15_000; // 15s between batches
 const FETCH_TIMEOUT_MS = 30_000; // 30s per-request timeout
@@ -233,12 +233,13 @@ async function fetchBatch(coords: CoordGroup[], attempt = 1): Promise<OpenMeteoR
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
+    const cause = err instanceof Error && err.cause ? ` [cause: ${err.cause}]` : "";
     if (attempt < MAX_RETRIES) {
-      console.warn(`  Request failed: ${message}. Waiting 5s before retry...`);
+      console.warn(`  Request failed: ${message}${cause}. Waiting 5s before retry...`);
       await sleep(5_000);
       return fetchBatch(coords, attempt + 1);
     }
-    throw new Error(`Request failed after ${MAX_RETRIES} attempts: ${message}`);
+    throw new Error(`Request failed after ${MAX_RETRIES} attempts: ${message}${cause}`);
   }
 
   if (!res.ok) {
