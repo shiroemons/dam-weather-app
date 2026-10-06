@@ -1,15 +1,17 @@
 type Props = {
   enabled: boolean;
   onChange: (enabled: boolean) => void;
+  label?: string;
 };
 
-export default function FilterToggle({ enabled, onChange }: Props) {
+export default function FilterToggle({ enabled, onChange, label = "観測所" }: Props) {
   return (
     <div className="flex items-center gap-2">
-      <span className="text-sm text-text-secondary">観測所</span>
+      <span className="text-sm text-text-secondary">{label}</span>
       <button
         type="button"
         role="switch"
+        aria-label={label}
         aria-checked={enabled}
         onClick={() => onChange(!enabled)}
         className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${

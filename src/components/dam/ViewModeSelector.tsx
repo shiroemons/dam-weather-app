@@ -20,6 +20,8 @@ export default function ViewModeSelector({ value, onChange }: Props) {
         <button
           key={mode}
           type="button"
+          aria-label={mode === "grid" ? "カード表示" : "一覧表示"}
+          aria-pressed={value === mode}
           onClick={() => onChange(mode)}
           className={`px-3 py-1 text-sm font-medium transition-colors ${rounded} ${
             value === mode

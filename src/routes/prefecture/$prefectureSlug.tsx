@@ -20,11 +20,13 @@ import ErrorFallback from "@/components/common/ErrorFallback";
 import { SITE_NAME, SITE_URL } from "@/config/seo";
 import WeatherSummaryBar from "@/components/today/WeatherSummaryBar";
 import { getDistribution } from "@/lib/weatherUtils";
+import { filterDamsWithStorageRate } from "@/lib/filterDamsWithStorageRate";
 import type { ViewMode, SortField, SortDirection } from "@/lib/sortDams";
 
 export const Route = createFileRoute("/prefecture/$prefectureSlug")({
   validateSearch: (search: Record<string, unknown>) => ({
     obs: search.obs === true || search.obs === "true" ? true : false,
+    storage: search.storage === true || search.storage === "true" ? true : false,
     group: search.group === "municipality" ? ("municipality" as const) : ("waterSystem" as const),
     purposes: typeof search.purposes === "string" ? search.purposes : "",
     types: typeof search.types === "string" ? search.types : "",
@@ -84,12 +86,22 @@ export const Route = createFileRoute("/prefecture/$prefectureSlug")({
 
 function PrefecturePage() {
   const { prefectureSlug } = Route.useParams();
-  const { obs, group, purposes, types, q, view, sort, order } = Route.useSearch();
+  const {
+    obs,
+    storage: storageOnly,
+    group,
+    purposes,
+    types,
+    q,
+    view,
+    sort,
+    order,
+  } = Route.useSearch();
   const navigate = Route.useNavigate();
 
   useEffect(() => {
     void navigate({
-      search: { obs, group, purposes, types, q, view, sort, order },
+      search: { obs, storage: storageOnly, group, purposes, types, q, view, sort, order },
       replace: true,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -123,6 +135,13 @@ function PrefecturePage() {
   function setObsOnly(value: boolean): void {
     void navigate({
       search: (prev) => ({ ...prev, obs: value }),
+      replace: true,
+    });
+  }
+
+  function setStorageOnly(value: boolean): void {
+    void navigate({
+      search: (prev) => ({ ...prev, storage: value }),
       replace: true,
     });
   }
@@ -193,7 +212,18 @@ function PrefecturePage() {
     refetch,
   } = useWeather(prefectureSlug);
   const distribution = useMemo(() => (weather ? getDistribution(weather) : null), [weather]);
-  const { data: storageData } = useStorage(prefectureSlug);
+  const {
+    data: storageData,
+    isPending: storageLoading,
+    isError: storageError,
+    refetch: refetchStorage,
+  } = useStorage(prefectureSlug);
+  const visibleDams = useMemo(
+    () => (storageOnly ? filterDamsWithStorageRate(dams, storageData) : dams),
+    [dams, storageOnly, storageData],
+  );
+  const storageFilterLoading = storageOnly && storageLoading;
+  const storageFilterError = storageOnly && storageError;
 
   if (!prefecture) {
     return (
@@ -217,8 +247,21 @@ function PrefecturePage() {
 
       <div className="mt-4">
         <h1 className="text-2xl font-bold text-text-primary">{prefecture.name}</h1>
-        <p className="mt-1 text-sm text-text-secondary">
-          {dams.length}基のダム{obs && totalCount > dams.length && ` / 全${totalCount}基`}
+        <p className="mt-1 text-sm text-text-secondary" aria-live="polite">
+          {damsLoading ? (
+            "ダム情報を読み込み中…"
+          ) : damsError ? (
+            "ダム情報を確認できません"
+          ) : storageFilterLoading ? (
+            "貯水率データを読み込み中…"
+          ) : storageFilterError ? (
+            "貯水率データを確認できません"
+          ) : (
+            <>
+              {visibleDams.length}基のダム
+              {totalCount > visibleDams.length && ` / 全${totalCount}基`}
+            </>
+          )}
         </p>
       </div>
 
@@ -246,6 +289,7 @@ function PrefecturePage() {
         {view === "grid" && <GroupBySelector value={group} onChange={setGroupBy} />}
         <ViewModeSelector value={view} onChange={setViewMode} />
         <FilterToggle enabled={obs} onChange={setObsOnly} />
+        <FilterToggle label="貯水率あり" enabled={storageOnly} onChange={setStorageOnly} />
       </div>
 
       <div className="mt-4 space-y-3 rounded-xl border border-border-primary bg-surface-primary p-4">
@@ -277,7 +321,7 @@ function PrefecturePage() {
         )}
       </div>
 
-      {(damsLoading || weatherLoading) && (
+      {(damsLoading || weatherLoading || storageFilterLoading) && (
         <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
             <DamCardSkeleton key={i} />
@@ -291,24 +335,60 @@ function PrefecturePage() {
         </div>
       )}
 
-      {!damsLoading && !weatherLoading && !damsError && !weatherError && (
-        <>
-          <div className="mt-6">
-            {view === "grid" ? (
-              <DamGroupedGrid dams={dams} weather={weather} storage={storageData} groupBy={group} />
-            ) : (
-              <DamListView
-                dams={dams}
-                weather={weather}
-                storage={storageData}
-                sortField={sort}
-                sortDirection={order}
-                onSort={setSortParams}
-              />
-            )}
-          </div>
-        </>
+      {storageFilterError && (
+        <div className="mt-6 rounded-xl border border-border-primary bg-surface-primary p-6 text-center">
+          <p role="alert" className="text-text-secondary">
+            貯水率データを取得できません。再読み込みするか、「貯水率あり」を解除してください。
+          </p>
+          <button
+            type="button"
+            onClick={() => void refetchStorage()}
+            className="mt-3 rounded-md bg-accent px-4 py-2 text-sm text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          >
+            貯水率データを再読み込み
+          </button>
+        </div>
       )}
+
+      {!damsLoading &&
+        !weatherLoading &&
+        !storageFilterLoading &&
+        !damsError &&
+        !weatherError &&
+        !storageFilterError && (
+          <>
+            <div className="mt-6">
+              {storageOnly && visibleDams.length === 0 ? (
+                <div className="py-12 text-center text-text-secondary">
+                  <p>条件に合うダムがありません</p>
+                  <button
+                    type="button"
+                    onClick={() => setStorageOnly(false)}
+                    className="mt-3 text-sm text-accent underline"
+                  >
+                    「貯水率あり」を解除
+                  </button>
+                </div>
+              ) : view === "grid" ? (
+                <DamGroupedGrid
+                  dams={visibleDams}
+                  weather={weather}
+                  storage={storageData}
+                  groupBy={group}
+                />
+              ) : (
+                <DamListView
+                  dams={visibleDams}
+                  weather={weather}
+                  storage={storageData}
+                  sortField={sort}
+                  sortDirection={order}
+                  onSort={setSortParams}
+                />
+              )}
+            </div>
+          </>
+        )}
     </div>
   );
 }

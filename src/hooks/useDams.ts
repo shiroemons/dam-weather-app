@@ -23,7 +23,7 @@ export function useFilteredDams(
   selectedTypes: Set<string>,
   keyword: string = "",
 ) {
-  const { data: dams = [], isLoading, isError } = useDams(prefectureSlug);
+  const { data: dams = [], isPending: isLoading, isError } = useDams(prefectureSlug);
 
   const baseDams = useMemo(() => {
     if (majorOnly) {

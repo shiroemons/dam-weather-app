@@ -38,6 +38,7 @@ export default function Footer() {
                           params={{ prefectureSlug: pref.slug }}
                           search={{
                             obs: true,
+                            storage: false,
                             group: "waterSystem",
                             purposes: "",
                             types: "",

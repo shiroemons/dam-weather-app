@@ -73,6 +73,7 @@ export default function PrefectureCard({
       params={{ prefectureSlug: prefecture.slug }}
       search={{
         obs: false,
+        storage: false,
         group: "waterSystem",
         purposes: "",
         types: "",
