@@ -9,12 +9,12 @@ import {
   PROJECT,
   PREVIEW_BRANCH,
   verifyPreviewDeployment,
-} from "./pr3-preview.ts";
+} from "./pr4-preview.ts";
 
 const SHA = "a".repeat(40);
 const ENV = {
   GITHUB_REPOSITORY: "shiroemons/dam-weather-app",
-  GITHUB_REF: "refs/heads/feat/prefecture-storage-rate-filter",
+  GITHUB_REF: "refs/heads/fix/hide-unavailable-storage-filter",
   GITHUB_EVENT_NAME: "push",
   GITHUB_SHA: SHA,
   CLOUDFLARE_ACCOUNT_ID: "b".repeat(32),
@@ -79,7 +79,7 @@ function deployment(overrides: Record<string, unknown> = {}) {
   };
 }
 
-describe("PR 3 preview deployment guard", () => {
+describe("PR 4 preview deployment guard", () => {
   it("reads only the existing project, rejects credential redirects, and accepts main distinct from the preview", async () => {
     const fetchImpl = vi
       .fn<typeof fetch>()
@@ -100,6 +100,7 @@ describe("PR 3 preview deployment guard", () => {
     { GITHUB_EVENT_NAME: "pull_request_target" },
     { GITHUB_EVENT_NAME: "pull_request" },
     { GITHUB_REF: "refs/heads/main" },
+    { GITHUB_REF: "refs/heads/feat/prefecture-storage-rate-filter" },
     { GITHUB_SHA: "" },
     { CLOUDFLARE_ACCOUNT_ID: "" },
     { CLOUDFLARE_API_TOKEN: "" },
@@ -174,14 +175,15 @@ describe("PR 3 preview deployment guard", () => {
 
   it("keeps workflow scope to the trusted push branch, explicit preview target and read-only repository permission", () => {
     const workflow = fs.readFileSync(
-      new URL("../.github/workflows/preview-pr3.yml", import.meta.url),
+      new URL("../.github/workflows/preview-pr4.yml", import.meta.url),
       "utf8",
     );
-    expect(workflow).toContain("branches: [feat/prefecture-storage-rate-filter]");
+    expect(workflow).toContain("branches: [fix/hide-unavailable-storage-filter]");
     expect(workflow).toContain("contents: read");
     expect(workflow).toContain("persist-credentials: false");
-    expect(workflow).toContain("group: pages-preview-pr-3");
-    expect(workflow).toContain("--project-name=japan-dam-weather --branch=preview-pr-3");
+    expect(workflow).toContain("group: pages-preview-pr-4");
+    expect(workflow).toContain("--project-name=japan-dam-weather --branch=preview-pr-4");
+    expect(workflow).not.toContain("preview-pr-3");
     expect(workflow).not.toContain("weather-production");
     expect(workflow).not.toContain("scripts/fetch-weather.ts");
     expect(workflow).not.toContain("scripts/fetch-dam-storage.ts");
@@ -191,7 +193,7 @@ describe("PR 3 preview deployment guard", () => {
 describe("published preview snapshots", () => {
   let directory: string;
   beforeEach(() => {
-    directory = fs.mkdtempSync(path.join(os.tmpdir(), "pr3-preview-"));
+    directory = fs.mkdtempSync(path.join(os.tmpdir(), "pr4-preview-"));
   });
   afterEach(() => {
     fs.rmSync(directory, { recursive: true, force: true });
