@@ -2,83 +2,85 @@
 
 ## 概要
 
-天気データ取得（`scripts/fetch-weather.ts`）で使用している Open-Meteo API のレート制限に関する情報。
-
-公式ドキュメント:
-- Terms: https://open-meteo.com/en/terms
-- Pricing: https://open-meteo.com/en/pricing
+`scripts/fetch-weather.ts` の無料API利用量と、失敗時に不完全な天気データを公開しないための運用メモ。公式資料・公開実装の確認日: 2026-10-06。公開実装はコミット `39a0b8c44b2ec2c86b26e89acaa2a7bb9340776f` に固定して参照しています。
 
 ## 制限値（無料プラン）
 
-| 単位 | 上限 |
-|------|------|
-| 分 | 600 コール/分 |
-| 時間 | 5,000 コール/時 |
-| 日 | 10,000 コール/日 |
-| 月 | 300,000 コール/月 |
-| 同時接続 | キュー最大 6 リクエスト/IP |
+[公式料金ページ](https://open-meteo.com/en/pricing)に記載されている上限:
 
-- 日次制限は UTC 0:00（JST 9:00）にリセット
-- 同時接続制限は 2025年3月に導入。1IPあたり同時処理1件、キュー最大6件
+| 単位 | 上限              |
+| ---- | ----------------- |
+| 分   | 600 コール/分     |
+| 時間 | 5,000 コール/時   |
+| 日   | 10,000 コール/日  |
+| 月   | 300,000 コール/月 |
 
-## APIコールの重み計算
+無料APIは非商用利用向けで、稼働保証はありません。公開された[レート制限実装](https://github.com/open-meteo/open-meteo/blob/39a0b8c44b2ec2c86b26e89acaa2a7bb9340776f/Sources/App/Helper/Vapor/RateLimiter.swift#L58-L80)は主に送信元IPごとにカウントし、UTC 0:00付近（JST 9:00付近）の日次コールバックで日次カウンターをリセットします。サービス側の設定・実装変更や同じ送信元からの他の利用もあるため、この時刻だけを根拠に成功を保証しないでください。
 
-複数座標を1リクエストにまとめた場合、1コールとはカウントされず重み計算される。
+## 複数地点のコール数
 
-```
-weight = nLocations × (nDays / 14) × (nVariables / 10)
-```
+HTTPリクエストをまとめても、地点数に応じた利用量が発生します。[公式サーバーの `calculateQueryWeight()`](https://github.com/open-meteo/open-meteo/blob/39a0b8c44b2ec2c86b26e89acaa2a7bb9340776f/Sources/App/Helper/Writer/ForecastApiResult.swift#L247-L259)は、地点ごとに次の重みを計算して合計しています。
 
-### 本プロジェクトの場合
-
-- バッチサイズ: 500座標
-- 予報日数: 2日
-- 変数数: 5（weather_code, temperature_2m_max, temperature_2m_min, precipitation_sum, precipitation_probability_max）
-
-```
-500 × (2 / 14) × (5 / 10) ≈ 35.7 コール/バッチ
+```text
+variablesFraction = nVariablesTimesDomains / 10
+timeFraction = nDays / 14
+weightPerLocation = max(1, variablesFraction, timeFraction * variablesFraction)
 ```
 
-全2,599座標（6バッチ）で約 **214 コール** 消費。
+本プロジェクトは2日分・日次5変数・既定モデルを取得するため、1地点あたり1コール相当です。短い予報だから1地点あたり1未満になる、という計算はできません。
 
-## 429 エラーの種類
+2026-10-06時点の `src/data/dams.json` を実際の座標丸め処理で集計すると、2,749ダム・2,599地点です。再試行なしの全件取得は6 HTTPリクエスト（500地点 × 5 + 99地点）で、**2,599コール相当**になります。
 
-| reason | 原因 | 対処 |
-|--------|------|------|
-| `Minutely API request limit exceeded` | 分制限超過 | 60秒待機後リトライ |
-| `Hourly API request limit exceeded` | 時間制限超過 | 待機後リトライ |
-| `Daily API request limit exceeded` | 日制限超過 | 翌日（UTC 0:00）まで待つ必要あり |
-| `Too many concurrent requests` | 同時接続超過 | 並列リクエスト数を削減 |
+修正前のスケジューラー設定は3時間ごと・1日8回で、全件取得を毎回完了すると **20,792コール/日** が必要です。これは再試行を含めなくても無料の日次上限を超えます。GitHub-hosted runnerの送信元IPが実行ごとに異なり、常に同一カウンターで拒否されるとは限りませんが、IPの変更を前提とした上限回避は運用方針にしません。
 
-- Open-Meteo は `Retry-After` ヘッダーを返さない
-- `X-RateLimit-Remaining` 等のヘッダーも提供されていない
-- エラー理由はレスポンスボディの JSON で確認: `{"error": true, "reason": "..."}`
+500地点への縮小と待機は分単位の負荷を下げる対策で、日次容量を増やす対策ではありません。無料枠で続ける場合、全件取得は再試行なしでも最大3回/日です（2,599 × 3 = 7,797、4回では10,396）。3回なら残り2,203コールを再試行や他の利用と分け合いますが、成功保証ではありません。均等な8時間間隔にすると従来の3時間間隔より予報の更新は遅くなります。1日2回なら5,198コールで余裕は増えます。3時間ごとの全件更新が必要なら、適切な契約や別の取得設計を検討してください。この修正では、天気と貯水率をともに8時間ごと・1日3回（日本時間1時・9時・17時、UTC 0時・8時・16時）へ変更します。契約や認証情報は変更しません。mainへのwrangler.toml変更で通常更新ワークフローを1回起動し、既存Workerのcronを反映・読み戻し検証してからデータを再取得します。
 
-## スクリプトでの対策
+## 現在の再試行・停止条件
 
-### リトライ戦略
+- 1バッチ500地点、バッチ間と再試行前に最低61秒待機
+- 1バッチ最大3試行、1リクエストのタイムアウトは30秒
+- 429の `Retry-After` があれば秒数とHTTP-dateの両方に対応し、指定時間を短縮しない
+- 必要な待機が120秒を超える場合、または429の理由に `Daily` / `Hourly` / `Monthly` が含まれる場合は追加リクエストを停止
+- 3試行目も429なら、後続バッチへ進まず未取得座標を失敗として記録
+- 408以外の4xx等の再試行不能なAPIエラーでも後続バッチを停止
+- 通信エラー・5xx・壊れた/短い応答・予報の欠落は最大3試行。バッチが3回連続で失敗した場合は後続バッチも停止
+- `Retry-After` の欠落・不正値だけで即時再試行しない。ヘッダーが常に返ることや残りコール数を取得できることは前提にしない
 
-1. **バッチ内リトライ**: 最大5回、指数バックオフ（15秒 × 2^n）
-2. **ラウンドリトライ**: 最大3ラウンド、60秒クールダウン
-3. **自動リトライ**: 通常取得後に失敗座標を60秒クールダウン後に再取得
-4. **Daily制限検出**: `Daily API request limit exceeded` を検出したら即座にリトライを中断
+`Hourly` / `Daily` の上限は61秒の待機では解消しません。上限の種類はログのHTTPステータスとJSONの `reason` で確認してください。
 
-### `_failed.json`
+## 公開前の検証
 
-取得失敗した座標は `public/weather/_failed.json` に保存される。
-`--retry` フラグで手動リトライが可能。
+取得失敗が残る場合は `public/weather/_failed.json` に不足座標を保存し、終了コード1にします。ワークフローは取得成功後にも `scripts/validate-weather.ts` を実行し、次を検証してからビルド・デプロイへ進みます。
+
+- 元データの全ダムが正しい都道府県ファイルに1回ずつ存在すること
+- 日本時間の当日・翌日の予報日付と必須フィールドが揃っていること
+- 更新日時が当日で、前日以前のファイルを混ぜていないこと
+- 未解決の失敗座標が残っていないこと
+
+天気コードの欠落は晴れに置き換えません。検証失敗や25分のジョブ上限到達では、新しいデータを公開しません。途中ファイルが残っていても公開可能な成果物とは扱いません。
+
+## 復旧
+
+同じ作業ディレクトリに当日の途中データと `_failed.json` が残っている場合のみ、制限の解除後に不足座標を再取得できます。
 
 ```bash
-# 通常実行（失敗時は自動リトライ付き）
-npx tsx scripts/fetch-weather.ts
-
-# 前回の失敗座標のみ再取得
-npx tsx scripts/fetch-weather.ts --retry
+vp dlx tsx scripts/fetch-weather.ts --retry
+vp dlx tsx scripts/validate-weather.ts
 ```
 
-## 参考: GitHub Issue
+`--retry` も全件検証に通るまで失敗扱いです。前日以前のデータやファイルがない新しいチェックアウトでは通常の全件取得を行ってください。GitHub Actionsの失敗実行の作業ファイルは次の実行に引き継がれません。
 
-- [#438](https://github.com/open-meteo/open-meteo/issues/438) — 重み計算の導入と調整
-- [#439](https://github.com/open-meteo/open-meteo/issues/439) — 分制限の詳細
-- [#485](https://github.com/open-meteo/open-meteo/issues/485) — 制限値の詳細と方針
-- [#1493](https://github.com/open-meteo/open-meteo/issues/1493) — 同時接続制限の導入
+```bash
+vp dlx tsx scripts/fetch-weather.ts
+vp dlx tsx scripts/validate-weather.ts
+```
+
+`--limit N` はローカル確認用です。部分取得を公開するために検証やデプロイ条件を外さないでください。
+
+## cron設定の反映
+
+mainの `workers/scheduler/wrangler.toml` が変わると、通常更新と同じワークフローを起動します。既存のCloudflare用secretを使い、既存Worker `dam-weather-scheduler` の登録cronを読み取ります。既に `0 */8 * * *` なら変更せず、旧設定 `0 */3 * * *` だけを置き換え、再度読み取って一致を確認します。Workerのコード、GITHUB_PAT、APIトークンのスコープは変更しません。
+
+既存tokenがWorkersスケジュール操作に対応していない場合や、実際のcronが想定外の場合は、データ取得前に失敗で止めます。権限を自動追加したり、設定反映を成功扱いしたりしません。既存の手動・定時起動は通常の全件更新を行い、データ更新・配信jobを同じconcurrencyグループで直列化します。cron反映jobは待機中のデータ更新の置き換えに巻き込まれないよう独立させ、失敗時は後続の取得・配信を止めます。復旧時は進行中・待機中の実行を確認し、重ねて手動起動しないでください。
+
+Cloudflareではcron変更が各拠点へ反映されるまで最大15分かかる場合があります。読み戻し成功は登録設定の確認であり、古いトリガーが即座に止まった保証ではありません（[公式Cron Triggers資料](https://developers.cloudflare.com/workers/configuration/cron-triggers/)）。反映直後も追加の手動起動を重ねないでください。

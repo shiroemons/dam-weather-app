@@ -6,7 +6,7 @@
 
 ## 概要
 
-全国約2,700基のダム所在地の天気を、都道府県別一覧・地図・個別ダム詳細など多角的に確認できます。天気データはGitHub Actionsで3時間ごとに自動更新されます。
+全国約2,700基のダム所在地の天気を、都道府県別一覧・地図・個別ダム詳細など多角的に確認できます。天気データはGitHub Actionsで8時間ごとに自動更新されます。
 
 ## 主な機能
 
@@ -45,8 +45,8 @@
 ## データソース
 
 - **ダムデータ**: [国土数値情報 ダムデータ（W01）](https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-W01.html)（約2,700基）
-- **天気データ**: [Open-Meteo API](https://open-meteo.com/)（各ダムの緯度経度からピンポイント天気を取得、GitHub Actionsで3時間ごとに更新）
-- **貯水量データ**: 国土交通省 川の防災情報（ダム諸量データ、GitHub Actionsで3時間ごとに更新）
+- **天気データ**: [Open-Meteo API](https://open-meteo.com/)（各ダムの緯度経度からピンポイント天気を取得、GitHub Actionsで8時間ごとに更新）
+- **貯水量データ**: 国土交通省 川の防災情報（ダム諸量データ、GitHub Actionsで8時間ごとに更新）
 
 ## セットアップ
 
@@ -112,7 +112,7 @@ vp fmt      # フォーマットのみ
 ### データ取得・ビルドフロー
 
 ```
-GitHub Actions (3時間ごと、1日8回)
+GitHub Actions (8時間ごと、1日3回)
   │
   ├─ 全ダムの緯度経度をOpen-Meteo APIにバルクリクエスト
   │   （近接ダムは座標を丸めて重複排除、約2,600地点）
@@ -127,7 +127,7 @@ GitHub Actions (3時間ごと、1日8回)
 
 ```
 Cloudflare Workers Scheduler
-  └─ Cron (0 */3 * * *) → GitHub Actions ワークフローをトリガー
+  └─ Cron (0 */8 * * *) → GitHub Actions ワークフローをトリガー
 ```
 
 ### ディレクトリ構成
@@ -139,8 +139,8 @@ dam-weather-app/
 ├── workers/scheduler/     # Cloudflare Workers（スケジューラー）
 ├── public/
 │   ├── data/dams/         # 都道府県別ダムデータ（ビルド時生成）
-│   ├── weather/           # 都道府県別天気データ（3時間ごと更新）
-│   └── storage/           # 都道府県別貯水量データ（3時間ごと更新）
+│   ├── weather/           # 都道府県別天気データ（8時間ごと更新）
+│   └── storage/           # 都道府県別貯水量データ（8時間ごと更新）
 ├── src/
 │   ├── components/
 │   │   ├── common/        # 共通コンポーネント
@@ -172,3 +172,28 @@ dam-weather-app/
 - ダムデータ: 国土数値情報（非商用利用）
 - 天気データ: [Open-Meteo](https://open-meteo.com/)（非商用利用、APIキー不要）
 - 天気アイコン: [Meteocons](https://github.com/basmilius/weather-icons) by Bas Milius
+
+天気と貯水率は、どちらも日本時間1時・9時・17時の1日3回に更新します。mainへのcron設定変更時は、既存Workerの登録時刻を反映・読み戻し検証してからデータを再取得します。既存tokenの権限不足などで反映できない場合は取得前に停止します。
+
+### 天気更新の失敗・復旧
+
+- API取得は500地点ずつ、バッチ間と再試行前に最低61秒待ちます。各バッチの試行は最大3回です。429の `Retry-After`（秒数・HTTP-date）を尊重し、120秒を超える待機や時間・日・月単位の制限では追加リクエストを止めます
+- 通信失敗、短い応答、日付や必須フィールドの欠落は取得失敗です。天気コードの欠落を晴れ（0）に置き換えません
+- 取得失敗が残れば `public/weather/_failed.json` に座標を保存し、終了コード1でビルド・デプロイを停止します。成功時も独立した検証ステップで全ダム・全都道府県・日本時間の当日/翌日の予報を確認します
+- 待機を含むジョブの上限は25分です。APIが復旧しない場合は失敗で終了し、公開済みサイトは更新しません
+
+同じ作業ディレクトリに当日取得したファイルと `_failed.json` が残っている場合は、制限が解除されてから不足地点だけ再取得できます。
+
+```bash
+vp dlx tsx scripts/fetch-weather.ts --retry
+vp dlx tsx scripts/validate-weather.ts
+```
+
+`--retry` も全データの検証に通るまで失敗扱いです。前日以前のデータやファイルのない新しいチェックアウトでは、通常の全件取得を行ってください。`--limit N` はローカル確認用です。全件未満の出力は、配信前の全件検証を通りません。
+
+```bash
+vp dlx tsx scripts/fetch-weather.ts
+vp dlx tsx scripts/validate-weather.ts
+```
+
+GitHub Actionsの失敗した実行は作業ファイルを次の実行へ引き継ぎません。修正のマージ後、承認した通常更新で全件を再取得してください。復旧のためにデプロイ条件を外したり、不足データで手動デプロイしたりしないでください。APIの無料枠には分・時・日単位の上限があるため、待機だけで日次上限が解消することはありません（[Open-Meteoの上限](https://open-meteo.com/en/pricing)）。

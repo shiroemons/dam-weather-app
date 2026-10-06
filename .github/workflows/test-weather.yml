@@ -1,0 +1,41 @@
+name: Test Weather Pipeline
+
+on:
+  pull_request:
+    paths:
+      - "scripts/**"
+      - "workers/scheduler/**"
+      - "src/data/dams.json"
+      - ".github/workflows/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "*config*"
+  push:
+    branches: [main]
+    paths:
+      - "scripts/**"
+      - "workers/scheduler/**"
+      - "src/data/dams.json"
+      - ".github/workflows/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "*config*"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: voidzero-dev/setup-vp@v1
+        with:
+          version: 0.1.15 # Match pnpm-lock.yaml; avoid changing the toolchain during data updates
+          cache: true
+      - run: vp install --frozen-lockfile
+      - run: vp check
+      - run: vp exec tsc -b
+      # All API responses are mocked: no live API quota or deployment credentials.
+      - run: vp test run scripts/fetch-weather.test.ts scripts/validate-weather.test.ts scripts/scheduler.test.ts scripts/sync-scheduler.test.ts

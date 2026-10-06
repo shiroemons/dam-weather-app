@@ -5,7 +5,9 @@ workers_dev = false
 preview_urls = false
 
 [triggers]
-crons = ["0 */3 * * *"]
+# UTC 00:00 / 08:00 / 16:00 = JST 09:00 / 17:00 / 01:00
+# Weather and dam storage are refreshed together, three times per day.
+crons = ["0 */8 * * *"]
 
 [vars]
 GITHUB_REPO = "shiroemons/dam-weather-app"
