@@ -288,8 +288,10 @@ function PrefecturePage() {
       <div className="mt-4 flex flex-wrap items-center justify-end gap-3 md:gap-4">
         {view === "grid" && <GroupBySelector value={group} onChange={setGroupBy} />}
         <ViewModeSelector value={view} onChange={setViewMode} />
-        <FilterToggle enabled={obs} onChange={setObsOnly} />
-        <FilterToggle label="貯水率あり" enabled={storageOnly} onChange={setStorageOnly} />
+        <div className="flex shrink-0 flex-nowrap items-center gap-3 whitespace-nowrap md:gap-4">
+          <FilterToggle enabled={obs} onChange={setObsOnly} />
+          <FilterToggle label="貯水率あり" enabled={storageOnly} onChange={setStorageOnly} />
+        </div>
       </div>
 
       <div className="mt-4 space-y-3 rounded-xl border border-border-primary bg-surface-primary p-4">

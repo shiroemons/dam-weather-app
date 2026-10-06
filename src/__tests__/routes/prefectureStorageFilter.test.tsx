@@ -143,6 +143,20 @@ describe("貯水率が表示できるダムの判定", () => {
 });
 
 describe("都道府県ページの貯水率フィルター", () => {
+  it("観測所と貯水率ありを折り返さない共通の横並びにまとめる", async () => {
+    await renderPage();
+    const obsToggle = screen.getByRole("switch", { name: "観測所" });
+    const storageToggle = screen.getByRole("switch", { name: "貯水率あり" });
+    const toggleRow = obsToggle.parentElement?.parentElement;
+
+    expect(toggleRow).toBe(storageToggle.parentElement?.parentElement);
+    for (const className of ["flex", "flex-nowrap", "shrink-0", "whitespace-nowrap"]) {
+      expect(toggleRow?.classList.contains(className)).toBe(true);
+    }
+    expect(toggleRow?.children).toHaveLength(2);
+    expect(toggleRow?.parentElement?.classList.contains("flex-wrap")).toBe(true);
+  });
+
   it("初期OFFで、キーボードでON/OFFでき、0%を含むカードと件数を更新する", async () => {
     const user = userEvent.setup();
     const { history } = await renderPage();
