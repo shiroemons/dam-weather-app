@@ -237,6 +237,40 @@ describe("published preview snapshots", () => {
     },
   );
 
+  it("preserves extra published observation IDs without treating them as dams on this page", async () => {
+    const extra = {
+      ...storage("tokyo"),
+      dams: [
+        { damId: "legacy-id", storageRate: 80 },
+        { damId: "two", storageRate: 50 },
+      ],
+    };
+    const fetchImpl = snapshots((url) =>
+      url.pathname === "/storage/tokyo.json" ? response(extra) : undefined,
+    );
+    await expect(
+      preparePreviewData({ dams: DAMS, publicDir: directory, fetchImpl, now: NOW }),
+    ).resolves.toEqual({ weatherFiles: 2, storageFiles: 2 });
+    expect(JSON.parse(fs.readFileSync(path.join(directory, "storage/tokyo.json"), "utf8"))).toEqual(
+      extra,
+    );
+  });
+
+  it("does not count unmatched observations as displayable rates", async () => {
+    const fetchImpl = snapshots((url) =>
+      url.pathname.startsWith("/storage/")
+        ? response({
+            prefectureSlug: path.basename(url.pathname, ".json"),
+            updatedAt: NOW.toISOString(),
+            dams: [{ damId: "legacy-id", storageRate: 80 }],
+          })
+        : undefined,
+    );
+    await expect(
+      preparePreviewData({ dams: DAMS, publicDir: directory, fetchImpl, now: NOW }),
+    ).rejects.toThrow("no displayable storage rates");
+  });
+
   it.each(["missing-weather", "incomplete-weather", "stale-weather", "bad-storage", "no-rates"])(
     "refuses unusable snapshots: %s",
     async (kind) => {

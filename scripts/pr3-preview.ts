@@ -76,9 +76,7 @@ export async function preparePreviewData({
       if (category === "storage") {
         for (const entry of payload.dams) {
           assert(
-            isRecord(entry) &&
-              typeof entry.damId === "string" &&
-              expected.get(entry.damId) === slug,
+            isRecord(entry) && typeof entry.damId === "string" && entry.damId.length > 0,
             `invalid storage dam in ${slug}`,
           );
           assert(
@@ -86,7 +84,11 @@ export async function preparePreviewData({
               (typeof entry.storageRate === "number" && Number.isFinite(entry.storageRate)),
             `invalid storage rate in ${slug}`,
           );
-          if (Number.isFinite(entry.storageRate)) displayableRates++;
+          // Published observation mappings can include IDs outside this page's
+          // dam list. Preserve the snapshot; count only rates the UI can display.
+          if (expected.get(entry.damId) === slug && Number.isFinite(entry.storageRate)) {
+            displayableRates++;
+          }
         }
         storageFiles++;
       }
