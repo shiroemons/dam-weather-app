@@ -172,3 +172,26 @@ dam-weather-app/
 - ダムデータ: 国土数値情報（非商用利用）
 - 天気データ: [Open-Meteo](https://open-meteo.com/)（非商用利用、APIキー不要）
 - 天気アイコン: [Meteocons](https://github.com/basmilius/weather-icons) by Bas Milius
+
+### 天気更新の失敗・復旧
+
+- API取得は500地点ずつ、バッチ間と再試行前に最低61秒待ちます。各バッチの試行は最大3回です。429の `Retry-After`（秒数・HTTP-date）を尊重し、120秒を超える待機や時間・日・月単位の制限では追加リクエストを止めます
+- 通信失敗、短い応答、日付や必須フィールドの欠落は取得失敗です。天気コードの欠落を晴れ（0）に置き換えません
+- 取得失敗が残れば `public/weather/_failed.json` に座標を保存し、終了コード1でビルド・デプロイを停止します。成功時も独立した検証ステップで全ダム・全都道府県・日本時間の当日/翌日の予報を確認します
+- 待機を含むジョブの上限は25分です。APIが復旧しない場合は失敗で終了し、公開済みサイトは更新しません
+
+同じ作業ディレクトリに当日取得したファイルと `_failed.json` が残っている場合は、制限が解除されてから不足地点だけ再取得できます。
+
+```bash
+vp dlx tsx scripts/fetch-weather.ts --retry
+vp dlx tsx scripts/validate-weather.ts
+```
+
+`--retry` も全データの検証に通るまで失敗扱いです。前日以前のデータやファイルのない新しいチェックアウトでは、通常の全件取得を行ってください。`--limit N` はローカル確認用です。全件未満の出力は、配信前の全件検証を通りません。
+
+```bash
+vp dlx tsx scripts/fetch-weather.ts
+vp dlx tsx scripts/validate-weather.ts
+```
+
+GitHub Actionsの失敗した実行は作業ファイルを次の実行へ引き継ぎません。修正のマージ後、承認した通常更新で全件を再取得してください。復旧のためにデプロイ条件を外したり、不足データで手動デプロイしたりしないでください。APIの無料枠には分・時・日単位の上限があるため、待機だけで日次上限が解消することはありません（[Open-Meteoの上限](https://open-meteo.com/en/pricing)）。

@@ -10,6 +10,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { inspect } from "node:util";
+import { getForecastDates, isValidDaily, validateWeatherData } from "./validate-weather.ts";
 
 // ---------------------------------------------------------------------------
 // Paths
@@ -18,18 +20,18 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUTPUT_DIR = path.join(__dirname, "..", "public", "weather");
 const DAMS_JSON_PATH = path.join(__dirname, "..", "src", "data", "dams.json");
-const FAILED_JSON_PATH = path.join(OUTPUT_DIR, "_failed.json");
 const OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast";
 
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
 
-const BATCH_SIZE = 650;
-const MAX_RETRIES = 2; // 1 initial + 1 retry
-const BATCH_DELAY_MS = 15_000; // 15s between batches
+// Stay below the free API's 600 calls/minute budget, including retries.
+const BATCH_SIZE = 500;
+const MAX_ATTEMPTS = 3; // bounded recovery, including timeout -> 429 -> success
+const BATCH_DELAY_MS = 61_000; // let the minute window reset before another batch
 const FETCH_TIMEOUT_MS = 30_000; // 30s per-request timeout
-const MAX_RETRY_WAIT_MS = 60_000; // cap Retry-After at 60s
+const MAX_RETRY_WAIT_MS = 120_000; // longer quotas abort rather than retry early
 const MAX_CONSECUTIVE_FAILURES = 3; // circuit breaker threshold
 const COORD_PRECISION = 2;
 
@@ -91,15 +93,7 @@ interface FailedCoordsFile {
   failedCoords: CoordGroup[];
 }
 
-class RateLimitError extends Error {
-  retryAfterMs: number;
-  daily: boolean;
-  constructor(message: string, retryAfterMs: number, daily = false) {
-    super(message);
-    this.retryAfterMs = retryAfterMs;
-    this.daily = daily;
-  }
-}
+class RateLimitError extends Error {}
 
 // ---------------------------------------------------------------------------
 // WMO weather code helpers
@@ -164,7 +158,7 @@ function sleep(ms: number): Promise<void> {
 }
 
 function buildDayForecast(daily: OpenMeteoDaily, index: number): DayForecast {
-  const code = daily.weather_code[index] ?? 0;
+  const code = daily.weather_code[index];
   return {
     date: daily.time[index] ?? "",
     weatherCode: code,
@@ -206,7 +200,15 @@ function groupByCoord(dams: DamEntry[]): CoordGroup[] {
 // Open-Meteo fetch with retry
 // ---------------------------------------------------------------------------
 
-async function fetchBatch(coords: CoordGroup[], attempt = 1): Promise<OpenMeteoResponse[]> {
+export function retryAfterMs(value: string | null, now = Date.now()): number {
+  if (value !== null && /^\d+(?:\.\d+)?$/.test(value.trim())) {
+    return Math.max(BATCH_DELAY_MS, Number(value) * 1000);
+  }
+  const date = value ? Date.parse(value) : NaN;
+  return Number.isFinite(date) ? Math.max(BATCH_DELAY_MS, date - now) : BATCH_DELAY_MS;
+}
+
+export async function fetchBatch(coords: CoordGroup[]): Promise<OpenMeteoResponse[]> {
   const body = {
     latitude: coords.map((c) => c.lat),
     longitude: coords.map((c) => c.lng),
@@ -221,81 +223,70 @@ async function fetchBatch(coords: CoordGroup[], attempt = 1): Promise<OpenMeteoR
     forecast_days: 2,
   };
 
-  console.log(`  POST ${coords.length} coordinates (attempt ${attempt}/${MAX_RETRIES})`);
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    console.log(`  POST ${coords.length} coordinates (attempt ${attempt}/${MAX_ATTEMPTS})`);
+    let waitMs = BATCH_DELAY_MS;
+    try {
+      const res = await fetch(OPEN_METEO_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+        signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+      });
 
-  let res: Response;
-  try {
-    res = await fetch(OPEN_METEO_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-    });
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    const cause = err instanceof Error && err.cause ? ` [cause: ${err.cause}]` : "";
-    if (attempt < MAX_RETRIES) {
-      console.warn(`  Request failed: ${message}${cause}. Waiting 5s before retry...`);
-      await sleep(5_000);
-      return fetchBatch(coords, attempt + 1);
-    }
-    throw new Error(`Request failed after ${MAX_RETRIES} attempts: ${message}${cause}`);
-  }
-
-  if (!res.ok) {
-    let reason = "";
-    if (res.status === 429) {
-      try {
-        const errBody = (await res.json()) as { error?: boolean; reason?: string };
-        reason = errBody.reason ?? "";
-      } catch {
-        // ignore parse errors
-      }
-    }
-
-    const message = reason
-      ? `HTTP ${res.status} ${res.statusText} (${reason})`
-      : `HTTP ${res.status} ${res.statusText}`;
-
-    if (res.status === 429) {
-      const isDaily = reason.toLowerCase().includes("daily");
-      if (isDaily) {
-        console.error(`  Daily API limit exceeded. Stopping retries.`);
-        throw new RateLimitError(message, 0, true);
+      if (!res.ok) {
+        let reason = "";
+        if (res.status === 429) {
+          try {
+            const errorBody = (await res.json()) as { reason?: string };
+            reason = errorBody.reason ?? "";
+          } catch {
+            // Missing/error response bodies still need a safe rate-limit wait.
+          }
+        }
+        const message = `HTTP ${res.status} ${res.statusText}${reason ? ` (${reason})` : ""}`;
+        if (res.status === 429) {
+          waitMs = retryAfterMs(res.headers.get("Retry-After"));
+          // A bounded job cannot recover hour/day quotas. Never skip ahead to
+          // another batch when throttled or shorten the provider's Retry-After.
+          if (
+            /daily|hourly|monthly/i.test(reason) ||
+            waitMs > MAX_RETRY_WAIT_MS ||
+            attempt === MAX_ATTEMPTS
+          ) {
+            throw new RateLimitError(message);
+          }
+        } else if (res.status < 500 && res.status !== 408) {
+          throw new RateLimitError(`Non-retryable API error: ${message}`);
+        }
+        throw new Error(message);
       }
 
-      const retryAfter = res.headers.get("Retry-After");
-      const retryAfterMs = retryAfter ? parseInt(retryAfter) * 1000 : 60_000;
-
-      if (retryAfterMs > MAX_RETRY_WAIT_MS) {
-        console.error(
-          `  Retry-After ${retryAfterMs / 1000}s exceeds cap of ${MAX_RETRY_WAIT_MS / 1000}s. Aborting.`,
+      const data: unknown = await res.json();
+      const responses = Array.isArray(data) ? data : [data];
+      // Do not misassign a shortened response array to the wrong coordinates,
+      // or silently turn a missing weather code into clear skies (code 0).
+      const dates = getForecastDates();
+      if (
+        responses.length !== coords.length ||
+        responses.some((response) => !response || !isValidDaily(response.daily, dates))
+      ) {
+        throw new Error(
+          `Incomplete/invalid API response: expected ${coords.length} valid forecasts, received ${responses.length}`,
         );
-        throw new RateLimitError(message, retryAfterMs);
       }
-
-      if (attempt < MAX_RETRIES) {
-        console.warn(
-          `  429 Rate limited: ${reason || "unknown reason"}. Waiting ${retryAfterMs / 1000}s...`,
-        );
-        await sleep(retryAfterMs);
-        return fetchBatch(coords, attempt + 1);
-      }
-
-      throw new RateLimitError(message, retryAfterMs);
+      return responses as OpenMeteoResponse[];
+    } catch (err) {
+      if (err instanceof RateLimitError || attempt === MAX_ATTEMPTS) throw err;
+      const message = err instanceof Error ? err.message : String(err);
+      const cause = err instanceof Error && err.cause ? ` [cause: ${inspect(err.cause)}]` : "";
+      console.warn(
+        `  Request failed: ${message}${cause}. Waiting ${waitMs / 1000}s before retry...`,
+      );
+      await sleep(waitMs);
     }
-
-    if (attempt < MAX_RETRIES) {
-      console.warn(`  Retry ${attempt}/${MAX_RETRIES}: ${message}. Waiting 5s...`);
-      await sleep(5_000);
-      return fetchBatch(coords, attempt + 1);
-    }
-
-    throw new Error(message);
   }
-
-  const data = (await res.json()) as OpenMeteoResponse | OpenMeteoResponse[];
-  return Array.isArray(data) ? data : [data];
+  throw new Error("Weather retry attempts exhausted");
 }
 
 // ---------------------------------------------------------------------------
@@ -303,11 +294,10 @@ async function fetchBatch(coords: CoordGroup[], attempt = 1): Promise<OpenMeteoR
 // ---------------------------------------------------------------------------
 
 interface FetchLoopResult {
-  dailyLimitHit: boolean;
   failedCoords: CoordGroup[];
 }
 
-async function fetchLoop(
+export async function fetchLoop(
   coordGroups: CoordGroup[],
   weatherByCoordKey: Map<string, OpenMeteoResponse>,
 ): Promise<FetchLoopResult> {
@@ -318,7 +308,6 @@ async function fetchLoop(
 
   const failedCoords: CoordGroup[] = [];
   let consecutiveFailures = 0;
-  let dailyLimitHit = false;
 
   for (let b = 0; b < batches.length; b++) {
     const coords = batches[b];
@@ -336,8 +325,7 @@ async function fetchLoop(
       const message = err instanceof Error ? err.message : String(err);
       console.error(`  Batch ${batchNum} failed: ${message}`);
 
-      if (err instanceof RateLimitError && err.daily) {
-        dailyLimitHit = true;
+      if (err instanceof RateLimitError) {
         for (let r = b; r < batches.length; r++) {
           failedCoords.push(...(batches[r] ?? []));
         }
@@ -346,19 +334,13 @@ async function fetchLoop(
 
       failedCoords.push(...coords);
 
-      if (err instanceof RateLimitError) {
-        // 429 rate limit: do not count toward circuit breaker
-      } else {
-        consecutiveFailures++;
-        if (consecutiveFailures >= MAX_CONSECUTIVE_FAILURES) {
-          console.error(
-            `  ${MAX_CONSECUTIVE_FAILURES} consecutive failures — API appears down, aborting.`,
-          );
-          for (let r = b + 1; r < batches.length; r++) {
-            failedCoords.push(...(batches[r] ?? []));
-          }
-          break;
-        }
+      consecutiveFailures++;
+      if (consecutiveFailures >= MAX_CONSECUTIVE_FAILURES) {
+        console.error(
+          `  ${MAX_CONSECUTIVE_FAILURES} consecutive failures — API appears down, aborting.`,
+        );
+        for (let r = b + 1; r < batches.length; r++) failedCoords.push(...batches[r]);
+        break;
       }
 
       if (b + 1 < batches.length) {
@@ -381,7 +363,7 @@ async function fetchLoop(
     }
   }
 
-  return { dailyLimitHit, failedCoords };
+  return { failedCoords };
 }
 
 // ---------------------------------------------------------------------------
@@ -391,8 +373,10 @@ async function fetchLoop(
 function mergeRetryResults(
   weatherByCoordKey: Map<string, OpenMeteoResponse>,
   fetchedGroups: CoordGroup[],
+  outputDir: string,
+  damsJsonPath: string,
 ): void {
-  const allDams = JSON.parse(fs.readFileSync(DAMS_JSON_PATH, "utf-8")) as DamEntry[];
+  const allDams = JSON.parse(fs.readFileSync(damsJsonPath, "utf-8")) as DamEntry[];
   const fetchedDamIds = new Set(fetchedGroups.flatMap((g) => g.damIds));
   const relevantDams = allDams.filter((d) => fetchedDamIds.has(d.id));
 
@@ -420,7 +404,7 @@ function mergeRetryResults(
   const updatedAt = new Date().toISOString();
 
   for (const [prefectureSlug, newDams] of byPrefecture) {
-    const outputPath = path.join(OUTPUT_DIR, `${prefectureSlug}.json`);
+    const outputPath = path.join(outputDir, `${prefectureSlug}.json`);
 
     let existing: PrefectureWeather;
     if (fs.existsSync(outputPath)) {
@@ -460,29 +444,29 @@ function mergeRetryResults(
 // --retry mode: reprocess _failed.json
 // ---------------------------------------------------------------------------
 
-async function retryFailedCoords(): Promise<void> {
-  if (!fs.existsSync(FAILED_JSON_PATH)) {
-    console.log("No _failed.json found. Nothing to retry.");
+async function retryFailedCoords(outputDir: string, damsJsonPath: string): Promise<void> {
+  const failedJsonPath = path.join(outputDir, "_failed.json");
+  const allDams = JSON.parse(fs.readFileSync(damsJsonPath, "utf-8")) as DamEntry[];
+  if (!fs.existsSync(failedJsonPath)) {
+    console.log("No _failed.json found. Validating existing data.");
+    validateWeatherData(allDams, outputDir);
     return;
   }
 
-  const raw = JSON.parse(fs.readFileSync(FAILED_JSON_PATH, "utf-8")) as FailedCoordsFile;
+  const raw = JSON.parse(fs.readFileSync(failedJsonPath, "utf-8")) as FailedCoordsFile;
   const { failedCoords } = raw;
 
   if (failedCoords.length === 0) {
     console.log("_failed.json is empty. Nothing to retry.");
-    fs.unlinkSync(FAILED_JSON_PATH);
+    fs.unlinkSync(failedJsonPath);
+    validateWeatherData(allDams, outputDir);
     return;
   }
 
   console.log(`Retrying ${failedCoords.length} failed coordinates (saved at ${raw.savedAt})`);
 
   const weatherByCoordKey = new Map<string, OpenMeteoResponse>();
-  const { dailyLimitHit } = await fetchLoop(failedCoords, weatherByCoordKey);
-
-  if (dailyLimitHit) {
-    console.error("Daily API limit exceeded. Cannot retry until tomorrow (UTC 0:00).");
-  }
+  await fetchLoop(failedCoords, weatherByCoordKey);
 
   const stillFailed = failedCoords.filter((g) => !weatherByCoordKey.has(coordKey(g.lat, g.lng)));
   const successCount = failedCoords.length - stillFailed.length;
@@ -491,18 +475,18 @@ async function retryFailedCoords(): Promise<void> {
     const successfulGroups = failedCoords.filter((g) =>
       weatherByCoordKey.has(coordKey(g.lat, g.lng)),
     );
-    mergeRetryResults(weatherByCoordKey, successfulGroups);
+    mergeRetryResults(weatherByCoordKey, successfulGroups, outputDir, damsJsonPath);
   }
 
   if (stillFailed.length === 0) {
-    fs.unlinkSync(FAILED_JSON_PATH);
+    fs.unlinkSync(failedJsonPath);
     console.log("\nAll coordinates fetched successfully. _failed.json removed.");
   } else {
     const payload: FailedCoordsFile = {
       savedAt: new Date().toISOString(),
       failedCoords: stillFailed,
     };
-    fs.writeFileSync(FAILED_JSON_PATH, JSON.stringify(payload, null, 2), "utf-8");
+    fs.writeFileSync(failedJsonPath, JSON.stringify(payload, null, 2), "utf-8");
     console.warn(`\n${stillFailed.length} coordinates still failed. _failed.json updated.`);
   }
 
@@ -510,30 +494,41 @@ async function retryFailedCoords(): Promise<void> {
   console.log(`Attempted coordinates: ${failedCoords.length}`);
   console.log(`Successfully fetched: ${successCount}`);
   console.log(`Still failing: ${stillFailed.length}`);
+  if (stillFailed.length > 0)
+    throw new Error(`Weather update incomplete: ${stillFailed.length} coordinates still failed`);
+  validateWeatherData(allDams, outputDir);
 }
 
 // ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 
-async function main(): Promise<void> {
-  const limitArg = process.argv.indexOf("--limit");
-  const limit = limitArg !== -1 ? parseInt(process.argv[limitArg + 1]) : undefined;
-  const retryFlag = process.argv.includes("--retry");
+export async function main(
+  options: { args?: string[]; outputDir?: string; damsJsonPath?: string } = {},
+): Promise<void> {
+  const args = options.args ?? process.argv.slice(2);
+  const outputDir = options.outputDir ?? OUTPUT_DIR;
+  const damsJsonPath = options.damsJsonPath ?? DAMS_JSON_PATH;
+  const failedJsonPath = path.join(outputDir, "_failed.json");
+  const limitArg = args.indexOf("--limit");
+  const limit = limitArg !== -1 ? Number(args[limitArg + 1]) : undefined;
+  if (limit !== undefined && (!Number.isInteger(limit) || limit <= 0))
+    throw new Error("--limit must be a positive integer");
+  const retryFlag = args.includes("--retry");
 
-  if (!fs.existsSync(OUTPUT_DIR)) {
-    fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
   }
 
   if (retryFlag) {
     if (limit !== undefined) {
       console.warn("Warning: --limit is ignored when --retry is used.");
     }
-    await retryFailedCoords();
+    await retryFailedCoords(outputDir, damsJsonPath);
     return;
   }
 
-  const allDams = JSON.parse(fs.readFileSync(DAMS_JSON_PATH, "utf-8")) as DamEntry[];
+  const allDams = JSON.parse(fs.readFileSync(damsJsonPath, "utf-8")) as DamEntry[];
   console.log(`Loaded ${allDams.length} dams from dams.json`);
 
   const allCoordGroups = groupByCoord(allDams);
@@ -585,7 +580,7 @@ async function main(): Promise<void> {
       distribution[getWeatherCategory(dam.today.weatherCode)]++;
     }
     const prefWeather: PrefectureWeather = { prefectureSlug, updatedAt, distribution, dams };
-    const outputPath = path.join(OUTPUT_DIR, `${prefectureSlug}.json`);
+    const outputPath = path.join(outputDir, `${prefectureSlug}.json`);
     fs.writeFileSync(outputPath, JSON.stringify(prefWeather, null, 2), "utf-8");
     successCount++;
     console.log(`  ${dams.length} dams saved to ${prefectureSlug}.json`);
@@ -593,10 +588,10 @@ async function main(): Promise<void> {
 
   if (failedCoords.length > 0) {
     const payload: FailedCoordsFile = { savedAt: new Date().toISOString(), failedCoords };
-    fs.writeFileSync(FAILED_JSON_PATH, JSON.stringify(payload, null, 2), "utf-8");
+    fs.writeFileSync(failedJsonPath, JSON.stringify(payload, null, 2), "utf-8");
     console.warn(`Saved to _failed.json. Re-run with --retry to attempt again.`);
-  } else if (fs.existsSync(FAILED_JSON_PATH)) {
-    fs.unlinkSync(FAILED_JSON_PATH);
+  } else if (fs.existsSync(failedJsonPath)) {
+    fs.unlinkSync(failedJsonPath);
   }
 
   console.log("\n=== Summary ===");
@@ -608,10 +603,16 @@ async function main(): Promise<void> {
   if (failedCoords.length > 0) {
     console.log(`Failed coordinates: ${failedCoords.length}`);
   }
-  console.log(`\nOutput directory: ${OUTPUT_DIR}`);
+  console.log(`\nOutput directory: ${outputDir}`);
+  if (failedCoords.length > 0)
+    throw new Error(`Weather update incomplete: ${failedCoords.length} coordinates failed`);
+  // --limit is a local sample only. Production always validates all dams.
+  if (limit === undefined) validateWeatherData(allDams, outputDir);
 }
 
-main().catch((err: unknown) => {
-  console.error(err);
-  process.exit(1);
-});
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch((err: unknown) => {
+    console.error(err);
+    process.exitCode = 1;
+  });
+}
