@@ -2,11 +2,43 @@ name: Update Weather Data
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "workers/scheduler/wrangler.toml"
+
+permissions:
+  contents: read
 
 jobs:
+  # Keep cron reconciliation outside the update queue: a newer dispatch may
+  # replace a pending update, but must never cancel a pending cron change.
+  sync_scheduler:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: voidzero-dev/setup-vp@v1
+        with:
+          version: 0.1.15
+          cache: true
+      - run: vp install --frozen-lockfile
+      - name: Apply and verify scheduler cron
+        run: vp dlx tsx scripts/sync-scheduler.ts
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
   update:
+    needs: sync_scheduler
+    if: ${{ always() && !cancelled() && (needs.sync_scheduler.result == 'success' || needs.sync_scheduler.result == 'skipped') }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    # Serialize publishers while allowing a newer update to replace a stale one.
+    concurrency:
+      group: weather-production
+      cancel-in-progress: false
 
     steps:
       # リポジトリをチェックアウト

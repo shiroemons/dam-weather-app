@@ -6,7 +6,7 @@
 
 ## 概要
 
-全国約2,700基のダム所在地の天気を、都道府県別一覧・地図・個別ダム詳細など多角的に確認できます。天気データはGitHub Actionsで3時間ごとに自動更新されます。
+全国約2,700基のダム所在地の天気を、都道府県別一覧・地図・個別ダム詳細など多角的に確認できます。天気データはGitHub Actionsで8時間ごとに自動更新されます。
 
 ## 主な機能
 
@@ -45,8 +45,8 @@
 ## データソース
 
 - **ダムデータ**: [国土数値情報 ダムデータ（W01）](https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-W01.html)（約2,700基）
-- **天気データ**: [Open-Meteo API](https://open-meteo.com/)（各ダムの緯度経度からピンポイント天気を取得、GitHub Actionsで3時間ごとに更新）
-- **貯水量データ**: 国土交通省 川の防災情報（ダム諸量データ、GitHub Actionsで3時間ごとに更新）
+- **天気データ**: [Open-Meteo API](https://open-meteo.com/)（各ダムの緯度経度からピンポイント天気を取得、GitHub Actionsで8時間ごとに更新）
+- **貯水量データ**: 国土交通省 川の防災情報（ダム諸量データ、GitHub Actionsで8時間ごとに更新）
 
 ## セットアップ
 
@@ -112,7 +112,7 @@ vp fmt      # フォーマットのみ
 ### データ取得・ビルドフロー
 
 ```
-GitHub Actions (3時間ごと、1日8回)
+GitHub Actions (8時間ごと、1日3回)
   │
   ├─ 全ダムの緯度経度をOpen-Meteo APIにバルクリクエスト
   │   （近接ダムは座標を丸めて重複排除、約2,600地点）
@@ -127,7 +127,7 @@ GitHub Actions (3時間ごと、1日8回)
 
 ```
 Cloudflare Workers Scheduler
-  └─ Cron (0 */3 * * *) → GitHub Actions ワークフローをトリガー
+  └─ Cron (0 */8 * * *) → GitHub Actions ワークフローをトリガー
 ```
 
 ### ディレクトリ構成
@@ -139,8 +139,8 @@ dam-weather-app/
 ├── workers/scheduler/     # Cloudflare Workers（スケジューラー）
 ├── public/
 │   ├── data/dams/         # 都道府県別ダムデータ（ビルド時生成）
-│   ├── weather/           # 都道府県別天気データ（3時間ごと更新）
-│   └── storage/           # 都道府県別貯水量データ（3時間ごと更新）
+│   ├── weather/           # 都道府県別天気データ（8時間ごと更新）
+│   └── storage/           # 都道府県別貯水量データ（8時間ごと更新）
 ├── src/
 │   ├── components/
 │   │   ├── common/        # 共通コンポーネント
@@ -172,6 +172,8 @@ dam-weather-app/
 - ダムデータ: 国土数値情報（非商用利用）
 - 天気データ: [Open-Meteo](https://open-meteo.com/)（非商用利用、APIキー不要）
 - 天気アイコン: [Meteocons](https://github.com/basmilius/weather-icons) by Bas Milius
+
+天気と貯水率は、どちらも日本時間1時・9時・17時の1日3回に更新します。mainへのcron設定変更時は、既存Workerの登録時刻を反映・読み戻し検証してからデータを再取得します。既存tokenの権限不足などで反映できない場合は取得前に停止します。
 
 ### 天気更新の失敗・復旧
 

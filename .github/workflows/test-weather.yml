@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "scripts/**"
+      - "workers/scheduler/**"
       - "src/data/dams.json"
       - ".github/workflows/**"
       - "package.json"
@@ -13,6 +14,7 @@ on:
     branches: [main]
     paths:
       - "scripts/**"
+      - "workers/scheduler/**"
       - "src/data/dams.json"
       - ".github/workflows/**"
       - "package.json"
@@ -36,4 +38,4 @@ jobs:
       - run: vp check
       - run: vp exec tsc -b
       # All API responses are mocked: no live API quota or deployment credentials.
-      - run: vp test run scripts/fetch-weather.test.ts scripts/validate-weather.test.ts
+      - run: vp test run scripts/fetch-weather.test.ts scripts/validate-weather.test.ts scripts/scheduler.test.ts scripts/sync-scheduler.test.ts
