@@ -115,6 +115,7 @@ function DamDetailPage() {
           params={{ prefectureSlug: dam.prefectureSlug }}
           search={{
             obs: true,
+            storage: false,
             group: "waterSystem",
             purposes: "",
             types: "",
