@@ -1,21 +1,21 @@
-name: Preview PR 3
+name: Preview PR 4
 
 # Only this trusted repository branch can use the existing deployment secrets.
 # No pull_request_target, forks, production branch, or schedule triggers.
 on:
   push:
-    branches: [feat/prefecture-storage-rate-filter]
+    branches: [fix/hide-unavailable-storage-filter]
 
 permissions:
   contents: read
 
 concurrency:
-  group: pages-preview-pr-3
+  group: pages-preview-pr-4
   cancel-in-progress: true
 
 jobs:
   preview:
-    if: github.repository == 'shiroemons/dam-weather-app' && github.ref == 'refs/heads/feat/prefecture-storage-rate-filter'
+    if: github.repository == 'shiroemons/dam-weather-app' && github.ref == 'refs/heads/fix/hide-unavailable-storage-filter'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -29,20 +29,20 @@ jobs:
       - run: vp install --frozen-lockfile
       - run: vp check
       - run: vp exec tsc -b
-      - run: vp test run src/__tests__/routes/prefectureStorageFilter.test.tsx scripts/pr3-preview.test.ts
+      - run: vp test run src/__tests__/routes/prefectureStorageFilter.test.tsx scripts/pr4-preview.test.ts
       - name: Reuse published data and build the preview
         run: |
           vp dlx tsx scripts/split-dams.ts
-          vp dlx tsx scripts/pr3-preview.ts prepare
+          vp dlx tsx scripts/pr4-preview.ts prepare
           vp dlx tsx scripts/validate-weather.ts
           vp dlx tsx scripts/generate-sitemap.ts
           vp build
           vp dlx tsx scripts/prerender.ts
-      - name: Verify nonproduction target and deploy only PR 3
+      - name: Verify nonproduction target and deploy only PR 4
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          vp dlx tsx scripts/pr3-preview.ts guard
-          vp exec wrangler pages deploy dist --project-name=japan-dam-weather --branch=preview-pr-3 --commit-hash="$GITHUB_SHA" --commit-message="PR 3 preview" --commit-dirty=true
-          vp dlx tsx scripts/pr3-preview.ts verify
+          vp dlx tsx scripts/pr4-preview.ts guard
+          vp exec wrangler pages deploy dist --project-name=japan-dam-weather --branch=preview-pr-4 --commit-hash="$GITHUB_SHA" --commit-message="PR 4 preview" --commit-dirty=true
+          vp dlx tsx scripts/pr4-preview.ts verify

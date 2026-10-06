@@ -1,13 +1,13 @@
-/** PR 3 only: reuse published snapshots and verify a separate Pages preview. */
+/** PR 4 only: reuse published snapshots and verify a separate Pages preview. */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { validateWeatherData } from "./validate-weather.ts";
 
 export const PROJECT = "japan-dam-weather";
-export const PREVIEW_BRANCH = "preview-pr-3";
+export const PREVIEW_BRANCH = "preview-pr-4";
 const PUBLISHED_ORIGIN = "https://japan-dam-weather.pages.dev";
-const TRUSTED_REF = "refs/heads/feat/prefecture-storage-rate-filter";
+const TRUSTED_REF = "refs/heads/fix/hide-unavailable-storage-filter";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 type ExpectedDam = { id: string; prefectureSlug: string };
@@ -28,7 +28,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function assert(condition: unknown, message: string): asserts condition {
-  if (!condition) throw new Error(`PR 3 preview: ${message}`);
+  if (!condition) throw new Error(`PR 4 preview: ${message}`);
 }
 
 export async function preparePreviewData({
@@ -223,11 +223,11 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
       console.log(`Verified ${PROJECT}: production main, target ${PREVIEW_BRANCH}`);
     } else if (mode === "verify") {
       const url = await verifyPreviewDeployment();
-      console.log(`Verified PR 3 preview: ${url}`);
+      console.log(`Verified PR 4 preview: ${url}`);
       if (process.env.GITHUB_STEP_SUMMARY)
         fs.appendFileSync(
           process.env.GITHUB_STEP_SUMMARY,
-          `## PR 3 preview\n\n${url}\n\nCommit: ${process.env.GITHUB_SHA}\n`,
+          `## PR 4 preview\n\n${url}\n\nCommit: ${process.env.GITHUB_SHA}\n`,
         );
     } else throw new Error("Use prepare, guard or verify");
   } catch (error) {

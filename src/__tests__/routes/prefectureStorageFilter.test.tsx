@@ -120,7 +120,7 @@ async function renderPage(search = "", client = createClient()) {
       </ThemeProvider>
     </QueryClientProvider>,
   );
-  await screen.findByRole("switch", { name: "貯水率あり" });
+  await screen.findByRole("heading", { name: "東京都", level: 1 });
   return { ...rendered, router, history, client };
 }
 
@@ -265,15 +265,99 @@ describe("都道府県ページの貯水率フィルター", () => {
     },
   );
 
-  it("正常な0件と解除ボタンを表示する", async () => {
-    storageResponse = () => Promise.resolve(jsonResponse({ ...storage, dams: [] }));
-    const user = userEvent.setup();
-    await renderPage("?storage=true");
-    await screen.findByText("0基のダム / 全6基");
-    expect(screen.getByText("条件に合うダムがありません")).not.toBeNull();
-    await user.click(screen.getByRole("button", { name: "「貯水率あり」を解除" }));
+  it.each([
+    ["記録なし", []],
+    ["すべてnull", dams.map((dam) => storageEntry(dam.id, null))],
+    ["県外の記録のみ", [storageEntry("outside-prefecture", 75)]],
+    ["貯水率フィールドなし", [{ damId: "zero" }]],
+  ])("正常取得した県全体に表示可能な貯水率がなければスイッチを隠す (%s)", async (_, entries) => {
+    storageResponse = () => Promise.resolve(jsonResponse({ ...storage, dams: entries }));
+    const { client } = await renderPage();
+    await waitFor(() => expect(client.getQueryState(["storage", "tokyo"])?.status).toBe("success"));
+    await waitFor(() => expect(screen.queryByRole("switch", { name: "貯水率あり" })).toBeNull());
+    expect(screen.getByRole("switch", { name: "観測所" })).not.toBeNull();
     await screen.findByText("6基のダム");
     expectDam("率なしダム", true);
+  });
+
+  it("0%のダムしかなくてもスイッチを表示する", async () => {
+    storageResponse = () =>
+      Promise.resolve(jsonResponse({ ...storage, dams: [storageEntry("zero", 0)] }));
+    await renderPage("?storage=true");
+    await screen.findByText("1基のダム / 全6基");
+    expect(screen.getByRole("switch", { name: "貯水率あり" }).getAttribute("aria-checked")).toBe(
+      "true",
+    );
+    expectDam("対象ゼロダム", true);
+  });
+
+  it("非表示にしたフィルターをURLから解除し、他の条件と表示を保つ", async () => {
+    storageResponse = () => Promise.resolve(jsonResponse({ ...storage, dams: [] }));
+    const { history } = await renderPage(
+      "?storage=true&obs=true&purposes=W&types=G&q=対象&group=municipality&view=list&sort=rate&order=desc",
+    );
+    await screen.findByText("1基のダム / 全6基");
+    await waitFor(() => expect(history.location.search).toContain("storage=false"));
+    expect(history.length).toBe(1);
+    for (const value of [
+      "obs=true",
+      "purposes=W",
+      "types=G",
+      "group=municipality",
+      "view=list",
+      "sort=rate",
+      "order=desc",
+    ]) {
+      expect(history.location.search).toContain(value);
+    }
+    expect((screen.getByPlaceholderText("ダム名で検索...") as HTMLInputElement).value).toBe("対象");
+    expect(screen.queryByRole("switch", { name: "貯水率あり" })).toBeNull();
+    expect(screen.queryByText("条件に合うダムがありません")).toBeNull();
+    expectDam("対象ゼロダム", true);
+  });
+
+  it("他の条件で貯水率のあるダムが0件になっても、スイッチと解除手段を残す", async () => {
+    const user = userEvent.setup();
+    await renderPage("?storage=true&q=率なし");
+    await screen.findByText("0基のダム / 全6基");
+    expect(screen.getByRole("switch", { name: "貯水率あり" })).not.toBeNull();
+    expect(screen.getByText("条件に合うダムがありません")).not.toBeNull();
+    await user.click(screen.getByRole("button", { name: "「貯水率あり」を解除" }));
+    await screen.findByText("1基のダム / 全6基");
+    expectDam("率なしダム", true);
+  });
+
+  it("読み込み中はスイッチを残し、データなしが確定してから非表示とURL解除を行う", async () => {
+    let resolveStorage!: (response: Response) => void;
+    storageResponse = () =>
+      new Promise((resolve) => {
+        resolveStorage = resolve;
+      });
+    const { history } = await renderPage("?storage=true");
+    await screen.findByText("貯水率データを読み込み中…");
+    expect(screen.getByRole("switch", { name: "貯水率あり" }).getAttribute("aria-checked")).toBe(
+      "true",
+    );
+    expect(history.location.search).toContain("storage=true");
+    await act(async () => resolveStorage(jsonResponse({ ...storage, dams: [] })));
+    await screen.findByText("6基のダム");
+    await waitFor(() => expect(history.location.search).toContain("storage=false"));
+    expect(screen.queryByRole("switch", { name: "貯水率あり" })).toBeNull();
+  });
+
+  it("取得エラーではスイッチを残し、再試行でデータなしが確定したら非表示にする", async () => {
+    storageResponse = () => Promise.resolve(jsonResponse({}, 500));
+    const user = userEvent.setup();
+    const { history } = await renderPage("?storage=true");
+    await screen.findByRole("alert");
+    expect(screen.getByRole("switch", { name: "貯水率あり" })).not.toBeNull();
+    expect(history.location.search).toContain("storage=true");
+    storageResponse = () => Promise.resolve(jsonResponse({ ...storage, dams: [] }));
+    await user.click(screen.getByRole("button", { name: "貯水率データを再読み込み" }));
+    await screen.findByText("6基のダム");
+    await waitFor(() => expect(history.location.search).toContain("storage=false"));
+    expect(screen.queryByRole("switch", { name: "貯水率あり" })).toBeNull();
+    expect(screen.queryByRole("alert")).toBeNull();
   });
 
   it("初回取得がオフラインで一時停止しても0件と表示せず、接続復帰で絞り込む", async () => {
@@ -304,5 +388,108 @@ describe("都道府県ページの貯水率フィルター", () => {
     expect(screen.queryByText(/0基のダム/)).toBeNull();
     await act(async () => resolveDams(jsonResponse(dams)));
     await screen.findByText("4基のダム / 全6基");
+  });
+
+  it("貯水率が空でもダム情報の取得中は非表示にせず、確定後に解除する", async () => {
+    let resolveDams!: (response: Response) => void;
+    damsResponse = () =>
+      new Promise((resolve) => {
+        resolveDams = resolve;
+      });
+    storageResponse = () => Promise.resolve(jsonResponse({ ...storage, dams: [] }));
+    const { client, history } = await renderPage("?storage=true");
+    await waitFor(() => expect(client.getQueryState(["storage", "tokyo"])?.status).toBe("success"));
+    expect(screen.getByRole("switch", { name: "貯水率あり" })).not.toBeNull();
+    expect(history.location.search).toContain("storage=true");
+    await act(async () => resolveDams(jsonResponse(dams)));
+    await screen.findByText("6基のダム");
+    await waitFor(() => expect(history.location.search).toContain("storage=false"));
+    expect(screen.queryByRole("switch", { name: "貯水率あり" })).toBeNull();
+  });
+
+  it("後から貯水率が取得できればスイッチをOFFの状態で再表示する", async () => {
+    storageResponse = () => Promise.resolve(jsonResponse({ ...storage, dams: [] }));
+    const { client, history } = await renderPage("?storage=true");
+    await waitFor(() => expect(history.location.search).toContain("storage=false"));
+    expect(screen.queryByRole("switch", { name: "貯水率あり" })).toBeNull();
+    storageResponse = () => Promise.resolve(jsonResponse(storage));
+    await act(async () => {
+      await client.refetchQueries({ queryKey: ["storage", "tokyo"] });
+    });
+    expect(
+      (await screen.findByRole("switch", { name: "貯水率あり" })).getAttribute("aria-checked"),
+    ).toBe("false");
+    await screen.findByText("6基のダム");
+  });
+
+  it.each([404, 500])(
+    "ダム情報のHTTP %iをデータなしとせず、再読み込みで確認する",
+    async (status) => {
+      damsResponse = () => Promise.resolve(jsonResponse([], status));
+      storageResponse = () => Promise.resolve(jsonResponse({ ...storage, dams: [] }));
+      const user = userEvent.setup();
+      const { history } = await renderPage("?storage=true");
+      await screen.findByText("ダム情報を確認できません");
+      expect(screen.getByRole("switch", { name: "貯水率あり" })).not.toBeNull();
+      expect(history.location.search).toContain("storage=true");
+      damsResponse = () => Promise.resolve(jsonResponse(dams));
+      await user.click(screen.getByRole("button", { name: "再読み込み" }));
+      await screen.findByText("6基のダム");
+      await waitFor(() => expect(history.location.search).toContain("storage=false"));
+      expect(screen.queryByRole("switch", { name: "貯水率あり" })).toBeNull();
+      expect(screen.queryByText("データの読み込みに失敗しました")).toBeNull();
+    },
+  );
+
+  it("県の切り替えと戻る・進むで、県ごとのスイッチとURLを一致させる", async () => {
+    const client = createClient();
+    const osakaDam = {
+      ...baseDam,
+      id: "osaka-dam",
+      damName: "大阪ダム",
+      prefecture: "大阪府",
+      prefectureSlug: "osaka",
+    };
+    client.setQueryData(["dams", "osaka"], [osakaDam]);
+    client.setQueryData(["weather", "osaka"], { ...storage, prefectureSlug: "osaka", dams: [] });
+    client.setQueryData(["storage", "osaka"], { ...storage, prefectureSlug: "osaka", dams: [] });
+    const { router, history } = await renderPage("?storage=true", client);
+    await screen.findByText("4基のダム / 全6基");
+    await act(async () => {
+      await router.navigate({
+        from: "/prefecture/$prefectureSlug",
+        to: "/prefecture/$prefectureSlug",
+        params: { prefectureSlug: "osaka" },
+        search: {
+          obs: false,
+          storage: true,
+          group: "waterSystem",
+          purposes: "",
+          types: "",
+          q: "",
+          view: "grid",
+          sort: "name",
+          order: "asc",
+        },
+      });
+    });
+    await screen.findByRole("heading", { name: "大阪府", level: 1 });
+    await screen.findByText("1基のダム");
+    await waitFor(() => expect(history.location.search).toContain("storage=false"));
+    expect(screen.queryByRole("switch", { name: "貯水率あり" })).toBeNull();
+    expectDam("大阪ダム", true);
+    expect(history.length).toBe(2);
+    await act(async () => history.back());
+    await screen.findByRole("heading", { name: "東京都", level: 1 });
+    await screen.findByText("4基のダム / 全6基");
+    expect(screen.getByRole("switch", { name: "貯水率あり" }).getAttribute("aria-checked")).toBe(
+      "true",
+    );
+    expect(history.location.search).toContain("storage=true");
+    await act(async () => history.forward());
+    await screen.findByRole("heading", { name: "大阪府", level: 1 });
+    await screen.findByText("1基のダム");
+    expect(screen.queryByRole("switch", { name: "貯水率あり" })).toBeNull();
+    expect(history.location.search).toContain("storage=false");
   });
 });
