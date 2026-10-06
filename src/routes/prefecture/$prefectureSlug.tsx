@@ -199,11 +199,13 @@ function PrefecturePage() {
   const prefecture = getPrefectureBySlug(prefectureSlug);
   const {
     dams,
+    allDams,
     totalCount,
     availablePurposes,
     availableTypes,
     isLoading: damsLoading,
     isError: damsError,
+    refetch: refetchDams,
   } = useFilteredDams(prefectureSlug, obs, selectedPurposes, selectedTypes, q);
   const {
     data: weather,
@@ -216,14 +218,36 @@ function PrefecturePage() {
     data: storageData,
     isPending: storageLoading,
     isError: storageError,
+    isSuccess: storageSuccess,
     refetch: refetchStorage,
   } = useStorage(prefectureSlug);
-  const visibleDams = useMemo(
-    () => (storageOnly ? filterDamsWithStorageRate(dams, storageData) : dams),
-    [dams, storageOnly, storageData],
+  // Only a successful prefecture-wide result can establish that the filter is unavailable.
+  // Other filters must not hide the switch, and 0% is a displayable storage rate.
+  const storageFilterUnavailable = useMemo(
+    () =>
+      !damsLoading &&
+      !damsError &&
+      storageSuccess &&
+      filterDamsWithStorageRate(allDams, storageData).length === 0,
+    [allDams, damsLoading, damsError, storageData, storageSuccess],
   );
-  const storageFilterLoading = storageOnly && storageLoading;
-  const storageFilterError = storageOnly && storageError;
+  const storageFilterActive = storageOnly && !storageFilterUnavailable;
+
+  useEffect(() => {
+    if (storageOnly && storageFilterUnavailable) {
+      void navigate({
+        search: (prev) => ({ ...prev, storage: false }),
+        replace: true,
+      });
+    }
+  }, [navigate, storageOnly, storageFilterUnavailable]);
+
+  const visibleDams = useMemo(
+    () => (storageFilterActive ? filterDamsWithStorageRate(dams, storageData) : dams),
+    [dams, storageFilterActive, storageData],
+  );
+  const storageFilterLoading = storageFilterActive && storageLoading;
+  const storageFilterError = storageFilterActive && storageError;
 
   if (!prefecture) {
     return (
@@ -290,7 +314,9 @@ function PrefecturePage() {
         <ViewModeSelector value={view} onChange={setViewMode} />
         <div className="flex shrink-0 flex-nowrap items-center gap-3 whitespace-nowrap md:gap-4">
           <FilterToggle enabled={obs} onChange={setObsOnly} />
-          <FilterToggle label="貯水率あり" enabled={storageOnly} onChange={setStorageOnly} />
+          {!storageFilterUnavailable && (
+            <FilterToggle label="貯水率あり" enabled={storageOnly} onChange={setStorageOnly} />
+          )}
         </div>
       </div>
 
@@ -333,7 +359,12 @@ function PrefecturePage() {
 
       {(damsError || weatherError) && (
         <div className="mt-6">
-          <ErrorFallback resetErrorBoundary={() => refetch()} />
+          <ErrorFallback
+            resetErrorBoundary={() => {
+              void refetchDams();
+              void refetch();
+            }}
+          />
         </div>
       )}
 
@@ -360,7 +391,7 @@ function PrefecturePage() {
         !storageFilterError && (
           <>
             <div className="mt-6">
-              {storageOnly && visibleDams.length === 0 ? (
+              {storageFilterActive && visibleDams.length === 0 ? (
                 <div className="py-12 text-center text-text-secondary">
                   <p>条件に合うダムがありません</p>
                   <button

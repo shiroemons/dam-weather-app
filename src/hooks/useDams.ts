@@ -8,7 +8,7 @@ export function useDams(prefectureSlug: string) {
     queryKey: ["dams", prefectureSlug],
     queryFn: async () => {
       const response = await fetch(`/data/dams/${prefectureSlug}.json`);
-      if (!response.ok) return [];
+      if (!response.ok) throw new Error(`ダム情報の取得に失敗しました (${response.status})`);
       return response.json() as Promise<Dam[]>;
     },
     staleTime: Infinity,
@@ -23,7 +23,7 @@ export function useFilteredDams(
   selectedTypes: Set<string>,
   keyword: string = "",
 ) {
-  const { data: dams = [], isPending: isLoading, isError } = useDams(prefectureSlug);
+  const { data: dams = [], isPending: isLoading, isError, refetch } = useDams(prefectureSlug);
 
   const baseDams = useMemo(() => {
     if (majorOnly) {
@@ -70,10 +70,12 @@ export function useFilteredDams(
 
   return {
     dams: filtered,
+    allDams: dams,
     totalCount: dams.length,
     availablePurposes,
     availableTypes,
     isLoading,
     isError,
+    refetch,
   };
 }
