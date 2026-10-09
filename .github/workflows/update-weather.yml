@@ -15,7 +15,7 @@ jobs:
   # replace a pending update, but must never cancel a pending cron change.
   sync_scheduler:
     if: github.event_name == 'push'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
@@ -33,7 +33,7 @@ jobs:
   update:
     needs: sync_scheduler
     if: ${{ always() && !cancelled() && (needs.sync_scheduler.result == 'success' || needs.sync_scheduler.result == 'skipped') }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     # Serialize publishers while allowing a newer update to replace a stale one.
     concurrency:

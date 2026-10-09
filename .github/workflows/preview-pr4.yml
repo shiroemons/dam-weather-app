@@ -16,7 +16,7 @@ concurrency:
 jobs:
   preview:
     if: github.repository == 'shiroemons/dam-weather-app' && github.ref == 'refs/heads/fix/hide-unavailable-storage-filter'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
