@@ -94,6 +94,7 @@ interface FailedCoordsFile {
 }
 
 class RateLimitError extends Error {}
+class TransientFetchError extends Error {}
 
 // ---------------------------------------------------------------------------
 // WMO weather code helpers
@@ -208,7 +209,10 @@ export function retryAfterMs(value: string | null, now = Date.now()): number {
   return Number.isFinite(date) ? Math.max(BATCH_DELAY_MS, date - now) : BATCH_DELAY_MS;
 }
 
-export async function fetchBatch(coords: CoordGroup[]): Promise<OpenMeteoResponse[]> {
+export async function fetchBatch(
+  coords: CoordGroup[],
+  maxAttempts = MAX_ATTEMPTS,
+): Promise<OpenMeteoResponse[]> {
   const body = {
     latitude: coords.map((c) => c.lat),
     longitude: coords.map((c) => c.lng),
@@ -223,8 +227,8 @@ export async function fetchBatch(coords: CoordGroup[]): Promise<OpenMeteoRespons
     forecast_days: 2,
   };
 
-  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-    console.log(`  POST ${coords.length} coordinates (attempt ${attempt}/${MAX_ATTEMPTS})`);
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    console.log(`  POST ${coords.length} coordinates (attempt ${attempt}/${maxAttempts})`);
     let waitMs = BATCH_DELAY_MS;
     try {
       const res = await fetch(OPEN_METEO_URL, {
@@ -232,6 +236,8 @@ export async function fetchBatch(coords: CoordGroup[]): Promise<OpenMeteoRespons
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
         signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+      }).catch((cause: unknown) => {
+        throw new TransientFetchError("Weather transport failed", { cause });
       });
 
       if (!res.ok) {
@@ -252,17 +258,21 @@ export async function fetchBatch(coords: CoordGroup[]): Promise<OpenMeteoRespons
           if (
             /daily|hourly|monthly/i.test(reason) ||
             waitMs > MAX_RETRY_WAIT_MS ||
-            attempt === MAX_ATTEMPTS
+            attempt === maxAttempts
           ) {
             throw new RateLimitError(message);
           }
         } else if (res.status < 500 && res.status !== 408) {
           throw new RateLimitError(`Non-retryable API error: ${message}`);
         }
+        if (res.status === 408 || res.status >= 500) throw new TransientFetchError(message);
         throw new Error(message);
       }
 
-      const data: unknown = await res.json();
+      const data: unknown = await res.json().catch((cause: unknown) => {
+        if (cause instanceof SyntaxError) throw cause;
+        throw new TransientFetchError("Weather response transport failed", { cause });
+      });
       const responses = Array.isArray(data) ? data : [data];
       // Do not misassign a shortened response array to the wrong coordinates,
       // or silently turn a missing weather code into clear skies (code 0).
@@ -277,7 +287,7 @@ export async function fetchBatch(coords: CoordGroup[]): Promise<OpenMeteoRespons
       }
       return responses as OpenMeteoResponse[];
     } catch (err) {
-      if (err instanceof RateLimitError || attempt === MAX_ATTEMPTS) throw err;
+      if (err instanceof RateLimitError || attempt === maxAttempts) throw err;
       const message = err instanceof Error ? err.message : String(err);
       const cause = err instanceof Error && err.cause ? ` [cause: ${inspect(err.cause)}]` : "";
       console.warn(
@@ -297,16 +307,24 @@ interface FetchLoopResult {
   failedCoords: CoordGroup[];
 }
 
-export async function fetchLoop(
+interface FetchPassResult extends FetchLoopResult {
+  transientCoords: CoordGroup[];
+  aborted: boolean;
+}
+
+async function fetchPass(
   coordGroups: CoordGroup[],
   weatherByCoordKey: Map<string, OpenMeteoResponse>,
-): Promise<FetchLoopResult> {
+  maxAttempts = MAX_ATTEMPTS,
+): Promise<FetchPassResult> {
   const batches: CoordGroup[][] = [];
   for (let i = 0; i < coordGroups.length; i += BATCH_SIZE) {
     batches.push(coordGroups.slice(i, i + BATCH_SIZE));
   }
 
   const failedCoords: CoordGroup[] = [];
+  const transientCoords: CoordGroup[] = [];
+  let aborted = false;
   let consecutiveFailures = 0;
 
   for (let b = 0; b < batches.length; b++) {
@@ -319,13 +337,15 @@ export async function fetchLoop(
 
     let responses: OpenMeteoResponse[];
     try {
-      responses = await fetchBatch(coords);
+      responses = await fetchBatch(coords, maxAttempts);
       consecutiveFailures = 0;
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
-      console.error(`  Batch ${batchNum} failed: ${message}`);
+      const cause = err instanceof Error && err.cause ? ` [cause: ${inspect(err.cause)}]` : "";
+      console.error(`  Batch ${batchNum} failed: ${message}${cause}`);
 
       if (err instanceof RateLimitError) {
+        aborted = true;
         for (let r = b; r < batches.length; r++) {
           failedCoords.push(...(batches[r] ?? []));
         }
@@ -333,9 +353,11 @@ export async function fetchLoop(
       }
 
       failedCoords.push(...coords);
+      if (err instanceof TransientFetchError) transientCoords.push(...coords);
 
       consecutiveFailures++;
       if (consecutiveFailures >= MAX_CONSECUTIVE_FAILURES) {
+        aborted = true;
         console.error(
           `  ${MAX_CONSECUTIVE_FAILURES} consecutive failures — API appears down, aborting.`,
         );
@@ -363,7 +385,33 @@ export async function fetchLoop(
     }
   }
 
-  return { failedCoords };
+  return { failedCoords, transientCoords, aborted };
+}
+
+export async function fetchLoop(
+  coordGroups: CoordGroup[],
+  weatherByCoordKey: Map<string, OpenMeteoResponse>,
+): Promise<FetchLoopResult> {
+  const firstPass = await fetchPass(coordGroups, weatherByCoordKey);
+  // Recover an isolated transient failure after the other batches have had a
+  // chance to succeed. Never refetch successful coordinates, amplify a quota
+  // failure, or recursively retry. One extra request (at most 500 coordinates)
+  // adds at most 61s of cooldown + 30s of request time to the existing loop.
+  if (
+    firstPass.aborted ||
+    firstPass.failedCoords.length === 0 ||
+    firstPass.failedCoords.length > BATCH_SIZE ||
+    firstPass.transientCoords.length !== firstPass.failedCoords.length
+  ) {
+    return { failedCoords: firstPass.failedCoords };
+  }
+
+  console.log(
+    `\nRecovering ${firstPass.transientCoords.length} transiently failed coordinates once...`,
+  );
+  await sleep(BATCH_DELAY_MS);
+  const recovery = await fetchPass(firstPass.transientCoords, weatherByCoordKey, 1);
+  return { failedCoords: recovery.failedCoords };
 }
 
 // ---------------------------------------------------------------------------
