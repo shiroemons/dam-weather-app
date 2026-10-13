@@ -139,6 +139,177 @@ describe("rate-limit-aware bounded recovery", () => {
   });
 });
 
+describe("one-shot deferred transient recovery", () => {
+  function groups(count: number) {
+    return Array.from({ length: count }, (_, i) => ({
+      lat: 30 + i / 100,
+      lng: 135,
+      damIds: [`${i}`],
+    }));
+  }
+
+  function succeed(_url: unknown, init?: RequestInit) {
+    const { latitude } = JSON.parse(init!.body as string);
+    return Promise.resolve(response(latitude.map(() => forecast())));
+  }
+
+  it.each([408, 503])("recovers exhausted HTTP %s failures once", async (status) => {
+    fetchMock
+      .mockResolvedValueOnce(response({}, status))
+      .mockResolvedValueOnce(response({}, status))
+      .mockResolvedValueOnce(response({}, status))
+      .mockImplementation(succeed);
+    const results = new Map();
+    const result = fetchLoop([group], results);
+    await vi.advanceTimersByTimeAsync(182_999);
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+    await vi.advanceTimersByTimeAsync(1);
+    expect((await result).failedCoords).toHaveLength(0);
+    expect(results.size).toBe(1);
+    expect(fetchMock).toHaveBeenCalledTimes(4);
+  });
+
+  it("does not recurse when the final recovery request also times out", async () => {
+    fetchMock.mockRejectedValue(new DOMException("timeout", "TimeoutError"));
+    const result = fetchLoop([group], new Map());
+    await vi.runAllTimersAsync();
+    expect((await result).failedCoords).toEqual([group]);
+    expect(fetchMock).toHaveBeenCalledTimes(4);
+  });
+
+  it("never retries a 429 during the final recovery request", async () => {
+    fetchMock
+      .mockRejectedValueOnce(new TypeError("fetch failed"))
+      .mockRejectedValueOnce(new TypeError("fetch failed"))
+      .mockRejectedValueOnce(new TypeError("fetch failed"))
+      .mockResolvedValueOnce(response({ reason: "Minutely limit" }, 429, { "Retry-After": "90" }));
+    const result = fetchLoop([group], new Map());
+    await vi.runAllTimersAsync();
+    expect((await result).failedCoords).toEqual([group]);
+    expect(fetchMock).toHaveBeenCalledTimes(4);
+    expect(Date.now() - now.getTime()).toBe(183_000);
+  });
+
+  it.each([400, 429])("suppresses pending recovery after terminal HTTP %s", async (status) => {
+    fetchMock
+      .mockRejectedValueOnce(new TypeError("fetch failed"))
+      .mockRejectedValueOnce(new TypeError("fetch failed"))
+      .mockRejectedValueOnce(new TypeError("fetch failed"))
+      .mockResolvedValueOnce(response({ reason: "Daily limit" }, status));
+    const result = fetchLoop(groups(501), new Map());
+    await vi.runAllTimersAsync();
+    expect((await result).failedCoords).toHaveLength(501);
+    expect(fetchMock).toHaveBeenCalledTimes(4);
+  });
+
+  it("keeps the circuit breaker and records unattempted batches", async () => {
+    fetchMock.mockRejectedValue(new TypeError("fetch failed"));
+    const result = fetchLoop(groups(1501), new Map());
+    await vi.runAllTimersAsync();
+    expect((await result).failedCoords).toHaveLength(1501);
+    expect(fetchMock).toHaveBeenCalledTimes(9);
+  });
+
+  it("skips recovery when transient failures exceed one batch", async () => {
+    fetchMock.mockRejectedValue(new TypeError("fetch failed"));
+    const result = fetchLoop(groups(501), new Map());
+    await vi.runAllTimersAsync();
+    expect((await result).failedCoords).toHaveLength(501);
+    expect(fetchMock).toHaveBeenCalledTimes(6);
+  });
+
+  it("does not add a recovery request for malformed successful responses", async () => {
+    fetchMock.mockImplementation(async () => response({ daily: {} }));
+    const result = fetchLoop([group], new Map());
+    await vi.runAllTimersAsync();
+    expect((await result).failedCoords).toEqual([group]);
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+  });
+
+  it.each(["TimeoutError", "AbortError"])(
+    "recovers exhausted response-body %s failures",
+    async (name) => {
+      let calls = 0;
+      fetchMock.mockImplementation(async () => {
+        const res = response(forecast());
+        if (++calls <= 3)
+          vi.spyOn(res, "json").mockRejectedValue(new DOMException("body failed", name));
+        return res;
+      });
+      const result = fetchLoop([group], new Map());
+      await vi.runAllTimersAsync();
+      expect((await result).failedCoords).toHaveLength(0);
+      expect(fetchMock).toHaveBeenCalledTimes(4);
+    },
+  );
+
+  it("does not recover exhausted JSON syntax errors", async () => {
+    fetchMock.mockImplementation(async () => new Response("{broken json"));
+    const result = fetchLoop([group], new Map());
+    await vi.runAllTimersAsync();
+    expect((await result).failedCoords).toEqual([group]);
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+  });
+
+  it("fails publication and retains missing coordinates after recovery is exhausted", async () => {
+    const options = fixture();
+    fetchMock.mockRejectedValue(new TypeError("fetch failed"));
+    const assertion = expect(main(options)).rejects.toThrow("Weather update incomplete");
+    await vi.runAllTimersAsync();
+    await assertion;
+    expect(fetchMock).toHaveBeenCalledTimes(4);
+    expect(
+      JSON.parse(fs.readFileSync(path.join(options.outputDir, "_failed.json"), "utf8"))
+        .failedCoords,
+    ).toEqual([{ ...group, damIds: ["a", "b"] }]);
+    expect(() => validateWeatherData(options.dams, options.outputDir, now)).toThrow();
+  });
+
+  it("recovers the failed first 500 coordinates after the other 2,099 without refetching successes", async () => {
+    const dams = JSON.parse(
+      fs.readFileSync(new URL("../src/data/dams.json", import.meta.url), "utf8"),
+    );
+    const options = fixture(dams);
+    const requests: { latitude: number[]; longitude: number[]; at: number }[] = [];
+    fetchMock.mockImplementation(async (_url, init) => {
+      const body = JSON.parse(init!.body as string);
+      requests.push({ ...body, at: Date.now() });
+      if (requests.length <= 3)
+        throw new TypeError("fetch failed", { cause: new Error("connect timeout") });
+      return response(
+        body.latitude.map((lat: number) => {
+          const data = forecast();
+          data.daily.temperature_2m_max[0] = lat;
+          return data;
+        }),
+      );
+    });
+    const result = main(options);
+    await vi.runAllTimersAsync();
+    await result;
+    expect(fetchMock).toHaveBeenCalledTimes(9);
+    expect(requests.map((r) => r.latitude.length)).toEqual([
+      500, 500, 500, 500, 500, 500, 500, 99, 500,
+    ]);
+    expect(requests[8].latitude).toEqual(requests[0].latitude);
+    expect(requests[8].longitude).toEqual(requests[0].longitude);
+    for (let i = 1; i < requests.length; i++) {
+      expect(requests[i].at - requests[i - 1].at).toBeGreaterThanOrEqual(61_000);
+    }
+    expect(fs.readdirSync(options.outputDir)).toHaveLength(47);
+    expect(fs.existsSync(path.join(options.outputDir, "_failed.json"))).toBe(false);
+    expect(() => validateWeatherData(options.dams, options.outputDir)).not.toThrow();
+    for (const dam of options.dams) {
+      const saved = JSON.parse(
+        fs.readFileSync(path.join(options.outputDir, `${dam.prefectureSlug}.json`), "utf8"),
+      );
+      expect(
+        saved.dams.find((entry: { damId: string }) => entry.damId === dam.id).today.tempMax,
+      ).toBe(Math.round(dam.latitude * 100) / 100);
+    }
+  });
+});
+
 describe("publication completeness", () => {
   it("writes every dam, including shared coordinates, and validates full coverage", async () => {
     const options = fixture();
