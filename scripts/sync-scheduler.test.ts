@@ -5,13 +5,13 @@ import { syncScheduler } from "./sync-scheduler";
 const ACCOUNT_ID = "0123456789abcdef0123456789abcdef";
 const TOKEN = "test-token-never-print-me";
 const ENV = { CLOUDFLARE_ACCOUNT_ID: ACCOUNT_ID, CLOUDFLARE_API_TOKEN: TOKEN };
-const TARGET = "0 */8 * * *";
-const PREVIOUS = "0 */3 * * *";
+const TARGET = "0 1,8,16 * * *";
+const PREVIOUS = "0 */8 * * *";
 const ENDPOINT = `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/workers/scripts/dam-weather-scheduler/schedules`;
 const CONFIG = `name = "dam-weather-scheduler"
 main = "src/index.ts"
 [triggers]
-# UTC 00:00 / 08:00 / 16:00
+# UTC 01:00 / 08:00 / 16:00
 crons = ["${TARGET}"]
 [vars]
 GITHUB_WORKFLOW_ID = "update-weather.yml"
@@ -109,15 +109,19 @@ describe("syncScheduler", () => {
     expect(fetchImpl).not.toHaveBeenCalled();
   });
 
-  it.each([[], ["0 * * * *"], [PREVIOUS, TARGET], [TARGET, TARGET], [PREVIOUS, PREVIOUS]])(
-    "refuses unexpected or multiple remote crons (%j)",
-    async (...crons) => {
-      const { fetchImpl, options } = setup();
-      fetchImpl.mockResolvedValueOnce(jsonResponse(payload(crons)));
-      await expect(syncScheduler(options)).rejects.toThrow("unexpected remote cron configuration");
-      expect(fetchImpl).toHaveBeenCalledTimes(1);
-    },
-  );
+  it.each([
+    [],
+    ["0 * * * *"],
+    ["0 */3 * * *"],
+    [PREVIOUS, TARGET],
+    [TARGET, TARGET],
+    [PREVIOUS, PREVIOUS],
+  ])("refuses unexpected or multiple remote crons (%j)", async (...crons) => {
+    const { fetchImpl, options } = setup();
+    fetchImpl.mockResolvedValueOnce(jsonResponse(payload(crons)));
+    await expect(syncScheduler(options)).rejects.toThrow("unexpected remote cron configuration");
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+  });
 
   it.each(["GET", "PUT", "readback"])(
     "stops on HTTP 403 at %s without leaking its body",

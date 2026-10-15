@@ -4,8 +4,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const WORKER_NAME = "dam-weather-scheduler";
-const TARGET_CRON = "0 */8 * * *";
-const PREVIOUS_CRON = "0 */3 * * *";
+const TARGET_CRON = "0 1,8,16 * * *";
+const PREVIOUS_CRON = "0 */8 * * *";
 const REQUEST_TIMEOUT_MS = 20_000;
 
 interface SyncOptions {
@@ -148,7 +148,7 @@ const invokedPath = process.argv[1];
 if (invokedPath && path.resolve(invokedPath) === fileURLToPath(import.meta.url)) {
   syncScheduler()
     .then((result) => {
-      console.log(`Scheduler ${result}: verified JST 01:00, 09:00 and 17:00.`);
+      console.log(`Scheduler ${result}: verified JST 01:00, 10:00 and 17:00.`);
     })
     .catch((error: unknown) => {
       console.error(
